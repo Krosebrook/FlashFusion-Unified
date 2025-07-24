@@ -1,273 +1,188 @@
 /**
- * FlashFusion Unified Platform Environment Configuration
- * Centralized configuration management for all platform services
+ * Environment Configuration for FlashFusion Unified Platform
  */
 
-require('dotenv').config();
-
-// Helper function to parse boolean environment variables
-const parseBoolean = (value, defaultValue = false) => {
-    if (value === undefined || value === null) return defaultValue;
-    return value.toLowerCase() === 'true';
-};
-
-// Helper function to parse JSON environment variables
-const parseJSON = (value, defaultValue = {}) => {
-    if (!value) return defaultValue;
-    try {
-        return JSON.parse(value);
-    } catch (error) {
-        console.warn(`Failed to parse JSON config: ${value}`);
-        return defaultValue;
-    }
-};
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
 const config = {
-    // ========================================
-    // CORE PLATFORM CONFIGURATION
-    // ========================================
+    // Application
     NODE_ENV: process.env.NODE_ENV || 'development',
-    PORT: parseInt(process.env.PORT, 10) || 3000,
+    APP_VERSION: process.env.APP_VERSION || '2.0.0',
+    PORT: parseInt(process.env.PORT) || 3333,
+    
+    // CORS
+    ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS ? 
+        process.env.ALLOWED_ORIGINS.split(',') : 
+        ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3333', 'https://flashfusion.co'],
+    
+    // Database (Supabase)
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+    SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
+    
+    // AI Services
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+    GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+    
+    // Integration Services
+    GITHUB_TOKEN: process.env.GITHUB_TOKEN,
+    VERCEL_TOKEN: process.env.VERCEL_TOKEN,
+    SHOPIFY_API_KEY: process.env.SHOPIFY_API_KEY,
+    SHOPIFY_API_SECRET: process.env.SHOPIFY_API_SECRET,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    TWITTER_API_KEY: process.env.TWITTER_API_KEY,
+    TWITTER_API_SECRET: process.env.TWITTER_API_SECRET,
+    LINKEDIN_CLIENT_ID: process.env.LINKEDIN_CLIENT_ID,
+    LINKEDIN_CLIENT_SECRET: process.env.LINKEDIN_CLIENT_SECRET,
+    
+    // Google Services
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID,
+    
+    // Security
+    JWT_SECRET: process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production',
+    ENCRYPTION_KEY: process.env.ENCRYPTION_KEY || 'your-32-char-encryption-key-here',
+    
+    // Features
+    ENABLE_AI_AGENTS: process.env.ENABLE_AI_AGENTS !== 'false',
+    ENABLE_WORKFLOWS: process.env.ENABLE_WORKFLOWS !== 'false',
+    ENABLE_INTEGRATIONS: process.env.ENABLE_INTEGRATIONS !== 'false',
+    
+    // Rate Limiting
+    RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
+    RATE_LIMIT_MAX_REQUESTS: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
+    
+    // Logging
     LOG_LEVEL: process.env.LOG_LEVEL || 'info',
     
-    APP_NAME: process.env.APP_NAME || 'FlashFusion Unified',
-    APP_VERSION: process.env.APP_VERSION || '2.0.0',
-    BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
+    // Validation helpers
+    isProduction: () => config.NODE_ENV === 'production',
+    isDevelopment: () => config.NODE_ENV === 'development',
+    isTest: () => config.NODE_ENV === 'test',
     
-    // ========================================
-    // AI SERVICE PROVIDERS
-    // ========================================
-    AI_SERVICES: {
-        OPENAI: {
-            API_KEY: process.env.OPENAI_API_KEY,
-            MODEL: process.env.OPENAI_MODEL || 'gpt-4-turbo-preview',
-            MAX_TOKENS: parseInt(process.env.OPENAI_MAX_TOKENS, 10) || 4000,
-            TEMPERATURE: parseFloat(process.env.OPENAI_TEMPERATURE) || 0.7
-        },
-        ANTHROPIC: {
-            API_KEY: process.env.ANTHROPIC_API_KEY,
-            MODEL: process.env.ANTHROPIC_MODEL || 'claude-3-sonnet-20240229',
-            MAX_TOKENS: parseInt(process.env.ANTHROPIC_MAX_TOKENS, 10) || 4000
-        },
-        GEMINI: {
-            API_KEY: process.env.GEMINI_API_KEY,
-            MODEL: process.env.GEMINI_MODEL || 'gemini-pro'
-        }
-    },
-
-    // ========================================
-    // DATABASE & STORAGE
-    // ========================================
-    DATABASE: {
-        SUPABASE: {
-            URL: process.env.SUPABASE_URL,
-            ANON_KEY: process.env.SUPABASE_ANON_KEY,
-            SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY
-        },
-        REDIS: {
-            URL: process.env.REDIS_URL || 'redis://localhost:6379',
-            PASSWORD: process.env.REDIS_PASSWORD,
-            MAX_RETRIES: parseInt(process.env.REDIS_MAX_RETRIES, 10) || 3
-        }
-    },
-
-    // ========================================
-    // AUTHENTICATION & SECURITY
-    // ========================================
-    SECURITY: {
-        JWT_SECRET: process.env.JWT_SECRET || 'your-super-secret-jwt-key',
-        JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
-        JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
-        SESSION_SECRET: process.env.SESSION_SECRET || 'your-session-secret',
+    // Configuration validation
+    validate: () => {
+        const required = [];
+        const warnings = [];
         
-        RATE_LIMIT: {
-            WINDOW_MS: parseInt(process.env.API_RATE_LIMIT_WINDOW, 10) * 60 * 1000 || 15 * 60 * 1000,
-            MAX_REQUESTS: parseInt(process.env.API_RATE_LIMIT_MAX_REQUESTS, 10) || 100
-        },
-        
-        ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS 
-            ? process.env.ALLOWED_ORIGINS.split(',') 
-            : ['http://localhost:3000', 'http://localhost:3001']
-    },
-
-    // ========================================
-    // WORKFLOW INTEGRATIONS
-    // ========================================
-    INTEGRATIONS: {
-        // Development workflow
-        DEVELOPMENT: {
-            GITHUB: {
-                TOKEN: process.env.GITHUB_TOKEN,
-                WEBHOOK_SECRET: process.env.GITHUB_WEBHOOK_SECRET
-            },
-            VERCEL: {
-                TOKEN: process.env.VERCEL_TOKEN
-            },
-            DOCKER: {
-                USERNAME: process.env.DOCKER_USERNAME,
-                PASSWORD: process.env.DOCKER_PASSWORD
-            }
-        },
-
-        // Commerce workflow
-        COMMERCE: {
-            SHOPIFY: {
-                API_KEY: process.env.SHOPIFY_API_KEY,
-                API_SECRET: process.env.SHOPIFY_API_SECRET,
-                WEBHOOK_SECRET: process.env.SHOPIFY_WEBHOOK_SECRET
-            },
-            AMAZON: {
-                CLIENT_ID: process.env.AMAZON_CLIENT_ID,
-                CLIENT_SECRET: process.env.AMAZON_CLIENT_SECRET,
-                REFRESH_TOKEN: process.env.AMAZON_REFRESH_TOKEN
-            },
-            EBAY: {
-                CLIENT_ID: process.env.EBAY_CLIENT_ID,
-                CLIENT_SECRET: process.env.EBAY_CLIENT_SECRET
-            },
-            STRIPE: {
-                PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
-                SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-                WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET
-            }
-        },
-
-        // Content workflow
-        CONTENT: {
-            YOUTUBE: {
-                API_KEY: process.env.YOUTUBE_API_KEY,
-                CLIENT_ID: process.env.YOUTUBE_CLIENT_ID,
-                CLIENT_SECRET: process.env.YOUTUBE_CLIENT_SECRET
-            },
-            TWITTER: {
-                BEARER_TOKEN: process.env.TWITTER_BEARER_TOKEN,
-                API_KEY: process.env.TWITTER_API_KEY,
-                API_SECRET: process.env.TWITTER_API_SECRET
-            },
-            INSTAGRAM: {
-                CLIENT_ID: process.env.INSTAGRAM_CLIENT_ID,
-                CLIENT_SECRET: process.env.INSTAGRAM_CLIENT_SECRET
-            }
-        },
-
-        // Shared services
-        SHARED: {
-            SENDGRID: {
-                API_KEY: process.env.SENDGRID_API_KEY,
-                FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL || 'noreply@flashfusion.ai'
-            },
-            FIRECRAWL: {
-                API_KEY: process.env.FIRECRAWL_API_KEY
-            }
+        // Check critical configurations
+        if (!config.SUPABASE_URL) {
+            warnings.push('SUPABASE_URL not configured - database features will be limited');
         }
+        
+        if (!config.SUPABASE_ANON_KEY) {
+            warnings.push('SUPABASE_ANON_KEY not configured - database features will be limited');
+        }
+        
+        if (!config.OPENAI_API_KEY && !config.ANTHROPIC_API_KEY) {
+            warnings.push('No AI API keys configured - agent chat features will be limited');
+        }
+        
+        if (config.isProduction() && config.JWT_SECRET === 'your-super-secret-jwt-key-change-in-production') {
+            required.push('JWT_SECRET must be set in production');
+        }
+        
+        // Log warnings
+        if (warnings.length > 0) {
+            console.warn('⚠️  Configuration warnings:');
+            warnings.forEach(warning => console.warn(`   - ${warning}`));
+        }
+        
+        // Throw errors for required configs
+        if (required.length > 0) {
+            console.error('❌ Configuration errors:');
+            required.forEach(error => console.error(`   - ${error}`));
+            throw new Error('Invalid configuration');
+        }
+        
+        if (warnings.length === 0) {
+            console.log('✅ Configuration validation passed');
+        }
+        
+        return true;
     },
-
-    // ========================================
-    // AGENT ORCHESTRATION SETTINGS
-    // ========================================
-    AGENTS: {
-        MAX_CONCURRENT: parseInt(process.env.MAX_CONCURRENT_AGENTS, 10) || 10,
-        TIMEOUT: parseInt(process.env.AGENT_TIMEOUT, 10) || 300000, // 5 minutes
-        HANDOFF_TIMEOUT: parseInt(process.env.HANDOFF_TIMEOUT, 10) || 60000, // 1 minute
-        ENABLE_LOGGING: parseBoolean(process.env.ENABLE_AGENT_LOGGING, true),
-        RETRY_ATTEMPTS: parseInt(process.env.AGENT_RETRY_ATTEMPTS, 10) || 3
+    
+    // Get database URL for different environments
+    getDatabaseConfig: () => {
+        return {
+            url: config.SUPABASE_URL,
+            key: config.SUPABASE_ANON_KEY,
+            serviceKey: config.SUPABASE_SERVICE_KEY,
+            configured: !!(config.SUPABASE_URL && config.SUPABASE_ANON_KEY)
+        };
     },
-
-    // ========================================
-    // WORKFLOW SETTINGS
-    // ========================================
-    WORKFLOWS: {
-        MAX_STEPS: parseInt(process.env.MAX_WORKFLOW_STEPS, 10) || 100,
-        TIMEOUT: parseInt(process.env.WORKFLOW_TIMEOUT, 10) || 1800000, // 30 minutes
-        ENABLE_CACHING: parseBoolean(process.env.ENABLE_WORKFLOW_CACHING, true),
-        ENABLE_CROSS_DATA_SHARING: parseBoolean(process.env.ENABLE_CROSS_WORKFLOW_DATA_SHARING, true),
-        DATA_RETENTION_DAYS: parseInt(process.env.DATA_RETENTION_DAYS, 10) || 90
+    
+    // Get AI service configuration
+    getAIConfig: () => {
+        return {
+            openai: {
+                apiKey: config.OPENAI_API_KEY,
+                enabled: !!config.OPENAI_API_KEY
+            },
+            anthropic: {
+                apiKey: config.ANTHROPIC_API_KEY,
+                enabled: !!config.ANTHROPIC_API_KEY
+            },
+            gemini: {
+                apiKey: config.GEMINI_API_KEY,
+                enabled: !!config.GEMINI_API_KEY
+            }
+        };
     },
-
-    // ========================================
-    // ANALYTICS & MONITORING
-    // ========================================
-    ANALYTICS: {
-        GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID,
-        MIXPANEL_TOKEN: process.env.MIXPANEL_TOKEN,
-        ENABLE_PERFORMANCE_MONITORING: parseBoolean(process.env.ENABLE_PERFORMANCE_MONITORING, true),
-        ENABLE_USER_ANALYTICS: parseBoolean(process.env.ENABLE_USER_ANALYTICS, true),
-        ENABLE_WORKFLOW_METRICS: parseBoolean(process.env.ENABLE_WORKFLOW_METRICS, true)
-    },
-
-    // ========================================
-    // BUSINESS SETTINGS
-    // ========================================
-    BUSINESS: {
-        SUBSCRIPTION_TIERS: parseJSON(process.env.SUBSCRIPTION_TIERS, {
-            starter: { price: 97, workflows: 3, agents: 6, tasks: 100 },
-            professional: { price: 297, workflows: 10, agents: 'unlimited', tasks: 1000 },
-            enterprise: { price: 997, workflows: 'unlimited', agents: 'unlimited', tasks: 'unlimited' }
-        }),
-        FREE_TIER_LIMITS: parseJSON(process.env.FREE_TIER_LIMITS, {
-            workflows: 1,
-            tasks: 10,
-            agents: 2
-        }),
-        TRACK_API_USAGE: parseBoolean(process.env.TRACK_API_USAGE, true)
-    },
-
-    // ========================================
-    // DEVELOPMENT & DEBUGGING
-    // ========================================
-    DEVELOPMENT: {
-        DEBUG: process.env.DEBUG,
-        ENABLE_REQUEST_LOGGING: parseBoolean(process.env.ENABLE_REQUEST_LOGGING, false),
-        ENABLE_BETA_FEATURES: parseBoolean(process.env.ENABLE_BETA_FEATURES, false),
-        ENABLE_EXPERIMENTAL_AGENTS: parseBoolean(process.env.ENABLE_EXPERIMENTAL_AGENTS, false),
-        TEST_DATABASE_URL: process.env.TEST_DATABASE_URL,
-        TEST_REDIS_URL: process.env.TEST_REDIS_URL || 'redis://localhost:6380'
-    },
-
-    // ========================================
-    // DEPLOYMENT & SCALING
-    // ========================================
-    DEPLOYMENT: {
-        CLUSTER_MODE: parseBoolean(process.env.CLUSTER_MODE, false),
-        WORKER_PROCESSES: process.env.WORKER_PROCESSES || 'auto',
-        ENABLE_REDIS_CACHING: parseBoolean(process.env.ENABLE_REDIS_CACHING, true),
-        CACHE_TTL: parseInt(process.env.CACHE_TTL, 10) || 3600, // 1 hour
-        FILE_UPLOAD_MAX_SIZE: parseInt(process.env.FILE_UPLOAD_MAX_SIZE, 10) || 10485760, // 10MB
-        CDN_URL: process.env.CDN_URL,
-        STATIC_ASSETS_URL: process.env.STATIC_ASSETS_URL
+    
+    // Get integration services configuration
+    getIntegrationConfig: () => {
+        return {
+            github: {
+                token: config.GITHUB_TOKEN,
+                enabled: !!config.GITHUB_TOKEN
+            },
+            vercel: {
+                token: config.VERCEL_TOKEN,
+                enabled: !!config.VERCEL_TOKEN
+            },
+            shopify: {
+                apiKey: config.SHOPIFY_API_KEY,
+                apiSecret: config.SHOPIFY_API_SECRET,
+                enabled: !!(config.SHOPIFY_API_KEY && config.SHOPIFY_API_SECRET)
+            },
+            stripe: {
+                secretKey: config.STRIPE_SECRET_KEY,
+                enabled: !!config.STRIPE_SECRET_KEY
+            },
+            twitter: {
+                apiKey: config.TWITTER_API_KEY,
+                apiSecret: config.TWITTER_API_SECRET,
+                enabled: !!(config.TWITTER_API_KEY && config.TWITTER_API_SECRET)
+            },
+            linkedin: {
+                clientId: config.LINKEDIN_CLIENT_ID,
+                clientSecret: config.LINKEDIN_CLIENT_SECRET,
+                enabled: !!(config.LINKEDIN_CLIENT_ID && config.LINKEDIN_CLIENT_SECRET)
+            },
+            google: {
+                clientId: config.GOOGLE_CLIENT_ID,
+                clientSecret: config.GOOGLE_CLIENT_SECRET,
+                analyticsId: config.GOOGLE_ANALYTICS_ID,
+                enabled: !!(config.GOOGLE_CLIENT_ID && config.GOOGLE_CLIENT_SECRET)
+            }
+        };
     }
 };
 
-// Validation function to check required environment variables
-const validateConfig = () => {
-    const requiredForProduction = [
-        'JWT_SECRET',
-        'SUPABASE_URL',
-        'SUPABASE_ANON_KEY'
-    ];
-
-    if (config.NODE_ENV === 'production') {
-        const missing = requiredForProduction.filter(key => !process.env[key]);
-        if (missing.length > 0) {
-            throw new Error(`Missing required environment variables for production: ${missing.join(', ')}`);
+// Validate configuration on load
+if (require.main !== module) {
+    try {
+        config.validate();
+    } catch (error) {
+        console.error('Configuration validation failed:', error.message);
+        // Don't exit in development, just warn
+        if (config.isProduction()) {
+            process.exit(1);
         }
-    }
-
-    // Warn about missing AI service keys
-    const aiServices = ['OPENAI_API_KEY', 'ANTHROPIC_API_KEY'];
-    const missingAI = aiServices.filter(key => !process.env[key]);
-    if (missingAI.length === aiServices.length) {
-        console.warn('⚠️  No AI service API keys configured. Some features will be limited.');
-    }
-};
-
-// Run validation
-try {
-    validateConfig();
-} catch (error) {
-    console.error('❌ Configuration validation failed:', error.message);
-    if (config.NODE_ENV === 'production') {
-        process.exit(1);
     }
 }
 

@@ -16,9 +16,13 @@ const { AgentOrchestrator } = require('./core/AgentOrchestrator');
 const { WorkflowEngine } = require('./core/WorkflowEngine');
 const { UnifiedDashboard } = require('./api/UnifiedDashboard');
 
+// Services
+const databaseService = require('./services/database');
+const aiService = require('./services/aiService');
+
 // Configuration
 const config = require('./config/environment');
-const logger = require('./utils/logger');
+const logger = console;
 
 class FlashFusionUnified {
     constructor() {
@@ -26,7 +30,7 @@ class FlashFusionUnified {
         this.core = new FlashFusionCore();
         this.orchestrator = new AgentOrchestrator();
         this.workflowEngine = new WorkflowEngine();
-        this.dashboard = new UnifiedDashboard();
+        this.dashboard = new UnifiedDashboard(this.orchestrator, this.workflowEngine);
         
         this.setupMiddleware();
         this.setupRoutes();
@@ -43,7 +47,7 @@ class FlashFusionUnified {
 
         // Utility middleware
         this.app.use(compression());
-        this.app.use(morgan('combined', { stream: { write: (message) => logger.info(message.trim()) } }));
+        this.app.use(morgan('combined'));
         this.app.use(express.json({ limit: '10mb' }));
         this.app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -59,9 +63,9 @@ class FlashFusionUnified {
                 version: config.APP_VERSION,
                 timestamp: new Date().toISOString(),
                 services: {
-                    core: this.core.isHealthy(),
-                    orchestrator: this.orchestrator.isHealthy(),
-                    workflowEngine: this.workflowEngine.isHealthy()
+                    core: this.core.getHealth ? this.core.getHealth() : { status: 'healthy' },
+                    orchestrator: this.orchestrator.getHealth(),
+                    workflowEngine: this.workflowEngine.getHealth()
                 }
             });
         });
@@ -114,26 +118,47 @@ class FlashFusionUnified {
         try {
             logger.info('🚀 Initializing FlashFusion Unified Platform...');
             
+            // Initialize database service
+            const dbInitialized = await databaseService.initialize();
+            if (dbInitialized) {
+                console.log('✅ Database service initialized');
+            } else {
+                console.warn('⚠️ Database service failed to initialize - running in offline mode');
+            }
+            
+            // Initialize AI service
+            const aiInitialized = await aiService.initialize();
+            if (aiInitialized) {
+                console.log('✅ AI service initialized');
+            } else {
+                console.warn('⚠️ AI service failed to initialize - agents will have limited functionality');
+            }
+            
             // Initialize core services
             await this.core.initialize();
             logger.info('✅ Core services initialized');
             
             // Initialize agent orchestrator
             await this.orchestrator.initialize();
-            logger.info('✅ Agent orchestrator initialized');
+            console.log('✅ Agent orchestrator initialized');
             
             // Initialize workflow engine
             await this.workflowEngine.initialize();
-            logger.info('✅ Workflow engine initialized');
+            console.log('✅ Workflow engine initialized');
             
-            // Initialize dashboard
-            await this.dashboard.initialize();
-            logger.info('✅ Unified dashboard initialized');
+            // Dashboard ready (no initialization needed)
+            console.log('📊 Dashboard ready');
+            console.log('✅ Unified dashboard initialized');
             
-            logger.info('🎉 FlashFusion Unified Platform ready!');
+            // Run database cleanup
+            if (dbInitialized) {
+                await databaseService.cleanup();
+            }
+            
+            console.log('🎉 FlashFusion Unified Platform ready!');
             
         } catch (error) {
-            logger.error('❌ Failed to initialize FlashFusion:', error);
+            console.error('❌ Failed to initialize FlashFusion:', error);
             throw error;
         }
     }
@@ -143,10 +168,10 @@ class FlashFusionUnified {
             await this.initialize();
             
             this.server = this.app.listen(port, () => {
-                logger.info(`🌟 FlashFusion Unified Platform running on port ${port}`);
-                logger.info(`📊 Dashboard: http://localhost:${port}`);
-                logger.info(`🔍 Health check: http://localhost:${port}/health`);
-                logger.info(`📚 API docs: http://localhost:${port}/api/docs`);
+                console.log(`🌟 FlashFusion Unified Platform running on port ${port}`);
+                console.log(`📊 Dashboard: http://localhost:${port}`);
+                console.log(`🔍 Health check: http://localhost:${port}/health`);
+                console.log(`📚 API docs: http://localhost:${port}/api/docs`);
             });
 
             // Graceful shutdown handling
@@ -154,13 +179,13 @@ class FlashFusionUnified {
             process.on('SIGINT', () => this.shutdown());
             
         } catch (error) {
-            logger.error('❌ Failed to start FlashFusion:', error);
+            console.error('❌ Failed to start FlashFusion:', error);
             process.exit(1);
         }
     }
 
     async shutdown() {
-        logger.info('🛑 Shutting down FlashFusion Unified Platform...');
+        console.log('🛑 Shutting down FlashFusion Unified Platform...');
         
         try {
             // Close server
@@ -173,11 +198,16 @@ class FlashFusionUnified {
             await this.orchestrator.shutdown();
             await this.core.shutdown();
             
-            logger.info('✅ FlashFusion shutdown complete');
+            // Final database cleanup
+            if (databaseService.isConnected) {
+                await databaseService.cleanup();
+            }
+            
+            console.log('✅ FlashFusion shutdown complete');
             process.exit(0);
             
         } catch (error) {
-            logger.error('❌ Error during shutdown:', error);
+            console.error('❌ Error during shutdown:', error);
             process.exit(1);
         }
     }

@@ -4,7 +4,7 @@
  */
 
 const EventEmitter = require('events');
-const logger = require('../utils/logger');
+const logger = console;
 
 class FlashFusionCore extends EventEmitter {
     constructor() {
