@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "framework": null,
   "builds": [
     {
       "src": "src/index.js",
@@ -20,7 +21,7 @@
     "NODE_ENV": "production"
   },
   "regions": ["iad1"],
-  "installCommand": "npm install",
-  "buildCommand": "npm run build || echo 'No build script found'",
+  "installCommand": "npm install --include=dev",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist"
 }
