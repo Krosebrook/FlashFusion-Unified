@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "name": "flashfusion",
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "server.js": {
+      "maxDuration": 30
+    }
+  },
+  "regions": ["iad1"],
+  "installCommand": "npm install",
+  "buildCommand": "npm run build || echo 'No build script found'",
+  "outputDirectory": "dist"
+}
