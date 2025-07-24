@@ -19,6 +19,7 @@ const { UnifiedDashboard } = require('./api/UnifiedDashboard');
 // Services
 const databaseService = require('./services/database');
 const aiService = require('./services/aiService');
+const notionService = require('./services/notionService');
 
 // Configuration
 const config = require('./config/environment');
@@ -81,6 +82,9 @@ class FlashFusionUnified {
         
         // Integration routes
         this.app.use('/api/integrations', require('./api/routes/integrations'));
+        
+        // Notion integration routes
+        this.app.use('/api/notion', require('./api/routes/notion'));
 
         // Analytics routes
         this.app.use('/api/analytics', require('./api/routes/analytics'));
@@ -152,6 +156,14 @@ class FlashFusionUnified {
                 console.log('✅ AI service initialized');
             } else {
                 console.warn('⚠️ AI service failed to initialize - agents will have limited functionality');
+            }
+            
+            // Initialize Notion service
+            const notionInitialized = await notionService.initialize();
+            if (notionInitialized) {
+                console.log('✅ Notion service initialized');
+            } else {
+                console.warn('⚠️ Notion service failed to initialize - integration disabled');
             }
             
             // Initialize core services

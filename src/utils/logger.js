@@ -47,9 +47,12 @@ const logger = winston.createLogger({
     ]
 });
 
-// Add file transports only in development or when explicitly enabled
-// DO NOT enable file logging in serverless environments (Vercel, AWS Lambda, etc.)
-if (process.env.NODE_ENV === 'development' && process.env.ENABLE_FILE_LOGGING === 'true') {
+// CRITICAL: Never enable file logging in production/serverless environments
+// Only enable file logging in local development when explicitly requested
+const isLocalDevelopment = process.env.NODE_ENV === 'development' && !process.env.VERCEL && !process.env.AWS_LAMBDA_FUNCTION_NAME;
+const fileLoggingExplicitlyEnabled = process.env.ENABLE_FILE_LOGGING === 'true';
+
+if (isLocalDevelopment && fileLoggingExplicitlyEnabled) {
     try {
         const fs = require('fs');
         const logsDir = path.join(process.cwd(), 'logs');
@@ -82,11 +85,14 @@ if (process.env.NODE_ENV === 'development' && process.env.ENABLE_FILE_LOGGING ==
             maxFiles: 10
         }));
         
-        logger.info('File logging enabled for development environment');
+        logger.info('File logging enabled for local development environment');
     } catch (error) {
         // Silently fail if file system operations are not allowed
-        logger.warn('File logging disabled - running in serverless environment');
+        console.warn('File logging disabled - filesystem access restricted');
     }
+} else {
+    // Ensure we're only using console logging in production/serverless
+    console.log('File logging disabled - using console-only logging for production/serverless');
 }
 
 // Helper functions for structured logging
