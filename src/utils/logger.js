@@ -47,30 +47,46 @@ const logger = winston.createLogger({
     ]
 });
 
-// Add file transports in production or when explicitly enabled
-if (process.env.NODE_ENV === 'production' || process.env.ENABLE_FILE_LOGGING === 'true') {
-    // Error log file
-    logger.add(new winston.transports.File({
-        filename: path.join(process.cwd(), 'logs', 'error.log'),
-        level: 'error',
-        format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.json()
-        ),
-        maxsize: 5242880, // 5MB
-        maxFiles: 5
-    }));
+// Add file transports only in development or when explicitly enabled
+// DO NOT enable file logging in serverless environments (Vercel, AWS Lambda, etc.)
+if (process.env.NODE_ENV === 'development' && process.env.ENABLE_FILE_LOGGING === 'true') {
+    try {
+        const fs = require('fs');
+        const logsDir = path.join(process.cwd(), 'logs');
+        
+        // Create logs directory if it doesn't exist (development only)
+        if (!fs.existsSync(logsDir)) {
+            fs.mkdirSync(logsDir, { recursive: true });
+        }
+        
+        // Error log file
+        logger.add(new winston.transports.File({
+            filename: path.join(logsDir, 'error.log'),
+            level: 'error',
+            format: winston.format.combine(
+                winston.format.timestamp(),
+                winston.format.json()
+            ),
+            maxsize: 5242880, // 5MB
+            maxFiles: 5
+        }));
 
-    // Combined log file
-    logger.add(new winston.transports.File({
-        filename: path.join(process.cwd(), 'logs', 'combined.log'),
-        format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.json()
-        ),
-        maxsize: 5242880, // 5MB
-        maxFiles: 10
-    }));
+        // Combined log file
+        logger.add(new winston.transports.File({
+            filename: path.join(logsDir, 'combined.log'),
+            format: winston.format.combine(
+                winston.format.timestamp(),
+                winston.format.json()
+            ),
+            maxsize: 5242880, // 5MB
+            maxFiles: 10
+        }));
+        
+        logger.info('File logging enabled for development environment');
+    } catch (error) {
+        // Silently fail if file system operations are not allowed
+        logger.warn('File logging disabled - running in serverless environment');
+    }
 }
 
 // Helper functions for structured logging

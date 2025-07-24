@@ -85,9 +85,29 @@ class FlashFusionUnified {
         // Analytics routes
         this.app.use('/api/analytics', require('./api/routes/analytics'));
 
-        // Serve React app for all other routes
-        this.app.get('*', (req, res) => {
+        // Replit-style interface route
+        this.app.get('/replit', (req, res) => {
+            res.sendFile(path.join(__dirname, '../client/dist/replit-interface.html'));
+        });
+        
+        // Default to Replit interface for root
+        this.app.get('/', (req, res) => {
+            res.sendFile(path.join(__dirname, '../client/dist/replit-interface.html'));
+        });
+        
+        // Original dashboard route
+        this.app.get('/dashboard', (req, res) => {
             res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+        });
+        
+        // Serve original dashboard for iframe in personal dashboard modal
+        this.app.get('*', (req, res) => {
+            // Check if it's a static file request
+            if (req.path.includes('.')) {
+                res.sendFile(path.join(__dirname, '../client/dist', req.path));
+            } else {
+                res.sendFile(path.join(__dirname, '../client/dist/replit-interface.html'));
+            }
         });
     }
 
