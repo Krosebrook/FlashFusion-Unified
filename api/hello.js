@@ -29,4 +29,4 @@ module.exports = (req, res) => {
         </body>
         </html>
     `);
-};
+};// Force deployment Thu, Jul 24, 2025  2:42:00 PM
