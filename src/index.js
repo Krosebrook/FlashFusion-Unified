@@ -20,6 +20,7 @@ const { UnifiedDashboard } = require('./api/UnifiedDashboard');
 const databaseService = require('./services/database');
 const aiService = require('./services/aiService');
 const notionService = require('./services/notionService');
+const zapierService = require('./services/zapierService');
 
 // Configuration
 const config = require('./config/environment');
@@ -85,6 +86,9 @@ class FlashFusionUnified {
         
         // Notion integration routes
         this.app.use('/api/notion', require('./api/routes/notion'));
+        
+        // Zapier integration routes
+        this.app.use('/api/zapier', require('./api/routes/zapier'));
 
         // Analytics routes
         this.app.use('/api/analytics', require('./api/routes/analytics'));
@@ -92,6 +96,11 @@ class FlashFusionUnified {
         // Replit-style interface route
         this.app.get('/replit', (req, res) => {
             res.sendFile(path.join(__dirname, '../client/dist/replit-interface.html'));
+        });
+        
+        // Zapier automation hub route
+        this.app.get('/zapier-automation', (req, res) => {
+            res.sendFile(path.join(__dirname, '../client/dist/zapier-automation.html'));
         });
         
         // Default to Replit interface for root
@@ -164,6 +173,14 @@ class FlashFusionUnified {
                 console.log('✅ Notion service initialized');
             } else {
                 console.warn('⚠️ Notion service failed to initialize - integration disabled');
+            }
+            
+            // Initialize Zapier service
+            const zapierInitialized = await zapierService.initialize();
+            if (zapierInitialized) {
+                console.log('✅ Zapier service initialized');
+            } else {
+                console.warn('⚠️ Zapier service failed to initialize - webhooks disabled');
             }
             
             // Initialize core services
