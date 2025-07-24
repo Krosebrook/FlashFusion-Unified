@@ -1,34 +1,8 @@
 {
   "version": 2,
-  "framework": null,
-  "builds": [
-    {
-      "src": "src/minimal-server.js",
-      "use": "@vercel/node",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/src/minimal-server.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/src/minimal-server.js"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "regions": ["iad1"],
-  "installCommand": "npm install",
-  "buildCommand": "echo 'Build complete - FlashFusion static client ready'",
   "functions": {
-    "src/minimal-server.js": {
-      "maxDuration": 30
+    "api/index.js": {
+      "maxDuration": 10
     }
   }
 }
