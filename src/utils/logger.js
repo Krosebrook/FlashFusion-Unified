@@ -1,99 +1,85 @@
 /**
  * FlashFusion Unified Logger
  * Centralized logging system for the entire platform
+ * CRITICAL: Vercel-safe implementation that never tries to write files in production
  */
 
-const winston = require('winston');
+const fs = require('fs');
+const os = require('os');
 const path = require('path');
+const winston = require('winston');
 
-// Custom log format for FlashFusion
-const flashFusionFormat = winston.format.combine(
-    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    winston.format.errors({ stack: true }),
-    winston.format.colorize({ all: true }),
-    winston.format.printf(({ timestamp, level, message, stack, ...meta }) => {
-        let log = `${timestamp} [${level}]: ${message}`;
-        
-        // Add metadata if present
-        if (Object.keys(meta).length > 0) {
-            log += ` ${JSON.stringify(meta, null, 2)}`;
-        }
-        
-        // Add stack trace for errors
-        if (stack) {
-            log += `\n${stack}`;
-        }
-        
-        return log;
-    })
-);
+// Safe fallback path for local dev
+const localLogDir = path.join(__dirname, '../../logs');
+const vercelLogDir = path.join(os.tmpdir(), 'logs');
 
-// Create logger instance
-const logger = winston.createLogger({
-    level: process.env.LOG_LEVEL || 'info',
-    format: flashFusionFormat,
-    defaultMeta: {
-        service: 'FlashFusion-Unified',
-        version: process.env.APP_VERSION || '2.0.0'
-    },
-    transports: [
-        // Console output
-        new winston.transports.Console({
-            format: winston.format.combine(
-                winston.format.colorize(),
-                flashFusionFormat
-            )
-        })
-    ]
-});
+// Create the log directory if not in Vercel
+const isVercel = !!process.env.VERCEL;
+const logDir = isVercel ? vercelLogDir : localLogDir;
 
-// CRITICAL: Never enable file logging in production/serverless environments
-// Only enable file logging in local development when explicitly requested
-const isLocalDevelopment = process.env.NODE_ENV === 'development' && !process.env.VERCEL && !process.env.AWS_LAMBDA_FUNCTION_NAME;
-const fileLoggingExplicitlyEnabled = process.env.ENABLE_FILE_LOGGING === 'true';
-
-if (isLocalDevelopment && fileLoggingExplicitlyEnabled) {
-    try {
-        const fs = require('fs');
-        const logsDir = path.join(process.cwd(), 'logs');
-        
-        // Create logs directory if it doesn't exist (development only)
-        if (!fs.existsSync(logsDir)) {
-            fs.mkdirSync(logsDir, { recursive: true });
-        }
-        
-        // Error log file
-        logger.add(new winston.transports.File({
-            filename: path.join(logsDir, 'error.log'),
-            level: 'error',
-            format: winston.format.combine(
-                winston.format.timestamp(),
-                winston.format.json()
-            ),
-            maxsize: 5242880, // 5MB
-            maxFiles: 5
-        }));
-
-        // Combined log file
-        logger.add(new winston.transports.File({
-            filename: path.join(logsDir, 'combined.log'),
-            format: winston.format.combine(
-                winston.format.timestamp(),
-                winston.format.json()
-            ),
-            maxsize: 5242880, // 5MB
-            maxFiles: 10
-        }));
-        
-        logger.info('File logging enabled for local development environment');
-    } catch (error) {
-        // Silently fail if file system operations are not allowed
-        console.warn('File logging disabled - filesystem access restricted');
-    }
-} else {
-    // Ensure we're only using console logging in production/serverless
-    console.log('File logging disabled - using console-only logging for production/serverless');
+if (!isVercel && !fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir, { recursive: true });
 }
+
+const transports = [];
+
+if (isVercel) {
+  // Use console logging only in Vercel
+  transports.push(new winston.transports.Console({
+    format: winston.format.combine(
+      winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+      winston.format.colorize(),
+      winston.format.printf(({ timestamp, level, message, ...meta }) => {
+        let log = `${timestamp} [${level}]: ${message}`;
+        if (Object.keys(meta).length > 0) {
+          log += ` ${JSON.stringify(meta)}`;
+        }
+        return log;
+      })
+    )
+  }));
+} else {
+  // Local development with file logging
+  transports.push(
+    new winston.transports.File({ 
+      filename: path.join(logDir, 'combined.log'),
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+      ),
+      maxsize: 5242880, // 5MB
+      maxFiles: 5
+    }),
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        winston.format.colorize(),
+        winston.format.printf(({ timestamp, level, message, ...meta }) => {
+          let log = `${timestamp} [${level}]: ${message}`;
+          if (Object.keys(meta).length > 0) {
+            log += ` ${JSON.stringify(meta)}`;
+          }
+          return log;
+        })
+      )
+    })
+  );
+}
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || (isVercel ? 'info' : 'debug'),
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: {
+    service: 'FlashFusion-Unified',
+    version: process.env.APP_VERSION || '2.0.0',
+    environment: isVercel ? 'production' : 'development'
+  },
+  transports,
+});
 
 // Helper functions for structured logging
 const createContextualLogger = (context) => {
