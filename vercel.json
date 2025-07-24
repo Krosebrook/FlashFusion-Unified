@@ -1,8 +1,11 @@
 {
   "version": 2,
   "functions": {
-    "api/index.js": {
+    "api/hello.js": {
       "maxDuration": 10
     }
-  }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/hello" }
+  ]
 }
