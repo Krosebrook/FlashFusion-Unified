@@ -24,7 +24,7 @@ const zapierService = require('./services/zapierService');
 
 // Configuration
 const config = require('./config/environment');
-const logger = console;
+const logger = require('./utils/logger');
 
 class FlashFusionUnified {
     constructor() {
