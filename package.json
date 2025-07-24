@@ -1,0 +1,133 @@
+{
+  "name": "flashfusion-unified",
+  "version": "2.0.0",
+  "description": "The AI operating system that turns your business ideas into automated revenue streams",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "dev:full": "concurrently \"npm run dev\" \"npm run dev:client\"",
+    "dev:client": "cd client && npm start",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint src/ --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd client && npm run build",
+    "build:server": "babel src --out-dir dist",
+    "workflow:create": "node scripts/create-workflow.js",
+    "agent:create": "node scripts/create-agent.js",
+    "setup": "node scripts/setup.js",
+    "migrate": "node scripts/migrate.js",
+    "dev:install": "npm install && cd client && npm install",
+    "deploy": "npm run build && npm run deploy:vercel",
+    "deploy:vercel": "vercel --prod",
+    "docs": "jsdoc src/ -r -d docs/",
+    "benchmark": "node scripts/benchmark.js",
+    "health": "node scripts/health-check.js"
+  },
+  "keywords": [
+    "ai",
+    "automation",
+    "business-operating-system",
+    "workflow-orchestration",
+    "multi-agent-system",
+    "ecommerce-automation",
+    "content-creation",
+    "saas-development",
+    "artificial-intelligence",
+    "business-automation"
+  ],
+  "author": "FlashFusion Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/FlashFusion-Unified.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/FlashFusion-Unified/issues"
+  },
+  "homepage": "https://flashfusion.ai",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.20.0",
+    "@supabase/supabase-js": "^2.38.0",
+    "express": "^4.18.2",
+    "express-validator": "^7.2.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0",
+    "dotenv": "^16.6.1",
+    "axios": "^1.6.0",
+    "openai": "^4.0.0",
+    "winston": "^3.17.0",
+    "joi": "^17.9.1",
+    "jsonwebtoken": "^9.0.0",
+    "bcryptjs": "^2.4.3",
+    "uuid": "^9.0.0",
+    "node-cron": "^3.0.2",
+    "bull": "^4.10.4",
+    "redis": "^5.6.1",
+    "socket.io": "^4.8.1",
+    "playwright": "^1.54.1",
+    "@mendable/firecrawl-js": "^1.29.2",
+    "commander": "^9.4.0",
+    "inquirer": "^9.2.0",
+    "chalk": "^5.3.0",
+    "ora": "^7.0.1",
+    "figlet": "^1.7.0",
+    "swagger-ui-express": "^4.6.2",
+    "rate-limiter-flexible": "^3.0.0",
+    "yaml": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.23.0",
+    "nodemon": "^3.0.0",
+    "concurrently": "^7.6.0",
+    "eslint": "^8.39.0",
+    "prettier": "^2.8.8",
+    "jest": "^29.0.0",
+    "supertest": "^6.3.3",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1",
+    "jsdoc": "^4.0.2",
+    "cross-env": "^7.0.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,css,md}": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/server.js",
+      "!src/config/*.js"
+    ],
+    "testMatch": [
+      "**/tests/**/*.test.js",
+      "**/src/**/*.test.js"
+    ]
+  }
+}
