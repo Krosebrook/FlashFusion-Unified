@@ -207,3 +207,4 @@ exports/
 # Temporary build artifacts
 build_temp/
 dist_temp/
+.vercel
