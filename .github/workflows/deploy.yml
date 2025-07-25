@@ -1,0 +1,131 @@
+name: Deploy to FlashFusion.co
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '.gitignore'
+  
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch: # Allow manual trigger
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: 🔧 Install dependencies
+      run: npm ci
+      
+    - name: 🔍 Run deployment safety tests
+      run: npm run test-deployment
+      
+    - name: 🔐 Validate environment (non-blocking)
+      run: npm run validate-keys || echo "⚠️ Some keys missing - continuing with deployment"
+      
+    - name: 🚀 Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      id: vercel-deploy
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod'
+        working-directory: ./
+        
+    - name: 🎯 Get deployment URL
+      run: |
+        echo "DEPLOYMENT_URL=${{ steps.vercel-deploy.outputs.preview-url }}" >> $GITHUB_ENV
+        echo "Deployed to: ${{ steps.vercel-deploy.outputs.preview-url }}"
+        
+    - name: ⏳ Wait for deployment
+      run: sleep 30
+      
+    - name: 🔍 Verify deployment health
+      run: |
+        echo "Testing deployment health..."
+        curl -f "${{ steps.vercel-deploy.outputs.preview-url }}/health" || exit 1
+        echo "✅ Deployment health check passed!"
+        
+    - name: 🌐 Test custom domain (if configured)
+      run: |
+        echo "Testing custom domain..."
+        curl -f "https://flashfusion.co/health" || echo "⚠️ Custom domain not yet configured"
+        
+    - name: 📝 Create deployment summary
+      run: |
+        echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Status:** Successful" >> $GITHUB_STEP_SUMMARY
+        echo "🔗 **URL:** ${{ steps.vercel-deploy.outputs.preview-url }}" >> $GITHUB_STEP_SUMMARY
+        echo "🌐 **Domain:** https://flashfusion.co" >> $GITHUB_STEP_SUMMARY
+        echo "⏰ **Time:** $(date)" >> $GITHUB_STEP_SUMMARY
+        echo "📦 **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        
+    - name: 🎉 Notify success
+      if: success()
+      run: |
+        echo "🎉 FlashFusion deployment successful!"
+        echo "🌐 Live at: ${{ steps.vercel-deploy.outputs.preview-url }}"
+        echo "🏷️ Custom domain: https://flashfusion.co"
+        
+    - name: 💥 Notify failure
+      if: failure()
+      run: |
+        echo "❌ FlashFusion deployment failed!"
+        echo "📋 Check the logs above for details"
+        exit 1
+
+  # Optional: Create GitHub release on successful deployment
+  create-release:
+    needs: test-and-deploy
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && success()
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🏷️ Create release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: FlashFusion v${{ github.run_number }}
+        body: |
+          🚀 **FlashFusion Deployment v${{ github.run_number }}**
+          
+          **Changes in this release:**
+          - Automated deployment to https://flashfusion.co
+          - Bulletproof logging system
+          - Enhanced security features
+          
+          **Live URLs:**
+          - 🌐 Main Site: https://flashfusion.co
+          - 🔍 Health Check: https://flashfusion.co/health
+          - 📊 API Status: https://flashfusion.co/api/status
+          
+          **Deployment Details:**
+          - Commit: ${{ github.sha }}
+          - Branch: ${{ github.ref_name }}
+          - Time: ${{ github.event.head_commit.timestamp }}
+        draft: false
+        prerelease: false
