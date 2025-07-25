@@ -22,7 +22,7 @@
     "lint:fix": "eslint src/ --ext .js,.jsx,.ts,.tsx --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "mkdir -p dist && echo '<!DOCTYPE html><html><head><title>FlashFusion</title></head><body><script>window.location.href=\"/api/bulletproof\";</script></body></html>' > dist/index.html && echo 'Client files ready - using static HTML/JS/CSS'",
+    "build:client": "mkdir -p dist && echo '<!DOCTYPE html><html><head><title>FlashFusion</title></head><body>Loading FlashFusion...</body></html>' > dist/index.html && echo 'Client files ready - using static HTML/JS/CSS'",
     "build:server": "echo 'Server build complete - using Node.js directly'",
     "build:angular": "echo 'Angular build disabled - using static client'",
     "workflow:create": "node scripts/create-workflow.js",

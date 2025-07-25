@@ -43,12 +43,14 @@ module.exports = (req, res) => {
         }
 
         // Root page - Full FlashFusion Dashboard
-        // Always show dashboard unless it's a specific API endpoint
-        const isAPIEndpoint = url === '/health' || url === '/api/health' || 
-                             url === '/api/status' || url === '/status' ||
-                             url.includes('/api/webhooks/');
+        // Show dashboard for root, /api/bulletproof, and /api/index
+        const showDashboard = url === '/' || url === '' || 
+                             url === '/api/bulletproof' || 
+                             url === '/api/index' ||
+                             url === '/api' ||
+                             !url.startsWith('/api/webhooks');
         
-        if (!isAPIEndpoint) {
+        if (showDashboard && !url.includes('/health') && !url.includes('/status')) {
             res.setHeader('Content-Type', 'text/html; charset=utf-8');
             return res.status(200).send(`<!DOCTYPE html>
 <html lang="en">

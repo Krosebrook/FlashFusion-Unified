@@ -509,15 +509,24 @@ Last Updated: ${new Date().toISOString()}
 </html>`);
         }
 
-        // All other requests
-        return res.status(200).json({
-            message: 'FlashFusion API',
-            path: url,
-            method: method,
-            status: 'working',
-            timestamp: new Date().toISOString(),
-            deployment: 'bulletproof'
-        });
+        // For unknown API routes, return JSON
+        if (url.startsWith('/api/')) {
+            return res.status(200).json({
+                message: 'FlashFusion API',
+                path: url,
+                method: method,
+                status: 'working',
+                timestamp: new Date().toISOString(),
+                deployment: 'bulletproof'
+            });
+        }
+        
+        // Otherwise show a redirect to root
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        return res.status(200).send(`<!DOCTYPE html>
+<html><head><title>FlashFusion</title></head>
+<body><script>window.location.href='/';</script></body>
+</html>`);
 
     } catch (error) {
         // Even if something impossible happens, never crash
