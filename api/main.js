@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
         const url = req.url || '/';
         const method = req.method || 'GET';
         
-        console.log('FlashFusion Request:', { url, method });
+        console.log('FlashFusion Request:', { url, method, timestamp: new Date().toISOString() });
 
         // Route to appropriate handler
         const route = getRoute(url);
