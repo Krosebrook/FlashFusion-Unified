@@ -40,7 +40,9 @@
     "vercel:dev": "vercel dev",
     "rotate-keys": "node scripts/key-rotation.js",
     "validate-keys": "node scripts/validate-keys.js",
-    "check-security": "npm run validate-keys && npm audit"
+    "check-security": "npm run validate-keys && npm audit",
+    "notion-sync": "node scripts/notion-sync.js",
+    "sync-updates": "git push && npm run notion-sync"
   },
   "keywords": [
     "ai",
