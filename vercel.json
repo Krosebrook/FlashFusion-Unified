@@ -12,20 +12,5 @@
     { "source": "/", "destination": "/api/main" },
     { "source": "/api/webhooks/(.*)", "destination": "/api/webhooks/$1" },
     { "source": "/(.*)", "destination": "/api/main" }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Deployment-Mode",
-          "value": "bulletproof"
-        },
-        {
-          "key": "X-Logger-Status",  
-          "value": "winston-disabled"
-        }
-      ]
-    }
   ]
 }
