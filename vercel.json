@@ -13,8 +13,8 @@
   },
   "rewrites": [
     { "source": "/api/mcp/(.*)", "destination": "/api/mcp" },
-    { "source": "/", "destination": "/api/bulletproof" },
-    { "source": "/(.*)", "destination": "/api/bulletproof" }
+    { "source": "/", "destination": "/api/index" },
+    { "source": "/(.*)", "destination": "/api/index" }
   ],
   "headers": [
     {
