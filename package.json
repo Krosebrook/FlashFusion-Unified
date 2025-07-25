@@ -46,7 +46,9 @@
     "test-deployment": "node scripts/deployment-test.js",
     "deploy-safe": "npm run test-deployment && vercel --prod",
     "domain-setup": "node scripts/domain-setup.js",
-    "verify-pipeline": "node scripts/verify-pipeline.js"
+    "verify-pipeline": "node scripts/verify-pipeline.js",
+    "setup-github-secrets": "node scripts/setup-github-secrets.js",
+    "manual-deploy": "node scripts/manual-deploy.js"
   },
   "keywords": [
     "ai",

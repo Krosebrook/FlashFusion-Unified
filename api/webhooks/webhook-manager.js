@@ -23,42 +23,6 @@ module.exports = async (req, res) => {
             timestamp: new Date().toISOString()
         });
 
-        // Route to appropriate webhook handler based on URL
-        if (url.includes('/stripe')) {
-            const stripeHandler = require('./stripe');
-            return await stripeHandler(req, res);
-        }
-        
-        if (url.includes('/shopify')) {
-            const shopifyHandler = require('./shopify');
-            return await shopifyHandler(req, res);
-        }
-        
-        if (url.includes('/zapier')) {
-            const zapierHandler = require('./zapier');
-            return await zapierHandler(req, res);
-        }
-        
-        if (url.includes('/github')) {
-            const githubHandler = require('./github');
-            return await githubHandler(req, res);
-        }
-        
-        if (url.includes('/discord')) {
-            const discordHandler = require('./discord');
-            return await discordHandler(req, res);
-        }
-        
-        if (url.includes('/slack')) {
-            const slackHandler = require('./slack');
-            return await slackHandler(req, res);
-        }
-        
-        if (url.includes('/openai')) {
-            const openaiHandler = require('./openai');
-            return await openaiHandler(req, res);
-        }
-
         // Handle webhook management endpoints
         if (method === 'GET' && url === '/') {
             return handleWebhookDashboard(req, res);
