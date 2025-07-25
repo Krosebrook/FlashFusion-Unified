@@ -503,6 +503,7 @@ Last Updated: ${new Date().toISOString()}
         // Auto-refresh status every 30 seconds
         setInterval(refreshStatus, 30000);
     </script>
+    <script src="https://va.vercel-scripts.com/v1/analytics.js" async></script>
 </body>
 </html>`);
         }
