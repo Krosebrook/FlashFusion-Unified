@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "echo 'No build needed for serverless functions'",
-  "outputDirectory": ".",
   "functions": {
     "api/bulletproof.js": {
       "maxDuration": 5
