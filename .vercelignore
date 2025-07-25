@@ -46,6 +46,14 @@ scripts_legacy/
 replit.nix
 replit-deploy.sh
 
+# CRITICAL: Ignore Winston logger files (prevent crashes)
+**/winston/**
+**/logs/**
+src/utils/logger.js.backup
+
 # Ignore Git files
 .git/
 .gitignore
+
+# Key rotation logs
+.key-rotation-log.json

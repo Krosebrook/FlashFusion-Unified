@@ -42,7 +42,9 @@
     "validate-keys": "node scripts/validate-keys.js",
     "check-security": "npm run validate-keys && npm audit",
     "notion-sync": "node scripts/notion-sync.js",
-    "sync-updates": "git push && npm run notion-sync"
+    "sync-updates": "git push && npm run notion-sync",
+    "test-deployment": "node scripts/deployment-test.js",
+    "deploy-safe": "npm run test-deployment && vercel --prod"
   },
   "keywords": [
     "ai",

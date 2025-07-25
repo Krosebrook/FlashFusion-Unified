@@ -1,6 +1,9 @@
 {
   "version": 2,
   "functions": {
+    "api/bulletproof.js": {
+      "maxDuration": 5
+    },
     "api/hello.js": {
       "maxDuration": 10
     },
@@ -10,6 +13,21 @@
   },
   "rewrites": [
     { "source": "/api/mcp/(.*)", "destination": "/api/mcp" },
-    { "source": "/(.*)", "destination": "/api/hello" }
+    { "source": "/(.*)", "destination": "/api/bulletproof" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Deployment-Mode",
+          "value": "bulletproof"
+        },
+        {
+          "key": "X-Logger-Status",
+          "value": "winston-disabled"
+        }
+      ]
+    }
   ]
 }
