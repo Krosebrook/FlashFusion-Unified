@@ -17,6 +17,9 @@ module.exports = (req, res) => {
 
         const url = req.url || '/';
         const method = req.method || 'GET';
+        
+        // Log request for debugging
+        console.log('API Index Request:', { url, method, path: req.path });
 
         // Health check
         if (url === '/health' || url === '/api/health') {
@@ -40,7 +43,12 @@ module.exports = (req, res) => {
         }
 
         // Root page - Full FlashFusion Dashboard
-        if (url === '/' || url === '') {
+        // Always show dashboard unless it's a specific API endpoint
+        const isAPIEndpoint = url === '/health' || url === '/api/health' || 
+                             url === '/api/status' || url === '/status' ||
+                             url.includes('/api/webhooks/');
+        
+        if (!isAPIEndpoint) {
             res.setHeader('Content-Type', 'text/html; charset=utf-8');
             return res.status(200).send(`<!DOCTYPE html>
 <html lang="en">
@@ -509,15 +517,6 @@ Last Updated: ${new Date().toISOString()}
 </html>`);
         }
 
-        // All other requests
-        return res.status(200).json({
-            message: 'FlashFusion API',
-            path: url,
-            method: method,
-            status: 'working',
-            timestamp: new Date().toISOString(),
-            deployment: 'bulletproof'
-        });
 
     } catch (error) {
         // Even if something impossible happens, never crash
