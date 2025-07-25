@@ -504,6 +504,7 @@ Last Updated: ${new Date().toISOString()}
         setInterval(refreshStatus, 30000);
     </script>
     <script src="https://va.vercel-scripts.com/v1/analytics.js" async></script>
+    <script src="https://va.vercel-scripts.com/v1/speed-insights.js" async></script>
 </body>
 </html>`);
         }
