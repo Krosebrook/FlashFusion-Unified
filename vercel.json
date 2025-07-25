@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "functions": {
     "api/bulletproof.js": {
       "maxDuration": 5
@@ -24,7 +26,7 @@
           "value": "bulletproof"
         },
         {
-          "key": "X-Logger-Status",
+          "key": "X-Logger-Status",  
           "value": "winston-disabled"
         }
       ]
