@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zapier Automation Hub - FlashFusion Unified</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .automation-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .automation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .automation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24);
+        }
+
+        .automation-category {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .automation-difficulty {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+        }
+
+        .automation-triggers, .automation-actions {
+            margin: 1rem 0;
+        }
+
+        .automation-triggers h4, .automation-actions h4 {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background: rgba(255,255,255,0.15);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .setup-time {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 1rem;
+        }
+
+        .zapier-btn {
+            background: #ff4a00;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1rem;
+            margin-right: 0.5rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s ease;
+        }
+
+        .zapier-btn:hover {
+            background: #e63e00;
+        }
+
+        .webhook-section {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            color: white;
+        }
+
+        .webhook-url {
+            background: #1a202c;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: monospace;
+            border: 1px solid #4a5568;
+            margin: 1rem 0;
+            word-break: break-all;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .category-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #4a5568;
+            background: transparent;
+            color: #4a5568;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .test-section {
+            background: #f7fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>⚡ Zapier Automation Hub</h1>
+        <p>Connect FlashFusion AI with 5,000+ apps for powerful automation</p>
+        <nav class="nav">
+            <a href="index.html">Dashboard</a>
+            <a href="agents.html">Agents</a>
+            <a href="workflows.html">Workflows</a>
+            <a href="integrations.html">Integrations</a>
+            <a href="zapier-automation.html" class="active">Zapier</a>
+        </nav>
+    </header>
+    
+    <main class="main">
+        <!-- Webhook Setup Section -->
+        <div class="webhook-section">
+            <h2>🔗 FlashFusion Webhook Endpoint</h2>
+            <p>Use this endpoint in your Zapier webhooks to trigger FlashFusion automations:</p>
+            <div class="webhook-url" id="webhook-url">
+                https://flashfusion.co/api/zapier/incoming-webhook
+            </div>
+            <div class="webhook-actions">
+                <button onclick="copyWebhookUrl()" class="btn-primary">📋 Copy URL</button>
+                <button onclick="testWebhookEndpoint()" class="btn-secondary">🧪 Test Endpoint</button>
+                <button onclick="viewWebhookDocs()" class="btn-secondary">📚 View Docs</button>
+            </div>
+        </div>
+
+        <!-- Stats Dashboard -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number" id="total-automations">0</span>
+                <span>Available Automations</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="active-webhooks">0</span>
+                <span>Active Webhooks</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="total-triggers">0</span>
+                <span>Total Triggers</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="success-rate">100%</span>
+                <span>Success Rate</span>
+            </div>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="category-filter">
+            <button class="filter-btn active" onclick="filterAutomations('all')">🌐 All</button>
+            <button class="filter-btn" onclick="filterAutomations('business')">💼 Business</button>
+            <button class="filter-btn" onclick="filterAutomations('ecommerce')">🛒 E-commerce</button>
+            <button class="filter-btn" onclick="filterAutomations('marketing')">📢 Marketing</button>
+            <button class="filter-btn" onclick="filterAutomations('analytics')">📊 Analytics</button>
+            <button class="filter-btn" onclick="filterAutomations('collaboration')">👥 Team</button>
+            <button class="filter-btn" onclick="filterAutomations('advanced')">⚡ Advanced</button>
+        </div>
+
+        <!-- Automation Suggestions -->
+        <div id="automations-container">
+            <!-- Automation cards will be loaded here -->
+        </div>
+
+        <!-- Test Automation Section -->
+        <div class="test-section">
+            <h3>🧪 Test Your Automations</h3>
+            <p>Send test data to your Zapier workflows to verify everything is working correctly.</p>
+            <div style="margin: 1rem 0;">
+                <select id="test-automation-type" style="padding: 0.5rem; margin-right: 1rem;">
+                    <option value="workflow_completed">Workflow Completed</option>
+                    <option value="lead_generated">Lead Generated</option>
+                    <option value="agent_action">Agent Action</option>
+                </select>
+                <button onclick="sendTestData()" class="zapier-btn">Send Test Data</button>
+            </div>
+            <div id="test-results" style="margin-top: 1rem; text-align: left;"></div>
+        </div>
+    </main>
+
+    <script>
+        let allAutomations = [];
+        let currentFilter = 'all';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAutomations();
+            loadStats();
+        });
+
+        async function loadAutomations() {
+            try {
+                const response = await fetch('/api/zapier/suggestions');
+                const result = await response.json();
+                
+                if (result.success) {
+                    allAutomations = result.data.suggestions;
+                    displayAutomations();
+                    document.getElementById('total-automations').textContent = allAutomations.length;
+                }
+            } catch (error) {
+                console.error('Failed to load automations:', error);
+            }
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/zapier/webhooks/stats');
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('active-webhooks').textContent = result.data.active || 0;
+                    document.getElementById('total-triggers').textContent = result.data.totalTriggers || 0;
+                }
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+
+        function displayAutomations() {
+            const container = document.getElementById('automations-container');
+            const filtered = currentFilter === 'all' ? 
+                allAutomations : 
+                allAutomations.filter(a => a.category === currentFilter);
+
+            container.innerHTML = filtered.map(automation => `
+                <div class="automation-card" onclick="showAutomationDetails('${automation.id}')">
+                    <div class="automation-difficulty">${automation.difficulty}</div>
+                    <div class="automation-category">${automation.category.toUpperCase()}</div>
+                    <h3>${automation.title}</h3>
+                    <p>${automation.description}</p>
+                    
+                    <div class="automation-triggers">
+                        <h4>🎯 Triggers:</h4>
+                        <div class="tag-list">
+                            ${automation.triggers.map(trigger => `<span class="tag">${trigger}</span>`).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="automation-actions">
+                        <h4>⚡ Actions:</h4>
+                        <div class="tag-list">
+                            ${automation.actions.map(action => `<span class="tag">${action}</span>`).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="setup-time">⏱️ Setup time: ${automation.timeToSetup}</div>
+                    
+                    <div style="margin-top: 1rem;">
+                        <a href="${automation.zapUrl}" target="_blank" class="zapier-btn">🚀 Create in Zapier</a>
+                        <button onclick="setupAutomation('${automation.id}')" class="btn-secondary">⚙️ Auto Setup</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterAutomations(category) {
+            currentFilter = category;
+            
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            displayAutomations();
+        }
+
+        function copyWebhookUrl() {
+            const url = document.getElementById('webhook-url').textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                showNotification('Webhook URL copied to clipboard!', 'success');
+            });
+        }
+
+        async function testWebhookEndpoint() {
+            try {
+                const response = await fetch('/api/zapier/incoming-webhook');
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Webhook endpoint is active and responding!', 'success');
+                } else {
+                    showNotification('Webhook test failed', 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to test webhook endpoint', 'error');
+            }
+        }
+
+        function viewWebhookDocs() {
+            window.open('https://flashfusion.co/docs/zapier', '_blank');
+        }
+
+        async function sendTestData() {
+            const automationType = document.getElementById('test-automation-type').value;
+            const testResults = document.getElementById('test-results');
+            
+            testResults.innerHTML = '<p>🔄 Sending test data...</p>';
+            
+            try {
+                const response = await fetch('/api/zapier/test-automation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        automationType: automationType,
+                        testData: {
+                            test: true,
+                            timestamp: new Date().toISOString()
+                        }
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    testResults.innerHTML = `
+                        <div style="background: #48bb78; color: white; padding: 1rem; border-radius: 6px;">
+                            <h4>✅ Test Successful!</h4>
+                            <p>Test data sent for: <strong>${automationType}</strong></p>
+                            <pre style="background: rgba(255,255,255,0.1); padding: 0.5rem; border-radius: 4px; margin-top: 0.5rem; overflow-x: auto;">${JSON.stringify(result.data, null, 2)}</pre>
+                        </div>
+                    `;
+                    showNotification('Test data sent successfully!', 'success');
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                testResults.innerHTML = `
+                    <div style="background: #f56565; color: white; padding: 1rem; border-radius: 6px;">
+                        <h4>❌ Test Failed</h4>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
+                showNotification('Test failed: ' + error.message, 'error');
+            }
+        }
+
+        function showAutomationDetails(automationId) {
+            const automation = allAutomations.find(a => a.id === automationId);
+            if (!automation) return;
+
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'block';
+            modal.innerHTML = `
+                <div class="modal-content large">
+                    <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    <h2>${automation.title}</h2>
+                    <div style="margin: 1rem 0;">
+                        <span class="automation-category">${automation.category}</span>
+                        <span class="automation-difficulty" style="position: static; margin-left: 1rem;">${automation.difficulty}</span>
+                    </div>
+                    <p style="font-size: 1.1rem; margin: 1.5rem 0;">${automation.description}</p>
+                    
+                    <h3>🎯 Triggers</h3>
+                    <div class="tag-list" style="margin-bottom: 1.5rem;">
+                        ${automation.triggers.map(trigger => `<span class="tag">${trigger}</span>`).join('')}
+                    </div>
+                    
+                    <h3>⚡ Actions</h3>
+                    <div class="tag-list" style="margin-bottom: 1.5rem;">
+                        ${automation.actions.map(action => `<span class="tag">${action}</span>`).join('')}
+                    </div>
+                    
+                    <div style="background: #f7fafc; padding: 1rem; border-radius: 6px; margin: 1rem 0;">
+                        <p><strong>⏱️ Setup time:</strong> ${automation.timeToSetup}</p>
+                        <p><strong>🎯 Difficulty:</strong> ${automation.difficulty}</p>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <a href="${automation.zapUrl}" target="_blank" class="zapier-btn" style="margin-right: 1rem;">🚀 Create in Zapier</a>
+                        <button onclick="setupAutomation('${automation.id}')" class="btn-primary">⚙️ Auto Setup</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        async function setupAutomation(automationId) {
+            showNotification('Setting up automation...', 'info');
+            
+            // This would integrate with Zapier's API to auto-create the zap
+            // For now, we'll show a success message and guide the user
+            setTimeout(() => {
+                showNotification('Automation template prepared! Click "Create in Zapier" to complete setup.', 'success');
+            }, 2000);
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                background: ${type === 'success' ? '#48bb78' : type === 'error' ? '#f56565' : '#4299e1'};
+                color: white; padding: 1rem; border-radius: 6px; max-width: 300px;
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 5000);
+        }
+    </script>
+</body>
+</html>

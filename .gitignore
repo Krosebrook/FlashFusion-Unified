@@ -71,7 +71,7 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+# dist - Allow dist directory for Vercel build output
 
 # Gatsby files
 .cache/

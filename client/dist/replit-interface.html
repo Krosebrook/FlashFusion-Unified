@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlashFusion × Replit - AI Development Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Replit Dark Theme Colors */
+            --bg-primary: #0e1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-overlay: #30363d;
+            --bg-subtle: #f6f8fa0a;
+            
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            
+            --border-default: #30363d;
+            --border-muted: #21262d;
+            
+            --accent-primary: #238636;
+            --accent-secondary: #1f6feb;
+            --accent-danger: #da3633;
+            --accent-warning: #d29922;
+            
+            /* FlashFusion Brand Colors */
+            --ff-primary: #61dafb;
+            --ff-secondary: #4ade80;
+            --ff-accent: #a855f7;
+            
+            --font-mono: 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        /* Main Layout - Replit Style */
+        .repl-container {
+            display: grid;
+            grid-template-areas: 
+                "sidebar header header"
+                "sidebar main terminal";
+            grid-template-columns: 300px 1fr 400px;
+            grid-template-rows: 48px 1fr;
+            height: 100vh;
+            gap: 1px;
+            background: var(--border-default);
+        }
+        
+        /* Sidebar - Replit File Explorer + FlashFusion Controls */
+        .sidebar {
+            grid-area: sidebar;
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-default);
+        }
+        
+        .sidebar-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-default);
+        }
+        
+        .sidebar-tab {
+            flex: 1;
+            padding: 8px 12px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-tab.active {
+            color: var(--text-primary);
+            background: var(--bg-subtle);
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        
+        /* File Explorer */
+        .file-tree {
+            list-style: none;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: background 0.15s;
+        }
+        
+        .file-item:hover {
+            background: var(--bg-subtle);
+        }
+        
+        .file-item.active {
+            background: var(--accent-secondary);
+            color: white;
+        }
+        
+        .file-icon {
+            width: 16px;
+            margin-right: 8px;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        /* FlashFusion Agent Panel */
+        .agents-panel {
+            display: none;
+        }
+        
+        .agents-panel.active {
+            display: block;
+        }
+        
+        .agent-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .agent-card:hover {
+            border-color: var(--ff-primary);
+            background: var(--bg-overlay);
+        }
+        
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .agent-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--ff-secondary);
+        }
+        
+        .agent-name {
+            font-weight: 500;
+            font-size: 13px;
+        }
+        
+        .agent-description {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        
+        /* Header - Replit Style */
+        .header {
+            grid-area: header;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--border-default);
+            gap: 12px;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .repl-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        
+        .repl-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--ff-secondary);
+        }
+        
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .run-button {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        
+        .run-button:hover {
+            background: #2ea043;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .header-button {
+            background: none;
+            border: 1px solid var(--border-default);
+            color: var(--text-secondary);
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .header-button:hover {
+            border-color: var(--ff-primary);
+            color: var(--text-primary);
+        }
+        
+        /* Main Editor Area */
+        .main-area {
+            grid-area: main;
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .editor-tabs {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-default);
+            min-height: 36px;
+        }
+        
+        .editor-tab {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            background: none;
+            border: none;
+            border-right: 1px solid var(--border-default);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 13px;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        
+        .editor-tab.active {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        
+        .editor-tab:hover {
+            background: var(--bg-subtle);
+        }
+        
+        .tab-close {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .editor-tab:hover .tab-close {
+            opacity: 1;
+        }
+        
+        .editor-content {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+        
+        .code-editor {
+            flex: 1;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 16px;
+            border: none;
+            outline: none;
+            resize: none;
+            white-space: pre;
+            overflow-wrap: normal;
+        }
+        
+        .line-numbers {
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 16px 8px;
+            text-align: right;
+            user-select: none;
+            min-width: 50px;
+            border-right: 1px solid var(--border-default);
+        }
+        
+        /* Terminal - Replit Style */
+        .terminal-area {
+            grid-area: terminal;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--border-default);
+        }
+        
+        .terminal-header {
+            background: var(--bg-secondary);
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .terminal-content {
+            flex: 1;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.5;
+            padding: 12px;
+            overflow-y: auto;
+        }
+        
+        .terminal-input-area {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-top: 1px solid var(--border-default);
+            background: var(--bg-secondary);
+        }
+        
+        .terminal-prompt {
+            color: var(--ff-primary);
+            margin-right: 8px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+        }
+        
+        .terminal-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            outline: none;
+        }
+        
+        /* Personal Dashboard Modal */
+        .dashboard-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        
+        .dashboard-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .dashboard-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            width: 90vw;
+            height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dashboard-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            justify-content: between;
+        }
+        
+        .dashboard-body {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* Chat Interface */
+        .chat-container {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .chat-container.active {
+            display: flex;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        
+        .chat-message {
+            margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--ff-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--bg-primary);
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .message-author {
+            font-weight: 500;
+            font-size: 13px;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        
+        .message-text {
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        
+        .chat-input-area {
+            padding: 16px;
+            border-top: 1px solid var(--border-default);
+            display: flex;
+            gap: 8px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            resize: none;
+            min-height: 36px;
+            max-height: 120px;
+        }
+        
+        .chat-send {
+            background: var(--ff-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .chat-send:hover {
+            background: #4cc5e8;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .repl-container {
+                grid-template-areas: 
+                    "header header"
+                    "main main";
+                grid-template-columns: 1fr;
+                grid-template-rows: 48px 1fr;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: -300px;
+                top: 48px;
+                height: calc(100vh - 48px);
+                z-index: 100;
+                transition: left 0.3s;
+            }
+            
+            .sidebar.open {
+                left: 0;
+            }
+            
+            .terminal-area {
+                display: none;
+            }
+        }
+        
+        /* Syntax Highlighting */
+        .token.comment { color: #6a737d; }
+        .token.string { color: #032f62; }
+        .token.number { color: #005cc5; }
+        .token.keyword { color: #d73a49; }
+        .token.function { color: #6f42c1; }
+        .token.operator { color: #d73a49; }
+    </style>
+</head>
+<body>
+    <div class="repl-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-rocket" style="color: var(--ff-primary);"></i>
+                FlashFusion
+            </div>
+            
+            <div class="sidebar-tabs">
+                <button class="sidebar-tab active" onclick="showSidebarTab('files')">
+                    <i class="fas fa-folder"></i> Files
+                </button>
+                <button class="sidebar-tab" onclick="showSidebarTab('agents')">
+                    <i class="fas fa-robot"></i> Agents
+                </button>
+                <button class="sidebar-tab" onclick="showSidebarTab('workflows')">
+                    <i class="fas fa-cogs"></i> Flows
+                </button>
+            </div>
+            
+            <div class="sidebar-content">
+                <!-- File Explorer -->
+                <div id="files-panel" class="files-panel">
+                    <ul class="file-tree">
+                        <li class="file-item active" onclick="openFile('index.js')">
+                            <i class="file-icon fas fa-file-code" style="color: #f1e05a;"></i>
+                            index.js
+                        </li>
+                        <li class="file-item" onclick="openFile('package.json')">
+                            <i class="file-icon fas fa-file-code" style="color: #cb3837;"></i>
+                            package.json
+                        </li>
+                        <li class="file-item" onclick="openFile('README.md')">
+                            <i class="file-icon fas fa-file-alt" style="color: #083fa1;"></i>
+                            README.md
+                        </li>
+                        <li class="file-item" onclick="openFile('styles.css')">
+                            <i class="file-icon fas fa-file-code" style="color: #563d7c;"></i>
+                            styles.css
+                        </li>
+                        <li class="file-item" onclick="createNewFile()">
+                            <i class="file-icon fas fa-plus" style="color: var(--text-secondary);"></i>
+                            <span style="color: var(--text-secondary);">New file...</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- FlashFusion Agents -->
+                <div id="agents-panel" class="agents-panel">
+                    <div class="agent-card" onclick="chatWithAgent('coordinator')">
+                        <div class="agent-header">
+                            <div class="agent-status"></div>
+                            <div class="agent-name">Universal Coordinator</div>
+                        </div>
+                        <div class="agent-description">Project coordination and team management</div>
+                    </div>
+                    
+                    <div class="agent-card" onclick="chatWithAgent('creator')">
+                        <div class="agent-header">
+                            <div class="agent-status"></div>
+                            <div class="agent-name">Universal Creator</div>
+                        </div>
+                        <div class="agent-description">Content creation and creative solutions</div>
+                    </div>
+                    
+                    <div class="agent-card" onclick="chatWithAgent('researcher')">
+                        <div class="agent-header">
+                            <div class="agent-status"></div>
+                            <div class="agent-name">Universal Researcher</div>
+                        </div>
+                        <div class="agent-description">Research and data analysis</div>
+                    </div>
+                    
+                    <div class="agent-card" onclick="chatWithAgent('automator')">
+                        <div class="agent-header">
+                            <div class="agent-status"></div>
+                            <div class="agent-name">Universal Automator</div>
+                        </div>
+                        <div class="agent-description">Process automation and optimization</div>
+                    </div>
+                </div>
+                
+                <!-- Workflows Panel -->
+                <div id="workflows-panel" class="agents-panel">
+                    <div class="agent-card" onclick="createWorkflow('development')">
+                        <div class="agent-header">
+                            <div class="agent-status" style="background: #f1e05a;"></div>
+                            <div class="agent-name">Development Workflow</div>
+                        </div>
+                        <div class="agent-description">MVP development, testing, and deployment</div>
+                    </div>
+                    
+                    <div class="agent-card" onclick="createWorkflow('commerce')">
+                        <div class="agent-header">
+                            <div class="agent-status" style="background: #4ade80;"></div>
+                            <div class="agent-name">Commerce Workflow</div>
+                        </div>
+                        <div class="agent-description">E-commerce automation and optimization</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="repl-title">FlashFusion AI Platform</div>
+                <div class="repl-status">
+                    <div class="status-dot"></div>
+                    Online
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <button class="run-button" onclick="runCode()">
+                    <i class="fas fa-play"></i>
+                    Run
+                </button>
+            </div>
+            
+            <div class="header-right">
+                <button class="header-button" onclick="showPersonalDashboard()">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </button>
+                <button class="header-button" onclick="shareProject()">
+                    <i class="fas fa-share"></i>
+                    Share
+                </button>
+                <button class="header-button" onclick="toggleSettings()">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Editor Area -->
+        <div class="main-area">
+            <div class="editor-tabs">
+                <button class="editor-tab active" onclick="switchTab('index.js')">
+                    <i class="fas fa-file-code" style="color: #f1e05a;"></i>
+                    index.js
+                    <i class="fas fa-times tab-close" onclick="closeTab('index.js')"></i>
+                </button>
+                <button class="editor-tab" onclick="switchTab('chat')">
+                    <i class="fas fa-comments" style="color: var(--ff-primary);"></i>
+                    AI Chat
+                </button>
+            </div>
+            
+            <div class="editor-content">
+                <div class="line-numbers" id="line-numbers">1</div>
+                <textarea class="code-editor" id="code-editor" placeholder="// Welcome to FlashFusion AI Platform
+// Start coding or chat with AI agents...
+
+console.log('Hello FlashFusion!');">// FlashFusion AI Platform
+// Your AI-powered development environment
+
+const FlashFusion = {
+    agents: ['coordinator', 'creator', 'researcher', 'automator'],
+    
+    async initialize() {
+        console.log('🚀 FlashFusion AI Platform initializing...');
+        await this.connectAgents();
+        console.log('✅ Ready for AI-powered development!');
+    },
+    
+    async connectAgents() {
+        for (const agent of this.agents) {
+            console.log(`Connecting to ${agent}...`);
+        }
+    }
+};
+
+// Initialize the platform
+FlashFusion.initialize();</textarea>
+                
+                <!-- Chat Interface -->
+                <div class="chat-container" id="chat-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="chat-message">
+                            <div class="message-avatar">FF</div>
+                            <div class="message-content">
+                                <div class="message-header">
+                                    <div class="message-author">FlashFusion AI</div>
+                                    <div class="message-time">now</div>
+                                </div>
+                                <div class="message-text">Welcome to FlashFusion AI Platform! I'm here to help you build, automate, and optimize your projects. What would you like to work on today?</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <textarea class="chat-input" id="chat-input" placeholder="Ask me anything about your project..." onkeypress="handleChatInput(event)"></textarea>
+                        <button class="chat-send" onclick="sendChatMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Terminal -->
+        <div class="terminal-area">
+            <div class="terminal-header">
+                <i class="fas fa-terminal"></i>
+                Console
+                <div style="margin-left: auto;">
+                    <button class="header-button" onclick="clearTerminal()" style="border: none; padding: 4px 8px;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="terminal-content" id="terminal-content">
+                <div style="color: var(--ff-primary);">FlashFusion AI Platform v2.0.0</div>
+                <div style="color: var(--text-secondary);">Connected to AI agents and ready for development</div>
+                <div style="margin-top: 8px;">
+                    <span style="color: var(--ff-secondary);">✓</span> Universal Coordinator - Online
+                </div>
+                <div>
+                    <span style="color: var(--ff-secondary);">✓</span> Universal Creator - Online
+                </div>
+                <div>
+                    <span style="color: var(--ff-secondary);">✓</span> Universal Researcher - Online
+                </div>
+                <div>
+                    <span style="color: var(--ff-secondary);">✓</span> Universal Automator - Online
+                </div>
+                <div style="margin-top: 8px; color: var(--text-secondary);">
+                    Type 'help' for available commands
+                </div>
+            </div>
+            
+            <div class="terminal-input-area">
+                <div class="terminal-prompt">$</div>
+                <input type="text" class="terminal-input" id="terminal-input" placeholder="Enter command..." onkeypress="handleTerminalInput(event)">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Personal Dashboard Modal -->
+    <div class="dashboard-modal" id="dashboard-modal">
+        <div class="dashboard-content">
+            <div class="dashboard-header">
+                <h2 style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-user-circle" style="color: var(--ff-primary);"></i>
+                    Personal Dashboard
+                </h2>
+                <button class="header-button" onclick="hidePersonalDashboard()" style="margin-left: auto;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="dashboard-body">
+                <iframe src="index.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <script src="dashboard-interactive.js"></script>
+    <script>
+        // Global state
+        let currentAgent = null;
+        let currentFile = 'index.js';
+        let isPersonalDashboardOpen = false;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLineNumbers();
+            loadSystemStatus();
+        });
+        
+        // Sidebar tab switching
+        function showSidebarTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.sidebar-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide panels
+            document.querySelectorAll('.files-panel, .agents-panel').forEach(panel => {
+                panel.style.display = 'none';
+            });
+            
+            const targetPanel = document.getElementById(tab + '-panel');
+            if (targetPanel) {
+                targetPanel.style.display = 'block';
+            }
+        }
+        
+        // File operations
+        function openFile(filename) {
+            currentFile = filename;
+            
+            // Update active file in sidebar
+            document.querySelectorAll('.file-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Load file content (simulated)
+            const editor = document.getElementById('code-editor');
+            switch(filename) {
+                case 'package.json':
+                    editor.value = `{
+  "name": "flashfusion-project",
+  "version": "1.0.0",
+  "description": "AI-powered development with FlashFusion",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  }
+}`;
+                    break;
+                case 'README.md':
+                    editor.value = `# FlashFusion AI Project
+
+Welcome to your AI-powered development environment!
+
+## Features
+- 🤖 AI Agent Integration
+- 🔄 Automated Workflows  
+- 💻 Smart Code Generation
+- 🚀 One-click Deployment
+
+## Getting Started
+1. Chat with AI agents in the sidebar
+2. Use workflows to automate tasks
+3. Deploy with FlashFusion platform
+
+Happy coding! 🎉`;
+                    break;
+                case 'styles.css':
+                    editor.value = `/* FlashFusion Project Styles */
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.ai-powered {
+    color: #61dafb;
+    font-weight: bold;
+}`;
+                    break;
+                default:
+                    // Keep current content for index.js
+                    break;
+            }
+            
+            updateLineNumbers();
+        }
+        
+        function createNewFile() {
+            const filename = prompt('Enter filename:');
+            if (filename) {
+                // Add to file list (simulated)
+                console.log('Creating file:', filename);
+            }
+        }
+        
+        // Editor operations
+        function switchTab(tab) {
+            document.querySelectorAll('.editor-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'chat') {
+                document.getElementById('code-editor').style.display = 'none';
+                document.getElementById('line-numbers').style.display = 'none';
+                document.getElementById('chat-container').classList.add('active');
+            } else {
+                document.getElementById('code-editor').style.display = 'block';
+                document.getElementById('line-numbers').style.display = 'block';
+                document.getElementById('chat-container').classList.remove('active');
+            }
+        }
+        
+        function closeTab(tab) {
+            // Implement tab closing logic
+            event.stopPropagation();
+        }
+        
+        function updateLineNumbers() {
+            const editor = document.getElementById('code-editor');
+            const lineNumbers = document.getElementById('line-numbers');
+            const lines = editor.value.split('\\n').length;
+            
+            let numbers = '';
+            for (let i = 1; i <= lines; i++) {
+                numbers += i + '\\n';
+            }
+            lineNumbers.textContent = numbers;
+        }
+        
+        // Code editor events
+        document.getElementById('code-editor').addEventListener('input', updateLineNumbers);
+        document.getElementById('code-editor').addEventListener('scroll', function() {
+            document.getElementById('line-numbers').scrollTop = this.scrollTop;
+        });
+        
+        // AI Chat functions
+        async function chatWithAgent(agentId) {
+            currentAgent = agentId;
+            
+            // Switch to chat tab
+            switchTab('chat');
+            document.querySelector('.editor-tab:nth-child(2)').classList.add('active');
+            document.querySelector('.editor-tab:nth-child(1)').classList.remove('active');
+            
+            // Add agent introduction message
+            addChatMessage('AI', `Hello! I'm the ${agentId} agent. How can I help you today?`, agentId);
+        }
+        
+        function handleChatInput(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendChatMessage();
+            }
+        }
+        
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addChatMessage('You', message, 'user');
+            input.value = '';
+            
+            // Send to FlashFusion API
+            try {
+                const response = await fetch('/api/v1/agents/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        agentId: currentAgent || 'coordinator',
+                        message: message,
+                        context: { userId: 'replit-user' }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    addChatMessage('AI', data.data.response, currentAgent || 'coordinator');
+                } else {
+                    addChatMessage('AI', 'Sorry, I encountered an error. Please try again.', 'error');
+                }
+            } catch (error) {
+                addChatMessage('AI', 'Connection error. Please check your network.', 'error');
+            }
+        }
+        
+        function addChatMessage(author, message, type) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message';
+            
+            const avatarColor = type === 'user' ? '#4ade80' : type === 'error' ? '#da3633' : '#61dafb';
+            const avatarText = type === 'user' ? 'U' : 'AI';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar" style="background: ${avatarColor};">${avatarText}</div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <div class="message-author">${author}</div>
+                        <div class="message-time">${new Date().toLocaleTimeString()}</div>
+                    </div>
+                    <div class="message-text">${message}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // Terminal functions
+        function handleTerminalInput(event) {
+            if (event.key === 'Enter') {
+                const input = event.target;
+                const command = input.value.trim();
+                
+                if (command) {
+                    executeCommand(command);
+                }
+                
+                input.value = '';
+            }
+        }
+        
+        function executeCommand(command) {
+            const terminal = document.getElementById('terminal-content');
+            
+            // Add command to terminal
+            const cmdDiv = document.createElement('div');
+            cmdDiv.innerHTML = `<span style="color: var(--ff-primary);">$ ${command}</span>`;
+            terminal.appendChild(cmdDiv);
+            
+            // Execute command
+            const outputDiv = document.createElement('div');
+            outputDiv.style.marginBottom = '8px';
+            
+            switch(command.toLowerCase()) {
+                case 'help':
+                    outputDiv.innerHTML = `Available commands:
+- help: Show this help
+- status: Show system status  
+- agents: List AI agents
+- clear: Clear terminal
+- run: Execute current code`;
+                    break;
+                case 'status':
+                    outputDiv.innerHTML = `<span style="color: var(--ff-secondary);">System Status: Online</span>
+Agents: 4/4 connected
+Workflows: Ready
+Platform: FlashFusion v2.0.0`;
+                    break;
+                case 'agents':
+                    outputDiv.innerHTML = `Available AI Agents:
+- coordinator: Project management
+- creator: Content creation  
+- researcher: Data analysis
+- automator: Process automation`;
+                    break;
+                case 'clear':
+                    terminal.innerHTML = '';
+                    return;
+                case 'run':
+                    runCode();
+                    return;
+                default:
+                    outputDiv.innerHTML = `Command not found: ${command}`;
+                    outputDiv.style.color = 'var(--accent-danger)';
+            }
+            
+            terminal.appendChild(outputDiv);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        
+        function clearTerminal() {
+            document.getElementById('terminal-content').innerHTML = '';
+        }
+        
+        // Code execution
+        function runCode() {
+            const code = document.getElementById('code-editor').value;
+            const terminal = document.getElementById('terminal-content');
+            
+            const outputDiv = document.createElement('div');
+            outputDiv.innerHTML = `<span style="color: var(--ff-primary);">Running code...</span>`;
+            terminal.appendChild(outputDiv);
+            
+            // Simulate code execution
+            setTimeout(() => {
+                const resultDiv = document.createElement('div');
+                resultDiv.innerHTML = `<span style="color: var(--ff-secondary);">✓ Code executed successfully</span>`;
+                terminal.appendChild(resultDiv);
+                terminal.scrollTop = terminal.scrollHeight;
+            }, 1000);
+        }
+        
+        // Personal Dashboard
+        function showPersonalDashboard() {
+            document.getElementById('dashboard-modal').classList.add('active');
+            isPersonalDashboardOpen = true;
+        }
+        
+        function hidePersonalDashboard() {
+            document.getElementById('dashboard-modal').classList.remove('active');
+            isPersonalDashboardOpen = false;
+        }
+        
+        // Workflow creation
+        async function createWorkflow(type) {
+            try {
+                const response = await fetch('/api/v1/workflows', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: type,
+                        config: { name: `${type} workflow from Replit interface` }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    addTerminalOutput(`✓ ${type} workflow created successfully`);
+                } else {
+                    addTerminalOutput(`✗ Failed to create workflow: ${data.error}`);
+                }
+            } catch (error) {
+                addTerminalOutput(`✗ Network error: ${error.message}`);
+            }
+        }
+        
+        function addTerminalOutput(message) {
+            const terminal = document.getElementById('terminal-content');
+            const div = document.createElement('div');
+            div.innerHTML = message;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        
+        // Load system status
+        async function loadSystemStatus() {
+            try {
+                const response = await fetch('/api/v1/status');
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update status indicators
+                    document.querySelectorAll('.status-dot').forEach(dot => {
+                        dot.style.background = 'var(--ff-secondary)';
+                    });
+                }
+            } catch (error) {
+                console.warn('Could not load system status');
+            }
+        }
+        
+        // Other functions
+        function shareProject() {
+            alert('Project sharing feature coming soon!');
+        }
+        
+        function toggleSettings() {
+            alert('Settings panel coming soon!');
+        }
+        
+        // Close dashboard modal when clicking outside
+        document.getElementById('dashboard-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hidePersonalDashboard();
+            }
+        });
+    </script>
+</body>
+</html>

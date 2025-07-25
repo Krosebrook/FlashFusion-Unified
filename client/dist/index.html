@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlashFusion Unified - AI Business Operating System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+        
+        .main {
+            flex: 1;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h3 {
+            color: #61dafb;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+        }
+        
+        .api-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .api-link {
+            color: #61dafb;
+            text-decoration: none;
+            padding: 0.5rem;
+            border: 1px solid #61dafb;
+            border-radius: 6px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        
+        .api-link:hover {
+            background: #61dafb;
+            color: #1a1a2e;
+        }
+        
+        .features {
+            list-style: none;
+        }
+        
+        .features li {
+            padding: 0.25rem 0;
+            opacity: 0.9;
+        }
+        
+        .features li:before {
+            content: "✅ ";
+            margin-right: 0.5rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0.7;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🚀 FlashFusion Unified</h1>
+        <p>AI Business Operating System - Turning Ideas into Automated Revenue Streams</p>
+    </header>
+    
+    <main class="main">
+        <div class="card">
+            <h3>System Status</h3>
+            <div class="status">
+                <div class="status-dot"></div>
+                <span>Platform Online</span>
+            </div>
+            <div class="api-links">
+                <a href="/health" class="api-link">Health Check</a>
+                <a href="/api/v1/status" class="api-link">System Status</a>
+                <a href="/api/v1/dashboard" class="api-link">Dashboard Data</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Universal Agents</h3>
+            <ul class="features">
+                <li>Universal Researcher</li>
+                <li>Universal Creator</li>
+                <li>Universal Optimizer</li>
+                <li>Universal Automator</li>
+                <li>Universal Analyzer</li>
+                <li>Universal Coordinator</li>
+            </ul>
+            <div class="api-links">
+                <a href="/api/v1/agents" class="api-link">View Agents</a>
+                <a href="/api/agents" class="api-link">Agent Management</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Workflow Engine</h3>
+            <ul class="features">
+                <li>Development Workflow</li>
+                <li>Commerce Workflow</li>
+                <li>Content Workflow</li>
+                <li>Hybrid Workflow</li>
+            </ul>
+            <div class="api-links">
+                <a href="/api/v1/workflows" class="api-link">View Workflows</a>
+                <a href="/api/workflows" class="api-link">Workflow Management</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Integration Hub</h3>
+            <ul class="features">
+                <li>30+ Service Integrations</li>
+                <li>AI Services (OpenAI, Anthropic, Gemini)</li>
+                <li>Commerce Platforms</li>
+                <li>Social Media Channels</li>
+            </ul>
+            <div class="api-links">
+                <a href="/api/integrations" class="api-link">View Integrations</a>
+                <a href="/api/analytics" class="api-link">Analytics</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Platform Features</h3>
+            <ul class="features">
+                <li>Cross-workflow Data Sharing</li>
+                <li>Performance Monitoring</li>
+                <li>Real-time Agent Communication</li>
+                <li>Automated Revenue Optimization</li>
+                <li>Multi-platform Deployment</li>
+                <li>Enterprise Security</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>Quick Actions</h3>
+            <div class="api-links">
+                <a href="/api/v1/agents/chat" class="api-link" onclick="testChat()">Test Agent Chat</a>
+                <a href="#" class="api-link" onclick="createWorkflow()">Create Workflow</a>
+                <a href="#" class="api-link" onclick="viewMetrics()">View Metrics</a>
+                <a href="#" class="api-link" onclick="exportData()">Export Data</a>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <p>FlashFusion Unified v2.0.0 | AI-Powered Business Automation Platform</p>
+        <p>🤖 Generated with Claude Code | Multi-cloud deployment ready</p>
+    </footer>
+    
+    <!-- Code Editor Modal -->
+    <div id="code-editor-modal" class="modal">
+        <div class="modal-content large">
+            <span class="close">&times;</span>
+            <h2>🔧 Interactive Code Builder</h2>
+            <div class="code-editor-container">
+                <div class="editor-tabs">
+                    <button class="tab-button active" onclick="showEditorTab('snippets')">📚 Snippets</button>
+                    <button class="tab-button" onclick="showEditorTab('editor')">💻 Editor</button>    
+                    <button class="tab-button" onclick="showEditorTab('terminal')">⚡ Terminal</button>
+                    <button class="tab-button" onclick="showEditorTab('ai-assist')">🤖 AI Assist</button>
+                </div>
+                
+                <!-- Code Snippets Tab -->
+                <div id="snippets-tab" class="tab-content active">
+                    <div class="snippets-toolbar">
+                        <select id="snippet-category" onchange="filterSnippets()">
+                            <option value="all">All Categories</option>
+                            <option value="agents">Agent Integration</option>
+                            <option value="workflows">Workflow Automation</option>
+                            <option value="api">API Endpoints</option>
+                            <option value="integrations">Service Integrations</option>
+                            <option value="analytics">Analytics & Monitoring</option>
+                        </select>
+                        <button onclick="createCustomSnippet()" class="btn-primary">➕ Create Snippet</button>
+                    </div>
+                    <div id="snippets-container" class="snippets-grid"></div>
+                </div>
+                
+                <!-- Code Editor Tab -->
+                <div id="editor-tab" class="tab-content">
+                    <div class="editor-toolbar">
+                        <select id="language-select" onchange="changeLanguage()">
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="bash">Bash</option>
+                            <option value="json">JSON</option>
+                            <option value="yaml">YAML</option>
+                        </select>
+                        <button onclick="runCode()" class="btn-primary">▶️ Run</button>
+                        <button onclick="saveCode()" class="btn-secondary">💾 Save</button>
+                        <button onclick="shareCode()" class="btn-secondary">🔗 Share</button>
+                    </div>
+                    <div class="editor-wrapper">
+                        <textarea id="code-editor" placeholder="// Start coding here...
+// FlashFusion API available at: /api/v1
+// Example: Create a new workflow
+fetch('/api/v1/workflows', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        type: 'development',
+        config: { name: 'My Custom Workflow' }
+    })
+})
+.then(response => response.json())
+.then(data => console.log('Workflow created:', data));"></textarea>
+                    </div>
+                    <div id="code-output" class="code-output"></div>
+                </div>
+                
+                <!-- Terminal Tab -->
+                <div id="terminal-tab" class="tab-content">
+                    <div class="terminal-toolbar">
+                        <button onclick="clearTerminal()" class="btn-secondary">🗑️ Clear</button>
+                        <button onclick="saveTerminalSession()" class="btn-secondary">💾 Save Session</button>
+                    </div>
+                    <div id="terminal" class="terminal">
+                        <div class="terminal-header">FlashFusion Interactive Terminal</div>
+                        <div id="terminal-content">
+                            <div class="terminal-line">Welcome to FlashFusion Interactive Terminal v2.0.0</div>
+                            <div class="terminal-line">Type 'help' for available commands</div>
+                        </div>
+                        <div class="terminal-input">
+                            <span class="terminal-prompt">flashfusion@unified:~$ </span>
+                            <input type="text" id="terminal-command" onkeypress="handleTerminalInput(event)">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI Assist Tab -->
+                <div id="ai-assist-tab" class="tab-content">
+                    <div class="ai-assist-container">
+                        <div class="ai-models">
+                            <label>Select AI Model:</label>
+                            <select id="ai-model-select">
+                                <option value="coordinator">Universal Coordinator</option>
+                                <option value="creator">Universal Creator</option>
+                                <option value="researcher">Universal Researcher</option>
+                                <option value="automator">Universal Automator</option>
+                            </select>
+                        </div>
+                        <div class="ai-chat-history" id="ai-chat-history"></div>
+                        <div class="ai-input">
+                            <textarea id="ai-prompt" placeholder="Ask me to generate code, explain concepts, or help with FlashFusion integration..."></textarea>
+                            <button onclick="sendAIPrompt()" class="btn-primary">🚀 Send</button>
+                        </div>
+                        <div class="ai-suggestions">
+                            <h4>Quick Prompts:</h4>
+                            <button onclick="setAIPrompt('Create a workflow automation script')" class="suggestion-btn">Create Workflow Script</button>
+                            <button onclick="setAIPrompt('Generate API integration code')" class="suggestion-btn">API Integration</button>
+                            <button onclick="setAIPrompt('Build analytics dashboard')" class="suggestion-btn">Analytics Dashboard</button>
+                            <button onclick="setAIPrompt('Optimize system performance')" class="suggestion-btn">Performance Optimization</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard-interactive.js"></script>
+    <script>
+        // Enhanced dashboard functionality
+        let realTimeData = {
+            agents: [],
+            workflows: [],
+            integrations: [],
+            metrics: {}
+        };
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            setupRealTimeUpdates();
+            loadCodeSnippets();
+        });
+        
+        async function initializeDashboard() {
+            try {
+                await Promise.all([
+                    loadSystemStatus(),
+                    loadAgentData(),
+                    loadWorkflowData(),
+                    loadIntegrationData()
+                ]);
+                renderDashboard();
+            } catch (error) {
+                console.error('Dashboard initialization failed:', error);
+                showError('Failed to initialize dashboard: ' + error.message);
+            }
+        }
+        
+        async function loadSystemStatus() {
+            const response = await fetch('/api/v1/status');
+            const data = await response.json();
+            if (data.success) {
+                realTimeData.system = data.data;
+            }
+        }
+        
+        async function loadAgentData() {
+            const response = await fetch('/api/v1/agents');
+            const data = await response.json();
+            if (data.success) {
+                realTimeData.agents = data.data.agents.roles || [];
+            }
+        }
+        
+        async function loadWorkflowData() {
+            const response = await fetch('/api/v1/workflows');
+            const data = await response.json();
+            if (data.success) {
+                realTimeData.workflows = data.data.workflows || [];
+            }
+        }
+        
+        async function loadIntegrationData() {
+            // Simulate integration data
+            realTimeData.integrations = [
+                { name: 'OpenAI', status: 'connected', usage: Math.floor(Math.random() * 1000) },
+                { name: 'Anthropic', status: 'connected', usage: Math.floor(Math.random() * 500) },
+                { name: 'GitHub', status: 'connected', usage: Math.floor(Math.random() * 200) },
+                { name: 'Vercel', status: 'connected', usage: Math.floor(Math.random() * 100) }
+            ];
+        }
+        
+        function renderDashboard() {
+            updateSystemMetrics();
+            updateAgentCards();
+            updateWorkflowCards();
+            updateIntegrationCards();
+        }
+        
+        function updateSystemMetrics() {
+            const activeAgents = realTimeData.agents.filter(a => a.status === 'active').length;
+            const runningWorkflows = realTimeData.workflows.filter(w => w.status === 'running').length;
+            const connectedIntegrations = realTimeData.integrations.filter(i => i.status === 'connected').length;
+            
+            // Update metrics display
+            document.querySelectorAll('.stat-number').forEach((el, index) => {
+                switch(index) {
+                    case 0: el.textContent = activeAgents; break;
+                    case 1: el.textContent = runningWorkflows; break;
+                    case 2: el.textContent = connectedIntegrations; break;
+                }
+            });
+        }
+        
+        function updateAgentCards() {
+            // Enhanced agent card updates with real-time status
+            realTimeData.agents.forEach(agent => {
+                const statusDot = document.querySelector(`[data-agent="${agent.id}"] .status-dot`);
+                if (statusDot) {
+                    statusDot.className = `status-dot ${agent.status}`;
+                }
+            });
+        }
+        
+        function updateWorkflowCards() {
+            // Real-time workflow progress updates
+            realTimeData.workflows.forEach(workflow => {
+                const progressBar = document.querySelector(`[data-workflow="${workflow.id}"] .progress-fill`);
+                if (progressBar) {
+                    progressBar.style.width = `${workflow.progress || 0}%`;
+                }
+            });
+        }
+        
+        function updateIntegrationCards() {
+            // Update integration usage statistics
+            realTimeData.integrations.forEach(integration => {
+                const usageEl = document.querySelector(`[data-integration="${integration.name.toLowerCase()}"] .usage-count`);
+                if (usageEl) {
+                    usageEl.textContent = integration.usage;
+                }
+            });
+        }
+        
+        function setupRealTimeUpdates() {
+            // Simulate real-time updates every 5 seconds
+            setInterval(async () => {
+                try {
+                    await loadSystemStatus();
+                    updateSystemMetrics();
+                    
+                    // Simulate random agent status changes
+                    if (Math.random() > 0.8) {
+                        const randomAgent = realTimeData.agents[Math.floor(Math.random() * realTimeData.agents.length)];
+                        if (randomAgent) {
+                            randomAgent.status = randomAgent.status === 'active' ? 'idle' : 'active';
+                            updateAgentCards();
+                        }
+                    }
+                    
+                    // Update workflow progress
+                    realTimeData.workflows.forEach(workflow => {
+                        if (workflow.status === 'running' && workflow.progress < 100) {
+                            workflow.progress += Math.floor(Math.random() * 5) + 1;
+                            if (workflow.progress >= 100) {
+                                workflow.status = 'completed';
+                                workflow.progress = 100;
+                            }
+                        }
+                    });
+                    updateWorkflowCards();
+                    
+                } catch (error) {
+                    console.error('Real-time update failed:', error);
+                }
+            }, 5000);
+        }
+        
+        // Enhanced interactive functions
+        async function testChat() {
+            showModal('ai-chat-modal', 'Agent Chat Interface');
+            
+            try {
+                const response = await fetch('/api/v1/agents/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: 'Hello FlashFusion! What can you help me with today?',
+                        agentId: 'coordinator',
+                        context: { source: 'dashboard', timestamp: new Date().toISOString() }
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    displayChatResponse(data.data);
+                    showSuccess('✅ Agent communication successful!');
+                } else {
+                    showError('❌ Agent communication failed: ' + data.error);
+                }
+            } catch (error) {
+                showError('❌ Network error: ' + error.message);
+            }
+        }
+        
+        async function createWorkflow() {
+            const modal = showWorkflowCreationModal();
+            // This will be handled by the modal interface
+        }
+        
+        async function viewMetrics() {
+            try {
+                const response = await fetch('/api/v1/dashboard');
+                const data = await response.json();
+                
+                const metricsModal = createMetricsModal(data.data || realTimeData);
+                document.body.appendChild(metricsModal);
+                metricsModal.style.display = 'block';
+                
+            } catch (error) {
+                showError('Failed to load metrics: ' + error.message);
+            }
+        }
+        
+        function exportData() {
+            const exportData = {
+                timestamp: new Date().toISOString(),
+                platform: 'FlashFusion Unified v2.0.0',
+                data: realTimeData,
+                metadata: {
+                    exportedBy: 'dashboard',
+                    format: 'json',
+                    version: '2.0.0'
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `flashfusion-export-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showSuccess('✅ Data exported successfully!');
+        }
+        
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (importedData.data) {
+                            Object.assign(realTimeData, importedData.data);
+                            renderDashboard();
+                            showSuccess('✅ Data imported successfully!');
+                        } else {
+                            showError('❌ Invalid data format');
+                        }
+                    } catch (error) {
+                        showError('❌ Failed to parse import file: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+        
+        function openCodeEditor() {
+            document.getElementById('code-editor-modal').style.display = 'block';
+        }
+        
+        // Code snippets library
+        const codeSnippets = {
+            agents: [
+                {
+                    title: 'Chat with Agent',
+                    description: 'Send a message to any FlashFusion agent',
+                    code: `// Chat with FlashFusion agent
+async function chatWithAgent(agentId, message) {
+    const response = await fetch('/api/v1/agents/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            agentId: agentId,
+            message: message,
+            context: { timestamp: new Date().toISOString() }
+        })
+    });
+    
+    const data = await response.json();
+    return data.success ? data.data.response : null;
+}
+
+// Usage
+const response = await chatWithAgent('coordinator', 'Help me optimize my workflow');
+console.log('Agent response:', response);`
+                },
+                {
+                    title: 'Get Agent Status',
+                    description: 'Retrieve current status of all agents',
+                    code: `// Get all agents status
+async function getAgentsStatus() {
+    const response = await fetch('/api/v1/agents');
+    const data = await response.json();
+    
+    if (data.success) {
+        const agents = data.data.agents.roles;
+        agents.forEach(agent => {
+            console.log(\`\${agent.name}: \${agent.status}\`);
+        });
+        return agents;
+    }
+    return null;
+}
+
+// Usage
+const agents = await getAgentsStatus();`
+                }
+            ],
+            workflows: [
+                {
+                    title: 'Create Custom Workflow',
+                    description: 'Create and start a new workflow',
+                    code: `// Create and start a workflow
+async function createWorkflow(type, config = {}) {
+    const response = await fetch('/api/v1/workflows', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            type: type, // 'development', 'commerce', 'content', 'hybrid'
+            config: {
+                name: config.name || \`\${type} workflow\`,
+                description: config.description,
+                priority: config.priority || 'medium',
+                ...config
+            }
+        })
+    });
+    
+    const data = await response.json();
+    if (data.success) {
+        const workflowId = data.data.workflowId;
+        console.log('Workflow created:', workflowId);
+        
+        // Start the workflow
+        const startResponse = await fetch(\`/api/v1/workflows/\${workflowId}/start\`, {
+            method: 'POST'
+        });
+        
+        const startData = await startResponse.json();
+        return startData.success ? workflowId : null;
+    }
+    return null;
+}
+
+// Usage
+const workflowId = await createWorkflow('development', {
+    name: 'My Custom App',
+    description: 'Build a new web application',
+    priority: 'high'
+});`
+                }
+            ],
+            api: [
+                {
+                    title: 'API Health Check',
+                    description: 'Check system health and status',
+                    code: `// Comprehensive health check
+async function systemHealthCheck() {
+    const endpoints = [
+        '/health',
+        '/api/v1/status', 
+        '/api/v1/agents',
+        '/api/v1/workflows'
+    ];
+    
+    const results = {};
+    
+    for (const endpoint of endpoints) {
+        try {
+            const start = performance.now();
+            const response = await fetch(endpoint);
+            const end = performance.now();
+            
+            results[endpoint] = {
+                status: response.status,
+                ok: response.ok,
+                responseTime: Math.round(end - start),
+                data: response.ok ? await response.json() : null
+            };
+        } catch (error) {
+            results[endpoint] = {
+                status: 0,
+                ok: false,
+                error: error.message
+            };
+        }
+    }
+    
+    return results;
+}
+
+// Usage
+const healthReport = await systemHealthCheck();
+console.table(healthReport);`
+                }
+            ],
+            integrations: [
+                {
+                    title: 'MCP Service Integration',
+                    description: 'Connect to external services via MCP',
+                    code: `// MCP Service Integration Example
+class MCPIntegration {
+    constructor(serviceName, config) {
+        this.serviceName = serviceName;
+        this.config = config;
+        this.connected = false;
+    }
+    
+    async connect() {
+        try {
+            const response = await fetch('/api/integrations/connect', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    service: this.serviceName,
+                    config: this.config
+                })
+            });
+            
+            const data = await response.json();
+            this.connected = data.success;
+            return this.connected;
+            
+        } catch (error) {
+            console.error('MCP connection failed:', error);
+            return false;
+        }
+    }
+    
+    async execute(action, params) {
+        if (!this.connected) {
+            throw new Error('Service not connected');
+        }
+        
+        const response = await fetch(\`/api/integrations/\${this.serviceName}/execute\`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action, params })
+        });
+        
+        return await response.json();
+    }
+}
+
+// Usage
+const openaiIntegration = new MCPIntegration('openai', {
+    apiKey: 'your-api-key',
+    model: 'gpt-4'
+});
+
+await openaiIntegration.connect();
+const result = await openaiIntegration.execute('generateText', {
+    prompt: 'Explain FlashFusion platform',
+    maxTokens: 500
+});`
+                }
+            ],
+            analytics: [
+                {
+                    title: 'Real-time Analytics',
+                    description: 'Monitor system performance in real-time',
+                    code: `// Real-time analytics dashboard
+class FlashFusionAnalytics {
+    constructor() {
+        this.metrics = {
+            requests: 0,
+            errors: 0,
+            responseTime: [],
+            activeUsers: 0
+        };
+        this.listeners = [];
+    }
+    
+    startMonitoring() {
+        setInterval(async () => {
+            await this.collectMetrics();
+            this.notifyListeners();
+        }, 5000);
+    }
+    
+    async collectMetrics() {
+        try {
+            const response = await fetch('/api/v1/analytics');
+            const data = await response.json();
+            
+            if (data.success) {
+                Object.assign(this.metrics, data.data);
+            }
+        } catch (error) {
+            this.metrics.errors++;
+        }
+    }
+    
+    subscribe(callback) {
+        this.listeners.push(callback);
+    }
+    
+    notifyListeners() {
+        this.listeners.forEach(callback => {
+            callback(this.metrics);
+        });
+    }
+    
+    getReport() {
+        return {
+            ...this.metrics,
+            uptime: performance.now(),
+            timestamp: new Date().toISOString()
+        };
+    }
+}
+
+// Usage
+const analytics = new FlashFusionAnalytics();
+analytics.subscribe((metrics) => {
+    console.log('Updated metrics:', metrics);
+    updateDashboard(metrics);
+});
+analytics.startMonitoring();`
+                }
+            ]
+        };
+        
+        function loadCodeSnippets() {
+            // This will be called when the code editor is opened
+        }
+        
+        // Utility functions
+        function showError(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification error';
+            notification.innerHTML = message;
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                background: #ef4444; color: white; padding: 1rem; border-radius: 6px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3); max-width: 400px;
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 5000);
+        }
+        
+        function showSuccess(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification success';
+            notification.innerHTML = message;
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                background: #4ade80; color: white; padding: 1rem; border-radius: 6px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3); max-width: 400px;
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+        
+        // Auto-refresh status with enhanced error handling
+        setInterval(async () => {
+            try {
+                const response = await fetch('/health');
+                if (response.ok) {
+                    const statusDot = document.querySelector('.status-dot');
+                    if (statusDot) {
+                        statusDot.className = 'status-dot online';
+                    }
+                } else {
+                    console.warn('Health check failed with status:', response.status);
+                }
+            } catch (error) {
+                console.error('Health check error:', error);
+                const statusDot = document.querySelector('.status-dot');
+                if (statusDot) {
+                    statusDot.className = 'status-dot offline';
+                }
+            }
+        }, 10000);
+    </script>
+</body>
+</html>

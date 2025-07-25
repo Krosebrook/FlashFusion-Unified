@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Management - FlashFusion Unified</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>🤖 Agent Management</h1>
+        <p>Configure and manage your Universal AI Agents</p>
+        <nav class="nav">
+            <a href="index.html">Dashboard</a>
+            <a href="agents.html" class="active">Agents</a>
+            <a href="workflows.html">Workflows</a>
+            <a href="integrations.html">Integrations</a>
+            <a href="help.html">Help</a>
+        </nav>
+    </header>
+    
+    <main class="main">
+        <div class="toolbar">
+            <button onclick="refreshAgents()" class="btn-primary">🔄 Refresh</button>
+            <button onclick="showAddAgent()" class="btn-secondary">➕ Add Custom Agent</button>
+            <button onclick="exportAgents()" class="btn-secondary">📤 Export Config</button>
+            <button onclick="importAgents()" class="btn-secondary">📥 Import Config</button>
+        </div>
+        
+        <div id="agents-container" class="agents-grid">
+            <!-- Agents will be loaded here -->
+        </div>
+        
+        <!-- Agent Detail Modal -->
+        <div id="agent-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="modal-title">Agent Details</h2>
+                <div id="modal-body">
+                    <!-- Agent details will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add/Edit Agent Modal -->
+        <div id="edit-agent-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="edit-modal-title">Edit Agent</h2>
+                <form id="agent-form">
+                    <div class="form-group">
+                        <label for="agent-name">Agent Name:</label>
+                        <input type="text" id="agent-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="agent-role">Role Description:</label>
+                        <textarea id="agent-role" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="agent-capabilities">Capabilities (comma-separated):</label>
+                        <input type="text" id="agent-capabilities" placeholder="web_search, data_analysis, automation">
+                    </div>
+                    <div class="form-group">
+                        <label for="agent-priority">Priority (0-10):</label>
+                        <input type="number" id="agent-priority" min="0" max="10" value="5">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">💾 Save Changes</button>
+                        <button type="button" onclick="closeEditModal()" class="btn-secondary">❌ Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Chat with Agent Modal -->
+        <div id="chat-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="chat-title">Chat with Agent</h2>
+                <div id="chat-history" class="chat-history"></div>
+                <div class="chat-input">
+                    <input type="text" id="chat-message" placeholder="Type your message...">
+                    <button onclick="sendMessage()" class="btn-primary">Send</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="agents.js"></script>
+</body>
+</html>

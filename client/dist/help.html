@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - FlashFusion Unified</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>❓ Help Center</h1>
+        <p>Documentation, FAQ, and troubleshooting for FlashFusion Unified</p>
+        <nav class="nav">
+            <a href="index.html">Dashboard</a>
+            <a href="agents.html">Agents</a>
+            <a href="workflows.html">Workflows</a>
+            <a href="integrations.html">Integrations</a>
+            <a href="help.html" class="active">Help</a>
+        </nav>
+    </header>
+    
+    <main class="main">
+        <div class="help-tabs">
+            <button class="tab-button active" onclick="showHelpTab('faq')">❓ FAQ</button>
+            <button class="tab-button" onclick="showHelpTab('features')">🚀 Features</button>
+            <button class="tab-button" onclick="showHelpTab('troubleshooting')">🔧 Troubleshooting</button>
+            <button class="tab-button" onclick="showHelpTab('api')">📚 API Docs</button>
+            <button class="tab-button" onclick="showHelpTab('support')">🆘 Support</button>
+        </div>
+        
+        <!-- FAQ Tab -->
+        <div id="faq-tab" class="tab-content active">
+            <h3>Frequently Asked Questions</h3>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <h4 class="faq-question" onclick="toggleFAQ(this)">What is FlashFusion Unified?</h4>
+                    <div class="faq-answer">
+                        <p>FlashFusion Unified is an AI-powered business operating system that automates revenue streams across multiple business domains. It features 6 Universal Agents and 4 core workflow types to transform business ideas into automated processes.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <h4 class="faq-question" onclick="toggleFAQ(this)">How do Universal Agents work?</h4>
+                    <div class="faq-answer">
+                        <p>Universal Agents are AI-powered entities that can adapt to different business contexts:</p>
+                        <ul>
+                            <li><strong>Researcher:</strong> Gathers market intelligence and data</li>
+                            <li><strong>Creator:</strong> Generates content, designs, and assets</li>
+                            <li><strong>Optimizer:</strong> Improves performance and conversions</li>
+                            <li><strong>Automator:</strong> Sets up and manages automated processes</li>
+                            <li><strong>Analyzer:</strong> Provides insights and analytics</li>
+                            <li><strong>Coordinator:</strong> Manages inter-agent communication</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <h4 class="faq-question" onclick="toggleFAQ(this)">What are the 4 workflow types?</h4>
+                    <div class="faq-answer">
+                        <p>FlashFusion supports four core workflow types:</p>
+                        <ul>
+                            <li><strong>Development:</strong> MVP creation, testing, deployment automation</li>
+                            <li><strong>Commerce:</strong> Multi-platform e-commerce optimization</li>
+                            <li><strong>Content:</strong> Content creation and distribution automation</li>
+                            <li><strong>Hybrid:</strong> Cross-workflow orchestration and optimization</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <h4 class="faq-question" onclick="toggleFAQ(this)">How do I rename an agent?</h4>
+                    <div class="faq-answer">
+                        <p>To rename an agent:</p>
+                        <ol>
+                            <li>Go to the Agents page</li>
+                            <li>Click on the agent card you want to rename</li>
+                            <li>Click the "Edit" button</li>
+                            <li>Change the "Agent Name" field</li>
+                            <li>Click "Save Changes"</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <h4 class="faq-question" onclick="toggleFAQ(this)">How do I change workflow hierarchy?</h4>
+                    <div class="faq-answer">
+                        <p>To manage workflow execution order:</p>
+                        <ol>
+                            <li>Navigate to Workflows → Hierarchy tab</li>
+                            <li>Drag and drop workflows to reorder them</li>
+                            <li>Higher position = higher priority</li>
+                            <li>Click "Save Order" to apply changes</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <h4 class="faq-question" onclick="toggleFAQ(this)">How do I export/import configurations?</h4>
+                    <div class="faq-answer">
+                        <p>FlashFusion supports configuration backup and restore:</p>
+                        <ul>
+                            <li><strong>Export:</strong> Use export buttons on any management page</li>
+                            <li><strong>Import:</strong> Use import buttons to restore configurations</li>
+                            <li><strong>Formats:</strong> JSON for configurations, CSV for data</li>
+                            <li><strong>Scope:</strong> Per-component or full system export</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Features Tab -->
+        <div id="features-tab" class="tab-content">
+            <h3>Platform Features</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>🤖 Universal Agents</h4>
+                    <p>Six specialized AI agents that can adapt to any business context and work collaboratively to achieve complex goals.</p>
+                    <ul>
+                        <li>Cross-context adaptability</li>
+                        <li>Inter-agent communication</li>
+                        <li>Dynamic role assignment</li>
+                        <li>Real-time collaboration</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>⚙️ Workflow Engine</h4>
+                    <p>Powerful workflow automation system supporting multiple business processes with intelligent orchestration.</p>
+                    <ul>
+                        <li>4 core workflow types</li>
+                        <li>Custom workflow creation</li>
+                        <li>Priority-based execution</li>
+                        <li>Progress monitoring</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🔗 Integration Hub</h4>
+                    <p>Connect with 30+ external services including AI platforms, commerce tools, and social media channels.</p>
+                    <ul>
+                        <li>AI service integration</li>
+                        <li>Commerce platform support</li>
+                        <li>Social media automation</li>
+                        <li>Developer tool connectivity</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>📊 Analytics & Monitoring</h4>
+                    <p>Comprehensive analytics and real-time monitoring of all platform activities and performance metrics.</p>
+                    <ul>
+                        <li>Real-time dashboards</li>
+                        <li>Performance metrics</li>
+                        <li>Cost analysis</li>
+                        <li>Success rate tracking</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🚀 Multi-Platform Deployment</h4>
+                    <p>Deploy FlashFusion across multiple cloud platforms with automatic scaling and load balancing.</p>
+                    <ul>
+                        <li>Vercel deployment</li>
+                        <li>Firebase integration</li>
+                        <li>Google Cloud support</li>
+                        <li>Replit compatibility</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🔒 Enterprise Security</h4>
+                    <p>Bank-grade security with encryption, access controls, and compliance features for enterprise use.</p>
+                    <ul>
+                        <li>JWT authentication</li>
+                        <li>Role-based access</li>
+                        <li>API rate limiting</li>
+                        <li>Audit logging</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Troubleshooting Tab -->
+        <div id="troubleshooting-tab" class="tab-content">
+            <h3>Troubleshooting Guide</h3>
+            <div class="troubleshooting-container">
+                <div class="trouble-section">
+                    <h4>🔧 Common Issues</h4>
+                    
+                    <div class="trouble-item">
+                        <h5>Agents not responding to chat</h5>
+                        <p><strong>Symptoms:</strong> Agent chat returns errors or no response</p>
+                        <p><strong>Solutions:</strong></p>
+                        <ol>
+                            <li>Check if agents are initialized: Go to /health endpoint</li>
+                            <li>Verify API endpoints are working: Test /api/v1/agents</li>
+                            <li>Restart the platform if agents show as "not ready"</li>
+                            <li>Check browser console for JavaScript errors</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="trouble-item">
+                        <h5>Workflows failing to start</h5>
+                        <p><strong>Symptoms:</strong> Workflows stuck in "created" status</p>
+                        <p><strong>Solutions:</strong></p>
+                        <ol>
+                            <li>Ensure required agents are available and idle</li>
+                            <li>Check workflow engine health: /api/v1/status</li>
+                            <li>Verify workflow configuration is valid</li>
+                            <li>Review workflow logs for specific errors</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="trouble-item">
+                        <h5>Integration connection failures</h5>
+                        <p><strong>Symptoms:</strong> External services showing as disconnected</p>
+                        <p><strong>Solutions:</strong></p>
+                        <ol>
+                            <li>Verify API keys are correctly configured in .env</li>
+                            <li>Check service status pages for outages</li>
+                            <li>Test individual connections using test buttons</li>
+                            <li>Review rate limits and usage quotas</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="trouble-item">
+                        <h5>Dashboard pages not loading</h5>
+                        <p><strong>Symptoms:</strong> White screens or 404 errors on subpages</p>
+                        <p><strong>Solutions:</strong></p>
+                        <ol>
+                            <li>Clear browser cache and refresh</li>
+                            <li>Check if server is running: curl localhost:3333/health</li>
+                            <li>Verify static files are served correctly</li>
+                            <li>Check browser developer tools for network errors</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="trouble-section">
+                    <h4>🚨 Error Codes</h4>
+                    <div class="error-codes">
+                        <div class="error-item">
+                            <strong>FF001:</strong> Agent initialization failed
+                            <p>One or more agents failed to initialize. Check agent configurations and restart.</p>
+                        </div>
+                        <div class="error-item">
+                            <strong>FF002:</strong> Workflow execution timeout
+                            <p>Workflow took too long to complete. Check step configurations and agent availability.</p>
+                        </div>
+                        <div class="error-item">
+                            <strong>FF003:</strong> Integration authentication error
+                            <p>External service authentication failed. Verify API keys and permissions.</p>
+                        </div>
+                        <div class="error-item">
+                            <strong>FF004:</strong> Resource limit exceeded
+                            <p>Platform resource limits reached. Consider upgrading or optimizing usage.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- API Docs Tab -->
+        <div id="api-tab" class="tab-content">
+            <h3>API Documentation</h3>
+            <div class="api-docs">
+                <div class="api-section">
+                    <h4>🔗 Base URL</h4>
+                    <code>http://localhost:3333/api/v1</code>
+                </div>
+                
+                <div class="api-section">
+                    <h4>🤖 Agent Endpoints</h4>
+                    <div class="api-endpoint">
+                        <strong>GET /agents</strong> - List all agents
+                        <pre>Response: { success: true, data: { agents: [...] } }</pre>
+                    </div>
+                    <div class="api-endpoint">
+                        <strong>GET /agents/:id</strong> - Get specific agent
+                        <pre>Response: { success: true, data: { id, name, status, ... } }</pre>
+                    </div>
+                    <div class="api-endpoint">
+                        <strong>POST /agents/chat</strong> - Chat with agent
+                        <pre>Body: { agentId: "coordinator", message: "Hello", context: {} }</pre>
+                    </div>
+                </div>
+                
+                <div class="api-section">
+                    <h4>⚙️ Workflow Endpoints</h4>
+                    <div class="api-endpoint">
+                        <strong>GET /workflows</strong> - List all workflows
+                        <pre>Response: { success: true, data: { workflows: [...] } }</pre>
+                    </div>
+                    <div class="api-endpoint">
+                        <strong>POST /workflows</strong> - Create workflow
+                        <pre>Body: { type: "development", config: { name: "Test" } }</pre>
+                    </div>
+                    <div class="api-endpoint">
+                        <strong>POST /workflows/:id/start</strong> - Start workflow
+                        <pre>Response: { success: true, data: { workflowId, status } }</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Support Tab -->
+        <div id="support-tab" class="tab-content">
+            <h3>Support & Contact</h3>
+            <div class="support-container">
+                <div class="support-card">
+                    <h4>📧 Contact Support</h4>
+                    <p>Need help? Our support team is here to assist you.</p>
+                    <ul>
+                        <li>Email: support@flashfusion.ai</li>
+                        <li>Response time: 24 hours</li>
+                        <li>Available: Monday-Friday, 9 AM - 6 PM EST</li>
+                    </ul>
+                </div>
+                
+                <div class="support-card">
+                    <h4>🐛 Report Issues</h4>
+                    <p>Found a bug? Let us know and we'll fix it quickly.</p>
+                    <ul>
+                        <li>GitHub Issues: github.com/flashfusion/issues</li>
+                        <li>Bug reports: bugs@flashfusion.ai</li>
+                        <li>Include: Error messages, steps to reproduce</li>
+                    </ul>
+                </div>
+                
+                <div class="support-card">
+                    <h4>💡 Feature Requests</h4>
+                    <p>Have an idea for improvement? We'd love to hear it!</p>
+                    <ul>
+                        <li>Feature requests: features@flashfusion.ai</li>
+                        <li>Community forum: community.flashfusion.ai</li>
+                        <li>Roadmap: roadmap.flashfusion.ai</li>
+                    </ul>
+                </div>
+                
+                <div class="support-card">
+                    <h4>📚 Resources</h4>
+                    <p>Additional resources and documentation.</p>
+                    <ul>
+                        <li>Full documentation: docs.flashfusion.ai</li>
+                        <li>Video tutorials: youtube.com/flashfusion</li>
+                        <li>Community Discord: discord.gg/flashfusion</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="help.js"></script>
+</body>
+</html>
