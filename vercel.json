@@ -3,9 +3,13 @@
   "functions": {
     "api/hello.js": {
       "maxDuration": 10
+    },
+    "api/mcp.js": {
+      "maxDuration": 30
     }
   },
   "rewrites": [
+    { "source": "/api/mcp/(.*)", "destination": "/api/mcp" },
     { "source": "/(.*)", "destination": "/api/hello" }
   ]
 }
