@@ -1,31 +1,16 @@
 {
   "version": 2,
   "functions": {
-    "api/bulletproof.js": {
-      "maxDuration": 5
-    },
-    "api/hello.js": {
+    "api/main.js": {
       "maxDuration": 10
-    },
-    "api/mcp.js": {
-      "maxDuration": 30
     },
     "api/webhooks/*.js": {
       "maxDuration": 30
     }
   },
   "rewrites": [
-    { "source": "/api/mcp/(.*)", "destination": "/api/mcp" },
-    { "source": "/api/webhooks/stripe", "destination": "/api/webhooks/stripe" },
-    { "source": "/api/webhooks/shopify", "destination": "/api/webhooks/shopify" },
-    { "source": "/api/webhooks/zapier", "destination": "/api/webhooks/zapier" },
-    { "source": "/api/webhooks/github", "destination": "/api/webhooks/github" },
-    { "source": "/api/webhooks/discord", "destination": "/api/webhooks/discord" },
-    { "source": "/api/webhooks/slack", "destination": "/api/webhooks/slack" },
-    { "source": "/api/webhooks/openai", "destination": "/api/webhooks/openai" },
-    { "source": "/api/webhooks/(.*)", "destination": "/api/webhooks/webhook-manager" },
-    { "source": "/", "destination": "/api/index" },
-    { "source": "/(.*)", "destination": "/api/index" }
+    { "source": "/api/webhooks/(.*)", "destination": "/api/webhooks/$1" },
+    { "source": "/(.*)", "destination": "/api/main" }
   ],
   "headers": [
     {
