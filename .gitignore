@@ -198,6 +198,9 @@ certificates/
 secrets/
 api_credentials/
 
+# Key rotation logs
+.key-rotation-log.json
+
 # Large files and datasets
 datasets/
 models/

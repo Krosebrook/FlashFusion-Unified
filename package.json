@@ -37,7 +37,10 @@
     "test-webscraping": "node scripts_legacy/test-web-scraping.js",
     "docker:build": "docker build -t flashfusion-unified .",
     "docker:run": "docker run -p 3000:3000 flashfusion-unified",
-    "vercel:dev": "vercel dev"
+    "vercel:dev": "vercel dev",
+    "rotate-keys": "node scripts/key-rotation.js",
+    "validate-keys": "node scripts/validate-keys.js",
+    "check-security": "npm run validate-keys && npm audit"
   },
   "keywords": [
     "ai",
