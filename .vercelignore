@@ -14,7 +14,7 @@ FlashFusion-Unified/client_legacy/
 .env.production
 
 # Ignore build artifacts
-dist/
+# dist/ - Allow dist directory for Vercel build output
 build/
 .next/
 .nuxt/
