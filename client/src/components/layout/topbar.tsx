@@ -37,7 +37,7 @@ export function Topbar({ title, onNewIdea, onMenuClick }: TopbarProps) {
             {queueStatus && typeof queueStatus === 'object' && 'totalTasks' in queueStatus && 'completedTasks' in queueStatus && 'failedTasks' in queueStatus && (
               <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-2" />
-                {((queueStatus as any).totalTasks - (queueStatus as any).completedTasks - (queueStatus as any).failedTasks) || 0} tasks queued
+                <span>{((queueStatus as any).totalTasks - (queueStatus as any).completedTasks - (queueStatus as any).failedTasks) || 0} tasks queued</span>
               </Badge>
             )}
             

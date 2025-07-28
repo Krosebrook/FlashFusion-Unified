@@ -91,7 +91,7 @@ export default function Dashboard() {
         <Topbar title="Dashboard" onNewIdea={handleNewIdea} />
         
         <main className="flex-1 overflow-y-auto">
-          <div className="px-6 py-8">
+          <div className="px-6 py-8 page-transition">
             {/* Welcome Section */}
             <div className="mb-8">
               <div className="flex items-center justify-between">
@@ -116,7 +116,7 @@ export default function Dashboard() {
 
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 card-hover cursor-pointer">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -134,7 +134,7 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+              <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 card-hover cursor-pointer">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -149,7 +149,7 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+              <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200 card-hover cursor-pointer">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -164,7 +164,7 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
+              <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 card-hover cursor-pointer">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>

@@ -25,18 +25,18 @@ interface SidebarProps {
 }
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: Home },
-  { name: "Ideas", href: "/ideas", icon: Lightbulb },
-  { name: "AI Agents", href: "/agents", icon: Bot },
-  { name: "Launch Center", href: "/launch", icon: Rocket },
-  { name: "Analytics", href: "/analytics", icon: BarChart3 },
+  { name: "Dashboard", href: "/app", icon: Home },
+  { name: "Ideas", href: "/app/ideas", icon: Lightbulb },
+  { name: "AI Agents", href: "/app/agents", icon: Bot },
+  { name: "Launch Center", href: "/app/launch", icon: Rocket },
+  { name: "Analytics", href: "/app/analytics", icon: BarChart3 },
 ];
 
 const tools = [
-  { name: "Billing & Plans", href: "/payments", icon: CreditCard },
-  { name: "Print Products", href: "/print", icon: Printer },
-  { name: "SEO Tools", href: "/seo", icon: Search },
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Billing & Plans", href: "/app/payments", icon: CreditCard },
+  { name: "Print Products", href: "/app/print", icon: Printer },
+  { name: "SEO Tools", href: "/app/seo", icon: Search },
+  { name: "Settings", href: "/app/settings", icon: Settings },
 ];
 
 export function Sidebar({ user }: SidebarProps) {
@@ -46,12 +46,14 @@ export function Sidebar({ user }: SidebarProps) {
     <div className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-slate-200">
       {/* Logo */}
       <div className="flex items-center px-6 py-4 border-b border-slate-200">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary-500 rounded-lg flex items-center justify-center">
-            <Zap className="h-5 w-5 text-white" />
+        <Link href="/">
+          <div className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity">
+            <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary-500 rounded-lg flex items-center justify-center">
+              <Zap className="h-5 w-5 text-white" />
+            </div>
+            <span className="text-xl font-bold text-slate-800">FlashFusion</span>
           </div>
-          <span className="text-xl font-bold text-slate-800">FlashFusion</span>
-        </div>
+        </Link>
       </div>
       
       {/* Navigation */}
