@@ -48,7 +48,16 @@
     "domain-setup": "node scripts/domain-setup.js",
     "verify-pipeline": "node scripts/verify-pipeline.js",
     "setup-github-secrets": "node scripts/setup-github-secrets.js",
-    "manual-deploy": "node scripts/manual-deploy.js"
+    "manual-deploy": "node scripts/manual-deploy.js",
+    "automation:start": "node scripts/start-automation-machine.js",
+    "automation:dev": "concurrently \"npm run zapier:dev\" \"npm run notion:sync\"",
+    "zapier:dev": "node scripts/zapier-automation-manager.js",
+    "zapier:start": "pm2 start scripts/zapier-automation-manager.js --name zapier-manager",
+    "automation:stop": "pm2 stop automation-machine zapier-manager notion-sync",
+    "automation:restart": "pm2 restart automation-machine zapier-manager notion-sync",
+    "automation:logs": "pm2 logs",
+    "checkpoint": "curl -X POST http://localhost:3001/api/zapier/automations/project-checkpoint/trigger",
+    "health:automation": "curl -s http://localhost:3001/api/zapier/health | jq ."
   },
   "keywords": [
     "ai",
@@ -105,7 +114,8 @@
     "swagger-ui-express": "^4.6.2",
     "uuid": "^9.0.0",
     "winston": "^3.17.0",
-    "yaml": "^2.3.0"
+    "yaml": "^2.3.0",
+    "pm2": "^5.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.0",
