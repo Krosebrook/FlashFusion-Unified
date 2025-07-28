@@ -16,7 +16,16 @@ import {
   Zap,
   Webhook,
   Activity,
-  Store
+  Store,
+  Users,
+  Cpu,
+  Shield,
+  Download,
+  Smartphone,
+  FileText,
+  Calculator,
+  Crown,
+  TrendingUp
 } from "lucide-react";
 
 interface SidebarProps {
@@ -42,7 +51,17 @@ const tools = [
   { name: "Zapier Integration", href: "/app/zapier", icon: Webhook },
   { name: "Webhook Monitor", href: "/app/webhook-monitor", icon: Activity },
   { name: "Enhanced Analytics", href: "/app/analytics-enhanced", icon: BarChart3 },
-  { name: "Agent Marketplace", href: "/app/marketplace", icon: Store },
+  { name: "AI Agent Marketplace", href: "/app/ai-agent-marketplace", icon: Store },
+  { name: "Team Workspace", href: "/app/team-workspace", icon: Users },
+  { name: "Advanced AI Models", href: "/app/advanced-ai-models", icon: Cpu },
+  { name: "Enterprise SSO", href: "/app/enterprise-sso", icon: Shield },
+  { name: "Advanced Export", href: "/app/advanced-export", icon: Download },
+  { name: "Mobile App & PWA", href: "/app/mobile-app", icon: Smartphone },
+  { name: "Content Templates", href: "/app/content-templates", icon: FileText },
+  { name: "Financial Planning", href: "/app/financial-planning", icon: Calculator },
+  { name: "White-label Platform", href: "/app/white-label", icon: Crown },
+  { name: "Automation Engine", href: "/app/automation-workflow", icon: Zap },
+  { name: "Market Research", href: "/app/market-research", icon: TrendingUp },
   { name: "Settings", href: "/app/settings", icon: Settings },
 ];
 

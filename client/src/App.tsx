@@ -17,6 +17,16 @@ import Zapier from "@/pages/zapier";
 import WebhookMonitor from "@/pages/webhook-monitor";
 import AnalyticsEnhanced from "@/pages/analytics-enhanced";
 import AIAgentMarketplace from "@/pages/ai-agent-marketplace";
+import TeamWorkspace from "@/pages/team-workspace";
+import AdvancedAIModels from "@/pages/advanced-ai-models";
+import EnterpriseSSO from "@/pages/enterprise-sso";
+import AdvancedExport from "@/pages/advanced-export";
+import MobileApp from "@/pages/mobile-app";
+import ContentTemplates from "@/pages/content-templates";
+import FinancialPlanning from "@/pages/financial-planning";
+import WhiteLabel from "@/pages/white-label";
+import AutomationWorkflow from "@/pages/automation-workflow";
+import MarketResearch from "@/pages/market-research";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -35,7 +45,17 @@ function Router() {
       <Route path="/app/zapier" component={Zapier} />
       <Route path="/app/webhook-monitor" component={WebhookMonitor} />
       <Route path="/app/analytics-enhanced" component={AnalyticsEnhanced} />
-      <Route path="/app/marketplace" component={AIAgentMarketplace} />
+      <Route path="/app/ai-agent-marketplace" component={AIAgentMarketplace} />
+      <Route path="/app/team-workspace" component={TeamWorkspace} />
+      <Route path="/app/advanced-ai-models" component={AdvancedAIModels} />
+      <Route path="/app/enterprise-sso" component={EnterpriseSSO} />
+      <Route path="/app/advanced-export" component={AdvancedExport} />
+      <Route path="/app/mobile-app" component={MobileApp} />
+      <Route path="/app/content-templates" component={ContentTemplates} />
+      <Route path="/app/financial-planning" component={FinancialPlanning} />
+      <Route path="/app/white-label" component={WhiteLabel} />
+      <Route path="/app/automation-workflow" component={AutomationWorkflow} />
+      <Route path="/app/market-research" component={MarketResearch} />
       <Route component={NotFound} />
     </Switch>
   );
