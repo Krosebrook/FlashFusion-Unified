@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
+import { ZapierWizard } from "@/components/wizard/zapier-wizard";
+import { QuickSetupWizard } from "@/components/wizard/quick-setup-wizard";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Plus, Trash2, TestTube, Zap, ExternalLink, Copy, CheckCircle } from "lucide-react";
+import { Plus, Trash2, TestTube, Zap, ExternalLink, Copy, CheckCircle, Lightbulb, Settings } from "lucide-react";
 
 interface ZapierWebhook {
   url: string;
@@ -34,6 +36,8 @@ const mockUser = {
 };
 
 export default function ZapierPage() {
+  const [showWizard, setShowWizard] = useState(false);
+  const [showQuickSetup, setShowQuickSetup] = useState(false);
   const [newWebhookUrl, setNewWebhookUrl] = useState("");
   const [newWebhookEvent, setNewWebhookEvent] = useState("");
   const [testWebhookUrl, setTestWebhookUrl] = useState("");
@@ -160,23 +164,115 @@ export default function ZapierPage() {
         
         <main className="flex-1 overflow-y-auto">
           <div className="p-6 page-transition">
-            <div className="max-w-4xl mx-auto space-y-8">
-          {/* Header */}
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
-                <Zap className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold text-slate-800">Zapier Integration</h1>
-            </div>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Connect FlashFusion to thousands of apps with Zapier webhooks. Automate your workflows 
-              when ideas are created, AI agents complete tasks, and content is generated.
-            </p>
-          </div>
+            {showWizard ? (
+              <ZapierWizard 
+                onComplete={() => {
+                  setShowWizard(false);
+                  toast({
+                    title: "Integration complete!",
+                    description: "Your Zapier webhook is now active and ready to automate your workflows.",
+                  });
+                }}
+                onClose={() => setShowWizard(false)}
+              />
+            ) : showQuickSetup ? (
+              <QuickSetupWizard
+                onComplete={() => {
+                  setShowQuickSetup(false);
+                  toast({
+                    title: "Quick setup complete!",
+                    description: "Your webhook will trigger when new ideas are created.",
+                  });
+                }}
+                onClose={() => setShowQuickSetup(false)}
+              />
+            ) : (
+              <div className="max-w-4xl mx-auto space-y-8">
+                {/* Header */}
+                <div className="text-center space-y-4">
+                  <div className="flex items-center justify-center space-x-3">
+                    <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
+                      <Zap className="h-6 w-6 text-white" />
+                    </div>
+                    <h1 className="text-3xl font-bold text-slate-800">Zapier Integration</h1>
+                  </div>
+                  <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                    Connect FlashFusion to thousands of apps with Zapier webhooks. Automate your workflows 
+                    when ideas are created, AI agents complete tasks, and content is generated.
+                  </p>
+                  <div className="flex justify-center space-x-4">
+                    <Button 
+                      onClick={() => setShowQuickSetup(true)}
+                      className="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700"
+                    >
+                      <Zap className="h-4 w-4 mr-2" />
+                      Quick Setup (2 mins)
+                    </Button>
+                    <Button 
+                      onClick={() => setShowWizard(true)}
+                      variant="outline"
+                    >
+                      <Settings className="h-4 w-4 mr-2" />
+                      Full Wizard
+                    </Button>
+                  </div>
+                </div>
 
-          {/* Getting Started Guide */}
-          <Card>
+                {/* Popular Use Cases */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Lightbulb className="h-5 w-5" />
+                      <span>Popular Automation Ideas</span>
+                    </CardTitle>
+                    <CardDescription>
+                      Get inspired by these common FlashFusion automation workflows
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 border rounded-lg bg-blue-50 border-blue-200">
+                        <h4 className="font-medium text-blue-800 mb-2">💡 Idea to Task Management</h4>
+                        <p className="text-sm text-blue-700 mb-3">
+                          When a new business idea is created → Create a card in Trello/Asana
+                        </p>
+                        <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-300">
+                          Trigger: Idea Created
+                        </Badge>
+                      </div>
+                      <div className="p-4 border rounded-lg bg-green-50 border-green-200">
+                        <h4 className="font-medium text-green-800 mb-2">🤖 AI Content to Social Media</h4>
+                        <p className="text-sm text-green-700 mb-3">
+                          When AI generates content → Post to Twitter/LinkedIn automatically
+                        </p>
+                        <Badge variant="outline" className="bg-green-100 text-green-700 border-green-300">
+                          Trigger: Content Generated
+                        </Badge>
+                      </div>
+                      <div className="p-4 border rounded-lg bg-purple-50 border-purple-200">
+                        <h4 className="font-medium text-purple-800 mb-2">📊 Analytics Dashboard</h4>
+                        <p className="text-sm text-purple-700 mb-3">
+                          Track all idea metrics → Update Google Sheets for analysis
+                        </p>
+                        <Badge variant="outline" className="bg-purple-100 text-purple-700 border-purple-300">
+                          Trigger: Multiple Events
+                        </Badge>
+                      </div>
+                      <div className="p-4 border rounded-lg bg-orange-50 border-orange-200">
+                        <h4 className="font-medium text-orange-800 mb-2">🔔 Team Notifications</h4>
+                        <p className="text-sm text-orange-700 mb-3">
+                          Send Slack alerts when brand kits or mockups are ready
+                        </p>
+                        <Badge variant="outline" className="bg-orange-100 text-orange-700 border-orange-300">
+                          Trigger: Agent Completed
+                        </Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Getting Started Guide */}
+                <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <ExternalLink className="h-5 w-5" />
@@ -382,7 +478,8 @@ export default function ZapierPage() {
               </div>
             </CardContent>
           </Card>
-            </div>
+              </div>
+            )}
           </div>
         </main>
       </div>
