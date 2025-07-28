@@ -6,14 +6,14 @@
  */
 
 require('dotenv').config();
-const NotionService = require('../src/services/notionService');
+const notionService = require('../src/services/notionService');
 const { execSync } = require('child_process');
 const fs = require('fs').promises;
 const path = require('path');
 
 class NotionProjectSync {
     constructor() {
-        this.notionService = new NotionService();
+        this.notionService = notionService;
         this.projectDatabaseId = process.env.NOTION_PROJECT_DB_ID;
         this.updatesDatabaseId = process.env.NOTION_UPDATES_DB_ID;
     }
@@ -78,21 +78,13 @@ class NotionProjectSync {
             const today = new Date().toISOString().split('T')[0];
             const pageTitle = `FlashFusion Updates - ${today}`;
             
-            const response = await this.notionService.createPage({
-                parent: { database_id: this.updatesDatabaseId || this.projectDatabaseId },
-                icon: { emoji: '🚀' },
-                properties: {
-                    title: { 
-                        title: [{ text: { content: pageTitle } }] 
-                    },
-                    Status: { 
-                        select: { name: 'In Progress' } 
-                    },
-                    Date: { 
-                        date: { start: today } 
-                    }
-                },
-                children: [
+            const properties = {
+                Title: { 
+                    title: [{ text: { content: pageTitle } }] 
+                }
+            };
+
+            const children = [
                     {
                         object: 'block',
                         type: 'heading_2',
@@ -129,11 +121,20 @@ class NotionProjectSync {
                             }]
                         }
                     }
-                ]
-            });
+            ];
 
-            console.log('✅ Commits synced to Notion successfully!');
-            console.log(`📄 Page created: ${pageTitle}`);
+            const response = await this.notionService.createPage(
+                this.updatesDatabaseId || this.projectDatabaseId,
+                properties,
+                children
+            );
+
+            if (response.success) {
+                console.log('✅ Commits synced to Notion successfully!');
+                console.log(`📄 Page created: ${pageTitle}`);
+            } else {
+                console.error('❌ Failed to create page:', response.error);
+            }
             
         } catch (error) {
             console.error('❌ Failed to sync commits:', error.message);
