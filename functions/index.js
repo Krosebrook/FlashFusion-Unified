@@ -29,7 +29,7 @@ app.get('/health', (req, res) => {
 // AI Orchestration endpoints
 app.post('/api/agents/chat', async (req, res) => {
   try {
-    const { message, agentType = 'universal' } = req.body;
+    const { message, agentType = 'coordinator', userId = 'anonymous' } = req.body;
     
     // Basic validation
     if (!message) {
@@ -39,12 +39,63 @@ app.post('/api/agents/chat', async (req, res) => {
       });
     }
 
-    // TODO: Integrate with FlashFusion AI agents
+    // Initialize OpenAI or Anthropic based on availability
+    const openaiKey = process.env.OPENAI_API_KEY;
+    const anthropicKey = process.env.ANTHROPIC_API_KEY;
+    
+    let aiResponse = '';
+    
+    if (openaiKey) {
+      const { OpenAI } = require('openai');
+      const openai = new OpenAI({ apiKey: openaiKey });
+      
+      const agentPersonality = getAgentPersonality(agentType);
+      
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4",
+        messages: [
+          { role: "system", content: agentPersonality },
+          { role: "user", content: message }
+        ],
+        max_tokens: 500,
+        temperature: 0.7
+      });
+      
+      aiResponse = completion.choices[0].message.content;
+    } else if (anthropicKey) {
+      const Anthropic = require('@anthropic-ai/sdk');
+      const anthropic = new Anthropic({ apiKey: anthropicKey });
+      
+      const agentPersonality = getAgentPersonality(agentType);
+      
+      const completion = await anthropic.messages.create({
+        model: "claude-3-sonnet-20240229",
+        max_tokens: 500,
+        messages: [
+          { role: "user", content: `${agentPersonality}\n\nUser: ${message}` }
+        ]
+      });
+      
+      aiResponse = completion.content[0].text;
+    } else {
+      aiResponse = `Hello! I'm the ${agentType} agent. I'm currently in demo mode. To enable full AI functionality, please add your OPENAI_API_KEY or ANTHROPIC_API_KEY to your environment variables.`;
+    }
+
+    // Store conversation in Firestore
+    const db = admin.firestore();
+    await db.collection('conversations').add({
+      userId,
+      agentType,
+      message,
+      response: aiResponse,
+      timestamp: admin.firestore.FieldValue.serverTimestamp()
+    });
+
     const response = {
       success: true,
       data: {
         agent: agentType,
-        response: `Echo from Firebase Functions: ${message}`,
+        response: aiResponse,
         timestamp: new Date().toISOString()
       }
     };
@@ -59,11 +110,33 @@ app.post('/api/agents/chat', async (req, res) => {
   }
 });
 
+// Agent personality definitions
+function getAgentPersonality(agentType) {
+  const personalities = {
+    coordinator: "You are the Coordinator Agent for FlashFusion. You orchestrate workflows, manage agent collaboration, and provide strategic oversight. You're analytical, organized, and focused on optimizing business operations across development, commerce, and content workflows.",
+    
+    creator: "You are the Creator Agent for FlashFusion. You specialize in content generation, product development, and creative solutions. You're innovative, artistic, and skilled at transforming ideas into compelling content and products.",
+    
+    researcher: "You are the Researcher Agent for FlashFusion. You excel at market research, competitor analysis, trend identification, and data gathering. You're thorough, analytical, and provide evidence-based insights.",
+    
+    automator: "You are the Automator Agent for FlashFusion. You focus on task automation, integration management, and workflow optimization. You're technical, efficient, and skilled at streamlining processes.",
+    
+    analyzer: "You are the Analyzer Agent for FlashFusion. You specialize in performance analytics, predictive modeling, and business intelligence. You're data-driven, insightful, and excel at turning metrics into actionable strategies.",
+    
+    optimizer: "You are the Optimizer Agent for FlashFusion. You focus on conversion optimization, SEO, performance tuning, and efficiency improvements. You're results-oriented, technical, and constantly seek to improve outcomes."
+  };
+  
+  return personalities[agentType] || personalities.coordinator;
+}
+
 // Workflow management
 app.get('/api/workflows', async (req, res) => {
   try {
+    const { userId = 'anonymous' } = req.query;
     const db = admin.firestore();
-    const workflowsSnapshot = await db.collection('workflows').get();
+    const workflowsSnapshot = await db.collection('workflows')
+      .where('userId', '==', userId)
+      .get();
     
     const workflows = [];
     workflowsSnapshot.forEach(doc => {
@@ -82,6 +155,111 @@ app.get('/api/workflows', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Failed to fetch workflows'
+    });
+  }
+});
+
+// Create workflow
+app.post('/api/workflows', async (req, res) => {
+  try {
+    const { name, type, description, config = {}, userId = 'anonymous' } = req.body;
+    
+    if (!name || !type) {
+      return res.status(400).json({
+        success: false,
+        error: 'Name and type are required'
+      });
+    }
+    
+    const db = admin.firestore();
+    const workflowData = {
+      name,
+      type,
+      description: description || '',
+      config,
+      userId,
+      status: 'active',
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+    
+    const docRef = await db.collection('workflows').add(workflowData);
+    
+    res.json({
+      success: true,
+      data: {
+        id: docRef.id,
+        ...workflowData
+      }
+    });
+  } catch (error) {
+    console.error('Workflow creation error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create workflow'
+    });
+  }
+});
+
+// Get conversation history
+app.get('/api/conversations', async (req, res) => {
+  try {
+    const { userId = 'anonymous', agentType, limit = 50 } = req.query;
+    const db = admin.firestore();
+    
+    let query = db.collection('conversations')
+      .where('userId', '==', userId)
+      .orderBy('timestamp', 'desc')
+      .limit(parseInt(limit));
+    
+    if (agentType) {
+      query = query.where('agentType', '==', agentType);
+    }
+    
+    const conversationsSnapshot = await query.get();
+    
+    const conversations = [];
+    conversationsSnapshot.forEach(doc => {
+      conversations.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+
+    res.json({
+      success: true,
+      data: conversations
+    });
+  } catch (error) {
+    console.error('Conversations fetch error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch conversations'
+    });
+  }
+});
+
+// Agent status endpoint
+app.get('/api/agents', async (req, res) => {
+  try {
+    const agents = [
+      { id: 'coordinator', name: 'Coordinator', status: 'active', description: 'Orchestrates workflows and manages agent collaboration' },
+      { id: 'creator', name: 'Creator', status: 'active', description: 'Specializes in content generation and creative solutions' },
+      { id: 'researcher', name: 'Researcher', status: 'active', description: 'Excels at market research and data analysis' },
+      { id: 'automator', name: 'Automator', status: 'active', description: 'Focuses on task automation and workflow optimization' },
+      { id: 'analyzer', name: 'Analyzer', status: 'active', description: 'Specializes in performance analytics and insights' },
+      { id: 'optimizer', name: 'Optimizer', status: 'active', description: 'Focuses on conversion optimization and performance tuning' }
+    ];
+    
+    res.json({
+      success: true,
+      data: agents
+    });
+  } catch (error) {
+    console.error('Agents fetch error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch agents'
     });
   }
 });
