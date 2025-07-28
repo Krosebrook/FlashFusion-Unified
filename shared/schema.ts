@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { sql, relations } from "drizzle-orm";
 import { pgTable, text, varchar, integer, timestamp, jsonb, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -76,6 +76,39 @@ export const insertAgentTaskSchema = createInsertSchema(agentTasks).omit({
   createdAt: true,
   completedAt: true,
 });
+
+// Relations
+export const usersRelations = relations(users, ({ many }) => ({
+  ideas: many(ideas),
+  agentTasks: many(agentTasks),
+}));
+
+export const ideasRelations = relations(ideas, ({ one, many }) => ({
+  user: one(users, {
+    fields: [ideas.userId],
+    references: [users.id],
+  }),
+  agentTasks: many(agentTasks),
+}));
+
+export const agentsRelations = relations(agents, ({ many }) => ({
+  agentTasks: many(agentTasks),
+}));
+
+export const agentTasksRelations = relations(agentTasks, ({ one }) => ({
+  user: one(users, {
+    fields: [agentTasks.userId],
+    references: [users.id],
+  }),
+  idea: one(ideas, {
+    fields: [agentTasks.ideaId],
+    references: [ideas.id],
+  }),
+  agent: one(agents, {
+    fields: [agentTasks.agentId],
+    references: [agents.id],
+  }),
+}));
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;

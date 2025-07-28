@@ -1,4 +1,6 @@
-import { type User, type InsertUser, type Idea, type InsertIdea, type Agent, type AgentTask, type InsertAgentTask, type QueueStatus } from "@shared/schema";
+import { type User, type InsertUser, type Idea, type InsertIdea, type Agent, type AgentTask, type InsertAgentTask, type QueueStatus, users, ideas, agents, agentTasks, queueStatus } from "@shared/schema";
+import { db } from "./db";
+import { eq, sql } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -32,35 +34,23 @@ export interface IStorage {
   updateQueueStatus(updates: Partial<QueueStatus>): Promise<QueueStatus>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-  private ideas: Map<string, Idea>;
-  private agents: Map<string, Agent>;
-  private agentTasks: Map<string, AgentTask>;
-  private queueStatus: QueueStatus;
+export class DatabaseStorage implements IStorage {
+  private initialized = false;
 
-  constructor() {
-    this.users = new Map();
-    this.ideas = new Map();
-    this.agents = new Map();
-    this.agentTasks = new Map();
-    this.queueStatus = {
-      id: randomUUID(),
-      totalTasks: 0,
-      completedTasks: 0,
-      failedTasks: 0,
-      averageProcessingTime: 0,
-      lastUpdated: new Date(),
-    };
-
-    // Initialize default agents
-    this.initializeAgents();
+  private async ensureInitialized() {
+    if (!this.initialized) {
+      await this.initializeAgents();
+      this.initialized = true;
+    }
   }
 
-  private initializeAgents() {
-    const defaultAgents: Agent[] = [
+  private async initializeAgents() {
+    // Check if agents already exist
+    const existingAgents = await db.select().from(agents);
+    if (existingAgents.length > 0) return;
+
+    const defaultAgents = [
       {
-        id: randomUUID(),
         name: "Brand Kit Generator",
         type: "brandKit",
         description: "Create comprehensive brand identities with logos, colors, and guidelines",
@@ -69,7 +59,6 @@ export class MemStorage implements IStorage {
         usageCount: 23,
       },
       {
-        id: randomUUID(),
         name: "Content Generator",
         type: "contentKit",
         description: "Generate social media captions, hashtags, and marketing copy",
@@ -78,7 +67,6 @@ export class MemStorage implements IStorage {
         usageCount: 15,
       },
       {
-        id: randomUUID(),
         name: "SEO Site Generator",
         type: "seoSiteGen",
         description: "Build optimized landing pages with SEO best practices",
@@ -87,7 +75,6 @@ export class MemStorage implements IStorage {
         usageCount: 8,
       },
       {
-        id: randomUUID(),
         name: "Product Mockup",
         type: "productMockup",
         description: "Create professional product mockups and visualizations",
@@ -97,162 +84,187 @@ export class MemStorage implements IStorage {
       },
     ];
 
-    defaultAgents.forEach(agent => this.agents.set(agent.id, agent));
+    await db.insert(agents).values(defaultAgents);
   }
 
   async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
 
   async getUserByFirebaseUid(firebaseUid: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.firebaseUid === firebaseUid);
+    const [user] = await db.select().from(users).where(eq(users.firebaseUid, firebaseUid));
+    return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { 
-      ...insertUser, 
-      id,
-      plan: insertUser.plan || "free",
-      stripeCustomerId: insertUser.stripeCustomerId || null,
-      stripeSubscriptionId: insertUser.stripeSubscriptionId || null,
-      createdAt: new Date(),
-    };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
 
   async updateUserStripeInfo(id: string, customerId: string, subscriptionId: string): Promise<User> {
-    const user = this.users.get(id);
-    if (!user) throw new Error("User not found");
+    const [user] = await db
+      .update(users)
+      .set({ 
+        stripeCustomerId: customerId, 
+        stripeSubscriptionId: subscriptionId 
+      })
+      .where(eq(users.id, id))
+      .returning();
     
-    const updatedUser = { 
-      ...user, 
-      stripeCustomerId: customerId, 
-      stripeSubscriptionId: subscriptionId 
-    };
-    this.users.set(id, updatedUser);
-    return updatedUser;
+    if (!user) throw new Error("User not found");
+    return user;
   }
 
   async getIdeas(userId: string): Promise<Idea[]> {
-    return Array.from(this.ideas.values()).filter(idea => idea.userId === userId);
+    return await db.select().from(ideas).where(eq(ideas.userId, userId));
   }
 
   async getIdea(id: string): Promise<Idea | undefined> {
-    return this.ideas.get(id);
+    const [idea] = await db.select().from(ideas).where(eq(ideas.id, id));
+    return idea || undefined;
   }
 
   async createIdea(ideaData: InsertIdea & { userId: string }): Promise<Idea> {
-    const id = randomUUID();
-    const idea: Idea = {
-      ...ideaData,
-      id,
-      status: ideaData.status || "draft",
-      tone: ideaData.tone || null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    this.ideas.set(id, idea);
+    const [idea] = await db
+      .insert(ideas)
+      .values(ideaData)
+      .returning();
     return idea;
   }
 
   async updateIdea(id: string, updates: Partial<Idea>): Promise<Idea | undefined> {
-    const idea = this.ideas.get(id);
-    if (!idea) return undefined;
-    
-    const updatedIdea = { ...idea, ...updates, updatedAt: new Date() };
-    this.ideas.set(id, updatedIdea);
-    return updatedIdea;
+    const [idea] = await db
+      .update(ideas)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(ideas.id, id))
+      .returning();
+    return idea || undefined;
   }
 
   async deleteIdea(id: string): Promise<boolean> {
-    return this.ideas.delete(id);
+    const result = await db.delete(ideas).where(eq(ideas.id, id));
+    return result.rowCount !== null && result.rowCount > 0;
   }
 
   async getAgents(): Promise<Agent[]> {
-    return Array.from(this.agents.values());
+    await this.ensureInitialized();
+    return await db.select().from(agents);
   }
 
   async getAgent(id: string): Promise<Agent | undefined> {
-    return this.agents.get(id);
+    const [agent] = await db.select().from(agents).where(eq(agents.id, id));
+    return agent || undefined;
   }
 
   async incrementAgentUsage(id: string): Promise<void> {
-    const agent = this.agents.get(id);
-    if (agent) {
-      agent.usageCount = (agent.usageCount || 0) + 1;
-      this.agents.set(id, agent);
-    }
+    await db
+      .update(agents)
+      .set({ usageCount: sql`${agents.usageCount} + 1` })
+      .where(eq(agents.id, id));
   }
 
   async getAgentTasks(userId: string): Promise<AgentTask[]> {
-    return Array.from(this.agentTasks.values()).filter(task => task.userId === userId);
+    return await db.select().from(agentTasks).where(eq(agentTasks.userId, userId));
   }
 
   async getAgentTask(id: string): Promise<AgentTask | undefined> {
-    return this.agentTasks.get(id);
+    const [task] = await db.select().from(agentTasks).where(eq(agentTasks.id, id));
+    return task || undefined;
   }
 
   async createAgentTask(taskData: InsertAgentTask & { userId: string }): Promise<AgentTask> {
-    const id = randomUUID();
-    const task: AgentTask = {
-      ...taskData,
-      id,
-      status: taskData.status || "queued",
-      output: taskData.output || null,
-      feedback: taskData.feedback || null,
-      rating: taskData.rating || null,
-      ideaId: taskData.ideaId || null,
-      createdAt: new Date(),
-      completedAt: null,
-    };
-    this.agentTasks.set(id, task);
+    const [task] = await db
+      .insert(agentTasks)
+      .values(taskData)
+      .returning();
     
     // Update queue status
-    if (this.queueStatus) {
-      this.queueStatus.totalTasks++;
-      this.queueStatus.lastUpdated = new Date();
-    }
+    await this.updateQueueStats('totalTasks', 1);
     
     return task;
   }
 
   async updateAgentTask(id: string, updates: Partial<AgentTask>): Promise<AgentTask | undefined> {
-    const task = this.agentTasks.get(id);
-    if (!task) return undefined;
-    
-    const updatedTask = { ...task, ...updates };
+    const updateData = { ...updates };
     if (updates.status === "completed") {
-      updatedTask.completedAt = new Date();
-      if (this.queueStatus) {
-        this.queueStatus.completedTasks++;
-      }
+      updateData.completedAt = new Date();
+      await this.updateQueueStats('completedTasks', 1);
     } else if (updates.status === "failed") {
-      if (this.queueStatus) {
-        this.queueStatus.failedTasks++;
-      }
+      await this.updateQueueStats('failedTasks', 1);
     }
     
-    this.agentTasks.set(id, updatedTask);
-    if (this.queueStatus) {
-      this.queueStatus.lastUpdated = new Date();
-    }
-    return updatedTask;
+    const [task] = await db
+      .update(agentTasks)
+      .set(updateData)
+      .where(eq(agentTasks.id, id))
+      .returning();
+    
+    return task || undefined;
   }
 
   async getQueuedTasks(): Promise<AgentTask[]> {
-    return Array.from(this.agentTasks.values()).filter(task => task.status === "queued");
+    return await db.select().from(agentTasks).where(eq(agentTasks.status, "queued"));
   }
 
   async getQueueStatus(): Promise<QueueStatus | undefined> {
-    return this.queueStatus;
+    const [status] = await db.select().from(queueStatus).limit(1);
+    return status || undefined;
   }
 
   async updateQueueStatus(updates: Partial<QueueStatus>): Promise<QueueStatus> {
-    this.queueStatus = { ...this.queueStatus, ...updates, lastUpdated: new Date() };
-    return this.queueStatus;
+    const updateData = { ...updates, lastUpdated: new Date() };
+    
+    // Try to update existing record first
+    const [updated] = await db
+      .update(queueStatus)
+      .set(updateData)
+      .returning();
+    
+    if (updated) {
+      return updated;
+    }
+    
+    // If no record exists, create one
+    const [created] = await db
+      .insert(queueStatus)
+      .values({
+        totalTasks: 0,
+        completedTasks: 0,
+        failedTasks: 0,
+        averageProcessingTime: 0,
+        ...updateData,
+      })
+      .returning();
+    
+    return created;
+  }
+
+  private async updateQueueStats(field: 'totalTasks' | 'completedTasks' | 'failedTasks', increment: number): Promise<void> {
+    // Get current status or create if doesn't exist
+    const currentStatus = await this.getQueueStatus();
+    if (currentStatus) {
+      await db
+        .update(queueStatus)
+        .set({ 
+          [field]: sql`${queueStatus[field]} + ${increment}`,
+          lastUpdated: new Date() 
+        })
+        .where(eq(queueStatus.id, currentStatus.id));
+    } else {
+      await db
+        .insert(queueStatus)
+        .values({
+          totalTasks: field === 'totalTasks' ? increment : 0,
+          completedTasks: field === 'completedTasks' ? increment : 0,
+          failedTasks: field === 'failedTasks' ? increment : 0,
+          averageProcessingTime: 0,
+        });
+    }
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

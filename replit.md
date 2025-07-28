@@ -99,8 +99,18 @@ The application is designed for Replit deployment with the following approach:
 
 **Shared Schema**: The `shared/schema.ts` file contains Drizzle schema definitions used by both client and server, ensuring type safety across the full stack.
 
-**Memory Storage Fallback**: The application includes an in-memory storage implementation for development and testing, with easy migration to PostgreSQL for production.
+**Database Integration**: The application now uses PostgreSQL with Neon for all data persistence, replacing the previous in-memory storage implementation.
 
 **Modular Agent System**: Each AI agent is designed as a separate module with specialized prompts and processing logic, making it easy to add new agent types.
 
 **Real-time Updates**: Using TanStack Query with polling intervals, the UI stays synchronized with background processing status without WebSocket complexity.
+
+## Recent Changes
+
+### January 28, 2025 - Database Integration
+- **Major**: Migrated from in-memory storage (MemStorage) to PostgreSQL database (DatabaseStorage)
+- **Added**: Database relations using Drizzle ORM relations operator for proper data modeling
+- **Updated**: All CRUD operations now use database queries instead of in-memory maps
+- **Created**: Database schema with 5 tables: users, ideas, agents, agent_tasks, queue_status
+- **Implemented**: Lazy initialization for agents to prevent issues during application startup
+- **Status**: ✅ Successfully tested - all database operations working properly
