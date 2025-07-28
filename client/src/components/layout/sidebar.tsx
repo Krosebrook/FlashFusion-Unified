@@ -28,14 +28,15 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "Ideas", href: "/ideas", icon: Lightbulb },
   { name: "AI Agents", href: "/agents", icon: Bot },
-  { name: "Launch", href: "/launch", icon: Rocket },
+  { name: "Launch Center", href: "/launch", icon: Rocket },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
 ];
 
 const tools = [
-  { name: "Payments", href: "/payments", icon: CreditCard },
+  { name: "Billing & Plans", href: "/payments", icon: CreditCard },
   { name: "Print Products", href: "/print", icon: Printer },
   { name: "SEO Tools", href: "/seo", icon: Search },
+  { name: "Settings", href: "/settings", icon: Settings },
 ];
 
 export function Sidebar({ user }: SidebarProps) {
