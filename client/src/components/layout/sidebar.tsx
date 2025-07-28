@@ -14,7 +14,9 @@ import {
   Search,
   Settings,
   Zap,
-  Webhook
+  Webhook,
+  Activity,
+  Store
 } from "lucide-react";
 
 interface SidebarProps {
@@ -38,6 +40,9 @@ const tools = [
   { name: "Print Products", href: "/app/print", icon: Printer },
   { name: "SEO Tools", href: "/app/seo", icon: Search },
   { name: "Zapier Integration", href: "/app/zapier", icon: Webhook },
+  { name: "Webhook Monitor", href: "/app/webhook-monitor", icon: Activity },
+  { name: "Enhanced Analytics", href: "/app/analytics-enhanced", icon: BarChart3 },
+  { name: "Agent Marketplace", href: "/app/marketplace", icon: Store },
   { name: "Settings", href: "/app/settings", icon: Settings },
 ];
 

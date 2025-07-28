@@ -29,11 +29,15 @@ export function QuickSetupWizard({ onComplete, onClose }: QuickSetupWizardProps)
 
   // Create webhook mutation for idea.created (most popular)
   const createWebhookMutation = useMutation({
-    mutationFn: (url: string) =>
-      apiRequest("/api/zapier/webhooks", {
+    mutationFn: async (url: string) => {
+      const response = await fetch("/api/zapier/webhooks", {
         method: "POST",
-        body: { url, event: "idea.created" },
-      }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url, event: "idea.created" }),
+      });
+      if (!response.ok) throw new Error("Failed to create webhook");
+      return response.json();
+    },
     onSuccess: () => {
       setIsComplete(true);
       queryClient.invalidateQueries({ queryKey: ["/api/zapier/webhooks"] });

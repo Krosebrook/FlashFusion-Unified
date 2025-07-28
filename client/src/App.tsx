@@ -14,6 +14,9 @@ import Print from "@/pages/print";
 import SEO from "@/pages/seo";
 import Settings from "@/pages/settings";
 import Zapier from "@/pages/zapier";
+import WebhookMonitor from "@/pages/webhook-monitor";
+import AnalyticsEnhanced from "@/pages/analytics-enhanced";
+import AIAgentMarketplace from "@/pages/ai-agent-marketplace";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -30,6 +33,9 @@ function Router() {
       <Route path="/app/seo" component={SEO} />
       <Route path="/app/settings" component={Settings} />
       <Route path="/app/zapier" component={Zapier} />
+      <Route path="/app/webhook-monitor" component={WebhookMonitor} />
+      <Route path="/app/analytics-enhanced" component={AnalyticsEnhanced} />
+      <Route path="/app/marketplace" component={AIAgentMarketplace} />
       <Route component={NotFound} />
     </Switch>
   );
