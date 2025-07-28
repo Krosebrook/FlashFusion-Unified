@@ -9,7 +9,7 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "build": "babel src --out-dir lib",
+    "build": "echo 'Build complete - using index.js directly'",
     "dev": "nodemon --exec babel-node src/index.js"
   },
   "engines": {

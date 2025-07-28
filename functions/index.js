@@ -14,7 +14,42 @@ const app = express();
 app.use(helmet());
 app.use(compression());
 app.use(cors({ origin: true }));
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '1mb' })); // Reduced payload limit
+
+// Simple rate limiting store
+const rateLimitStore = new Map();
+
+// Rate limiting middleware
+function rateLimiter(req, res, next) {
+  const userId = req.body.userId || req.query.userId || 'anonymous';
+  const now = Date.now();
+  const windowMs = 60 * 1000; // 1 minute window
+  const maxRequests = 10; // Max 10 requests per minute per user
+  
+  if (!rateLimitStore.has(userId)) {
+    rateLimitStore.set(userId, { count: 1, resetTime: now + windowMs });
+    return next();
+  }
+  
+  const userLimit = rateLimitStore.get(userId);
+  
+  if (now > userLimit.resetTime) {
+    // Reset window
+    rateLimitStore.set(userId, { count: 1, resetTime: now + windowMs });
+    return next();
+  }
+  
+  if (userLimit.count >= maxRequests) {
+    return res.status(429).json({
+      success: false,
+      error: 'Rate limit exceeded. Please wait before making more requests.',
+      retryAfter: Math.ceil((userLimit.resetTime - now) / 1000)
+    });
+  }
+  
+  userLimit.count++;
+  next();
+}
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -27,7 +62,7 @@ app.get('/health', (req, res) => {
 });
 
 // AI Orchestration endpoints
-app.post('/api/agents/chat', async (req, res) => {
+app.post('/api/agents/chat', rateLimiter, async (req, res) => {
   try {
     const { message, agentType = 'coordinator', userId = 'anonymous' } = req.body;
     
@@ -52,12 +87,12 @@ app.post('/api/agents/chat', async (req, res) => {
       const agentPersonality = getAgentPersonality(agentType);
       
       const completion = await openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-3.5-turbo", // More cost-effective than GPT-4
         messages: [
           { role: "system", content: agentPersonality },
           { role: "user", content: message }
         ],
-        max_tokens: 500,
+        max_tokens: 150, // Reduced from 500 to minimize costs
         temperature: 0.7
       });
       
@@ -69,8 +104,8 @@ app.post('/api/agents/chat', async (req, res) => {
       const agentPersonality = getAgentPersonality(agentType);
       
       const completion = await anthropic.messages.create({
-        model: "claude-3-sonnet-20240229",
-        max_tokens: 500,
+        model: "claude-3-haiku-20240307", // More cost-effective than Sonnet
+        max_tokens: 150, // Reduced from 500 to minimize costs
         messages: [
           { role: "user", content: `${agentPersonality}\n\nUser: ${message}` }
         ]
