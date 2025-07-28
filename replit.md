@@ -107,6 +107,16 @@ The application is designed for Replit deployment with the following approach:
 
 ## Recent Changes
 
+### January 28, 2025 - Zapier Integration & Automation
+- **Major**: Integrated comprehensive Zapier webhook system for workflow automation
+- **Features**: Full webhook management UI with registration, testing, and monitoring capabilities
+- **Events**: 7 webhook events covering ideas, agent tasks, and content generation
+- **API**: Complete REST API for webhook management with proper error handling
+- **Triggers**: Automatic webhook firing on idea creation/updates and AI agent completions
+- **Documentation**: Comprehensive integration guide with examples and use cases
+- **Navigation**: Added Zapier Integration page to tools section with webhook icon
+- **Status**: ✅ Successfully integrated - Zapier webhooks working with Anthropic API
+
 ### January 28, 2025 - Landing Page Integration & Vercel Deployment Setup
 - **Major**: Integrated beautiful marketing landing page as homepage (/) with gradient backgrounds and animations
 - **Restructured**: Moved all app functionality to /app routes for clear separation of marketing vs functional areas

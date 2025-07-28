@@ -13,6 +13,7 @@ import Payments from "@/pages/payments";
 import Print from "@/pages/print";
 import SEO from "@/pages/seo";
 import Settings from "@/pages/settings";
+import Zapier from "@/pages/zapier";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -28,6 +29,7 @@ function Router() {
       <Route path="/app/print" component={Print} />
       <Route path="/app/seo" component={SEO} />
       <Route path="/app/settings" component={Settings} />
+      <Route path="/app/zapier" component={Zapier} />
       <Route component={NotFound} />
     </Switch>
   );

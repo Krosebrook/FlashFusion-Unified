@@ -13,7 +13,8 @@ import {
   Printer,
   Search,
   Settings,
-  Zap
+  Zap,
+  Webhook
 } from "lucide-react";
 
 interface SidebarProps {
@@ -36,6 +37,7 @@ const tools = [
   { name: "Billing & Plans", href: "/app/payments", icon: CreditCard },
   { name: "Print Products", href: "/app/print", icon: Printer },
   { name: "SEO Tools", href: "/app/seo", icon: Search },
+  { name: "Zapier Integration", href: "/app/zapier", icon: Webhook },
   { name: "Settings", href: "/app/settings", icon: Settings },
 ];
 

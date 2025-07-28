@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertIdeaSchema, insertAgentTaskSchema } from "@shared/schema";
 import Anthropic from '@anthropic-ai/sdk';
+import { setupZapierRoutes, zapierService, ZapierService } from "./zapier";
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -41,6 +42,41 @@ async function processQueue() {
           status: "completed", 
           output: { result: output, timestamp: Date.now() }
         });
+        
+        // Trigger Zapier webhooks for completed tasks
+        const agent = await storage.getAgent(task.agentId);
+        if (agent) {
+          const userId = task.userId?.toString() || 'anonymous';
+          
+          // General agent task completion event
+          await zapierService.triggerWebhooks(userId, ZapierService.EVENTS.AGENT_TASK_COMPLETED, {
+            taskId: task.id,
+            agentName: agent.name,
+            agentType: agent.type,
+            input: task.input,
+            output: output,
+            completedAt: new Date().toISOString()
+          });
+          
+          // Specific agent type events
+          const agentTypeEvents = {
+            'Brand Kit Agent': ZapierService.EVENTS.BRAND_KIT_GENERATED,
+            'Content Kit Agent': ZapierService.EVENTS.CONTENT_KIT_GENERATED,
+            'SEO Site Generator': ZapierService.EVENTS.SEO_SITE_GENERATED,
+            'Product Mockup Agent': ZapierService.EVENTS.PRODUCT_MOCKUP_GENERATED
+          };
+          
+          const specificEvent = agentTypeEvents[agent.name as keyof typeof agentTypeEvents];
+          if (specificEvent) {
+            await zapierService.triggerWebhooks(userId, specificEvent, {
+              taskId: task.id,
+              agentName: agent.name,
+              content: output,
+              generatedAt: new Date().toISOString(),
+              metadata: task.input
+            });
+          }
+        }
         
         // Increment agent usage
         await storage.incrementAgentUsage(task.agentId);
@@ -170,6 +206,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertIdeaSchema.parse(ideaData);
       const idea = await storage.createIdea({ ...validatedData, userId });
       
+      // Trigger Zapier webhook for idea creation
+      await zapierService.triggerWebhooks(userId, ZapierService.EVENTS.IDEA_CREATED, {
+        ideaId: idea.id,
+        title: idea.title,
+        description: idea.description,
+        category: idea.category,
+        tone: idea.tone,
+        createdAt: new Date().toISOString(),
+        userId: userId
+      });
+      
       res.status(201).json(idea);
     } catch (error) {
       res.status(400).json({ error: "Invalid idea data", details: (error as Error).message });
@@ -185,6 +232,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!updatedIdea) {
         return res.status(404).json({ error: "Idea not found" });
       }
+      
+      // Trigger Zapier webhook for idea update
+      await zapierService.triggerWebhooks(updatedIdea.userId.toString(), ZapierService.EVENTS.IDEA_UPDATED, {
+        ideaId: updatedIdea.id,
+        title: updatedIdea.title,
+        description: updatedIdea.description,
+        category: updatedIdea.category,
+        tone: updatedIdea.tone,
+        updatedAt: new Date().toISOString(),
+        changes: updates
+      });
       
       res.json(updatedIdea);
     } catch (error) {
@@ -303,6 +361,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: "Failed to fetch user" });
     }
   });
+
+  // Setup Zapier webhook routes
+  setupZapierRoutes(app);
 
   const httpServer = createServer(app);
   return httpServer;
