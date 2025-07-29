@@ -13,6 +13,13 @@ class UniversalLogger {
     // Core logging method that NEVER throws errors
     log(level, message, ...args) {
         try {
+            // Handle unhandled promise rejections
+            if (typeof window !== 'undefined') {
+                window.addEventListener('unhandledrejection', (event) => {
+                    this.error('Unhandled Promise Rejection:', event.reason);
+                    event.preventDefault();
+                });
+            }
             const timestamp = new Date().toISOString();
             const logEntry = {
                 timestamp,
