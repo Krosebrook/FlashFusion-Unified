@@ -281,7 +281,20 @@ class NotionProjectSync {
 
     getRecentCommits(count = 5) {
         try {
-            const gitLog = execSync(`git log --oneline -${count} --pretty=format:"%h|%s|%ad" --date=short`)
+            // Validate and sanitize count parameter
+            const sanitizedCount = parseInt(count, 10);
+            if (isNaN(sanitizedCount) || sanitizedCount < 1 || sanitizedCount > 100) {
+                throw new Error('Invalid count parameter');
+            }
+            
+            // Use array syntax to prevent injection
+            const gitLog = execSync('git', [
+                'log', 
+                '--oneline', 
+                `-${sanitizedCount}`, 
+                '--pretty=format:%h|%s|%ad', 
+                '--date=short'
+            ], { encoding: 'utf8' })
                 .toString()
                 .trim()
                 .split('\n');

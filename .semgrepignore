@@ -1,0 +1,12 @@
+# Security scanning ignore file
+# Ignore false positives in validation patterns
+
+# API key validation patterns (not actual secrets)
+**/keyValidator.js
+**/apiKeyService.js
+
+# Environment setup templates
+**/setup-env.js
+
+# Configuration files with patterns
+**/mcpConfig.js

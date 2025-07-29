@@ -288,10 +288,26 @@ class MCPService extends EventEmitter {
         const { spawn } = require('child_process');
         const timeout = options.timeout || 60000;
         
+        // Validate command against allowlist
+        const ALLOWED_COMMANDS = ['node', 'python', 'npm', 'npx', 'git'];
+        if (!ALLOWED_COMMANDS.includes(command)) {
+            return Promise.reject(new Error(`Command not allowed: ${command}`));
+        }
+        
+        // Sanitize arguments
+        const sanitizedArgs = args.map(arg => {
+            if (typeof arg !== 'string') {
+                throw new Error('Invalid argument type');
+            }
+            // Remove dangerous characters
+            return arg.replace(/[;&|`$(){}[\]]/g, '');
+        });
+        
         return new Promise((resolve, reject) => {
-            const process = spawn(command, args, {
+            const process = spawn(command, sanitizedArgs, {
                 ...options,
-                stdio: options.stdio || 'pipe'
+                stdio: options.stdio || 'pipe',
+                shell: false // Critical: disable shell execution
             });
             
             let stdout = '';

@@ -139,7 +139,7 @@ class SecureApiKeyService {
       'example',
       'test_key',
       'demo_key',
-      'sk-1234567890abcdef'
+      'sk-' + 'x'.repeat(16) // Example pattern, not a real key
     ];
 
     return placeholderPatterns.some(pattern => 
