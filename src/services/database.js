@@ -17,16 +17,28 @@ class DatabaseService {
             const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
             if (!supabaseUrl || !supabaseKey) {
-                throw new Error('Missing Supabase credentials. Check SUPABASE_URL and SUPABASE_ANON_KEY environment variables.');
+                this.connectionError = 'Supabase credentials not configured - running in fallback mode';
+                this.isConnected = false;
+                console.warn('⚠️ Database credentials missing - running in offline mode');
+                console.warn('   To enable database features, configure SUPABASE_URL and SUPABASE_ANON_KEY');
+                return false; // Return false but don't throw error
             }
 
             this.supabase = createClient(supabaseUrl, supabaseKey);
             
-            // Test connection
-            const { data, error } = await this.supabase
+            // Test connection with timeout
+            const connectionTest = this.supabase
                 .from('agent_personalities')
                 .select('count(*)')
                 .limit(1);
+
+            // Add timeout to prevent hanging
+            const { data, error } = await Promise.race([
+                connectionTest,
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Connection timeout')), 10000)
+                )
+            ]);
 
             if (error) {
                 throw new Error(`Database connection failed: ${error.message}`);
@@ -42,8 +54,9 @@ class DatabaseService {
         } catch (error) {
             this.connectionError = error.message;
             this.isConnected = false;
-            console.error('❌ Database connection failed:', error.message);
-            return false;
+            console.warn('⚠️ Database connection failed:', error.message);
+            console.warn('   Application will run in offline mode with limited functionality');
+            return false; // Return false instead of throwing to allow graceful degradation
         }
     }
 
@@ -68,7 +81,7 @@ class DatabaseService {
     // Agent Personalities
     async getAgentPersonalities() {
         if (!this.isConnected) {
-            return { success: false, error: 'Database not connected' };
+            return { success: true, data: [], fallback: true, message: 'Database offline - using fallback data' };
         }
 
         try {
@@ -86,7 +99,7 @@ class DatabaseService {
 
     async createAgentPersonality(agentData) {
         if (!this.isConnected) {
-            return { success: false, error: 'Database not connected' };
+            return { success: false, error: 'Database offline - cannot save agent personality', fallback: true };
         }
 
         try {
@@ -281,7 +294,7 @@ class DatabaseService {
 
     async getProjects(ownerId) {
         if (!this.isConnected) {
-            return { success: false, error: 'Database not connected' };
+            return { success: true, data: [], fallback: true, message: 'Database offline - no saved projects available' };
         }
 
         try {
@@ -326,6 +339,16 @@ class DatabaseService {
 
     // Health Check
     async healthCheck() {
+        if (!this.isConnected) {
+            return {
+                status: 'offline',
+                connected: false,
+                error: this.connectionError || 'Database not configured',
+                message: 'Running in fallback mode - database features disabled',
+                timestamp: new Date().toISOString()
+            };
+        }
+
         try {
             const { data, error } = await this.supabase
                 .from('agent_personalities')

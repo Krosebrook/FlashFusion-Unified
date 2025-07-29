@@ -43,7 +43,7 @@ const config = {
     GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID,
     
     // Security
-    JWT_SECRET: process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production',
+    JWT_SECRET: process.env.JWT_SECRET || (process.env.NODE_ENV === 'production' ? null : 'dev-jwt-secret-key'),
     ENCRYPTION_KEY: process.env.ENCRYPTION_KEY || 'your-32-char-encryption-key-here',
     
     // Features
@@ -68,37 +68,52 @@ const config = {
         const required = [];
         const warnings = [];
         
-        // Check critical configurations
-        if (!config.SUPABASE_URL) {
-            warnings.push('SUPABASE_URL not configured - database features will be limited');
-        }
-        
-        if (!config.SUPABASE_ANON_KEY) {
-            warnings.push('SUPABASE_ANON_KEY not configured - database features will be limited');
+        // Check critical configurations for production
+        if (config.isProduction()) {
+            // JWT_SECRET is required in production
+            if (!config.JWT_SECRET || config.JWT_SECRET === 'your-super-secret-jwt-key-change-in-production') {
+                required.push('JWT_SECRET environment variable is required but not configured in production deployment');
+            }
+            
+            // Database configuration warnings for production
+            if (!config.SUPABASE_URL) {
+                warnings.push('SUPABASE_URL environment variable is missing, preventing database connectivity');
+            }
+            
+            if (!config.SUPABASE_ANON_KEY) {
+                warnings.push('SUPABASE_ANON_KEY environment variable is missing, preventing database authentication');
+            }
+        } else {
+            // Development warnings only
+            if (!config.SUPABASE_URL) {
+                warnings.push('SUPABASE_URL not configured - database features will be limited');
+            }
+            
+            if (!config.SUPABASE_ANON_KEY) {
+                warnings.push('SUPABASE_ANON_KEY not configured - database features will be limited');
+            }
         }
         
         if (!config.OPENAI_API_KEY && !config.ANTHROPIC_API_KEY) {
             warnings.push('No AI API keys configured - agent chat features will be limited');
         }
         
-        if (config.isProduction() && config.JWT_SECRET === 'your-super-secret-jwt-key-change-in-production') {
-            required.push('JWT_SECRET must be set in production');
-        }
-        
         // Log warnings
         if (warnings.length > 0) {
-            console.warn('⚠️  Configuration warnings:');
+            console.warn('⚠️ Configuration warnings:');
             warnings.forEach(warning => console.warn(`   - ${warning}`));
         }
         
-        // Throw errors for required configs
+        // Throw errors for required configs in production only
         if (required.length > 0) {
             console.error('❌ Configuration errors:');
             required.forEach(error => console.error(`   - ${error}`));
-            throw new Error('Invalid configuration');
+            if (config.isProduction()) {
+                throw new Error('Invalid production configuration');
+            }
         }
         
-        if (warnings.length === 0) {
+        if (warnings.length === 0 && required.length === 0) {
             console.log('✅ Configuration validation passed');
         }
         
@@ -107,11 +122,14 @@ const config = {
     
     // Get database URL for different environments
     getDatabaseConfig: () => {
+        const hasCredentials = !!(config.SUPABASE_URL && config.SUPABASE_ANON_KEY);
         return {
             url: config.SUPABASE_URL,
             key: config.SUPABASE_ANON_KEY,
             serviceKey: config.SUPABASE_SERVICE_KEY,
-            configured: !!(config.SUPABASE_URL && config.SUPABASE_ANON_KEY)
+            configured: hasCredentials,
+            canConnect: hasCredentials,
+            fallbackMode: !hasCredentials
         };
     },
     
@@ -176,9 +194,22 @@ const config = {
 // Validate configuration on load
 if (require.main !== module) {
     try {
-        config.validate();
+        const EnvironmentValidator = require('../utils/environmentValidator');
+        const validation = EnvironmentValidator.validate();
+        
+        if (!validation.isValid && config.isProduction()) {
+            console.error('\n❌ Critical configuration errors detected in production:');
+            validation.errors.forEach(error => {
+                console.error(`   ${error.message}`);
+            });
+            console.error('\nSuggested fixes:');
+            validation.errors.forEach(error => {
+                console.error(`   ${error.solution}`);
+            });
+            process.exit(1);
+        }
     } catch (error) {
-        console.error('Configuration validation failed:', error.message);
+        console.error('Environment validation failed:', error.message);
         // Don't exit in development, just warn
         if (config.isProduction()) {
             process.exit(1);

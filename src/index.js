@@ -151,12 +151,14 @@ class FlashFusionUnified {
         try {
             logger.info('🚀 Initializing FlashFusion Unified Platform...');
             
-            // Initialize database service
+            // Initialize database service with graceful fallback
             const dbInitialized = await databaseService.initialize();
             if (dbInitialized) {
                 console.log('✅ Database service initialized');
             } else {
                 console.warn('⚠️ Database service failed to initialize - running in offline mode');
+                console.warn('   Application will continue with limited functionality');
+                // Don't treat this as a failure - continue with other services
             }
             
             // Initialize AI service

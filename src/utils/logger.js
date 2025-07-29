@@ -10,8 +10,8 @@ const universalLogger = require('./universalLogger');
 // Export the universal logger
 module.exports = universalLogger;
 
-// Maintain consistent export - don't override module.exports
+// Also export as console for absolute compatibility
 if (process.env.VERCEL || process.env.NOW_REGION) {
-    // On Vercel, the universal logger already handles this safely
-    console.log('Running on Vercel - using universal logger');
+    // On Vercel, use pure console to guarantee no issues
+    module.exports = console;
 }
