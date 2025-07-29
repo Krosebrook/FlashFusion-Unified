@@ -1,0 +1,1871 @@
+`` import React, { useState, useEffect } from 'react'; import { ChevronRight, Menu, X, Home, Users, Settings, BarChart3, Zap, ArrowRight, Star, Globe, Shield, Rocket, Plus, Mail, Phone, MessageCircle, HelpCircle } from 'lucide-react';  const FlashFusionUnited = () => {   const [currentPage, setCurrentPage] = useState('home');   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);   const [animationClass, setAnimationClass] = useState('');   const [fabOpen, setFabOpen] = useState(false);    // Subtle animation effects   const animations = ['fadeIn', 'slideUp', 'scaleIn'];      const triggerRandomAnimation = () => {     const randomAnimation = animations[Math.floor(Math.random() * animations.length)];     setAnimationClass(randomAnimation);     setTimeout(() => setAnimationClass(''), 600);   };    // Occasional animations   useEffect(() => {     const interval = setInterval(() => {       if (Math.random() > 0.85) { // 15% chance         triggerRandomAnimation();       }     }, 5000);     return () => clearInterval(interval);   }, []);    const navigationItems = [     { id: 'home', label: 'Home', icon: Home },     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },     { id: 'team', label: 'Team', icon: Users },     { id: 'settings', label: 'Settings', icon: Settings }   ];    const fabActions = [     { icon: Mail, label: 'Contact', color: '#667eea' },     { icon: Phone, label: 'Call', color: '#4ecdc4' },     { icon: MessageCircle, label: 'Chat', color: '#a55eea' },     { icon: HelpCircle, label: 'Help', color: '#feca57' }   ];    // Simple page navigation   const navigateTo = (page) => {     setCurrentPage(page);     setIsMobileMenuOpen(false);     triggerRandomAnimation();   };    const HomePage = () => (     
+
+
+      {/* Hero Section */}
+      
+
+
+        
+
+
+          
+
+
+            
+            Innovation Powered
+          
+
+
+          
+
+
+            Welcome to FlashFusion-United
+          
+
+
+          
+
+
+            The next-generation platform that combines cutting-edge technology with seamless user experience. 
+            Join thousands of professionals who trust FlashFusion-United for their digital transformation.
+          
+
+
+          
+
+
+             navigateTo('dashboard')}
+            >
+              Get Started 
+            
+             navigateTo('team')}
+            >
+              Learn More
+            
+          
+
+
+        
+
+
+        
+
+
+          
+
+
+            
+
+
+              
+
+
+                99.9%
+                Uptime
+              
+
+
+              
+
+
+                50K+
+                Active Users
+              
+
+
+              
+
+
+                150+
+                Countries
+              
+
+
+              
+
+
+                24/7
+                Support
+              
+
+
+            
+
+
+          
+
+
+        
+
+
+      
+
+
+
+      {/* Features Section */}
+      
+
+
+        
+
+
+          
+
+Why Choose FlashFusion-United?
+
+
+          
+
+Discover the features that set us apart from the competition
+
+
+        
+
+
+        
+
+
+          
+
+ navigateTo('dashboard')}>
+            
+
+
+              
+            
+
+
+            
+
+Lightning Performance
+
+
+            
+
+Experience blazing-fast performance with our optimized infrastructure and global CDN
+
+
+            
+
+
+              
+            
+
+
+          
+
+
+          
+
+ navigateTo('team')}>
+            
+
+
+              
+            
+
+
+            
+
+Enterprise Security
+
+
+            
+
+Bank-level security with 99.9% uptime guarantee and SOC 2 compliance
+
+
+            
+
+
+              
+            
+
+
+          
+
+
+          
+
+ navigateTo('settings')}>
+            
+
+
+              
+            
+
+
+            
+
+Global Scale
+
+
+            
+
+Reach users worldwide with our global network and multi-region deployment
+
+
+            
+
+
+              
+            
+
+
+          
+
+
+        
+
+
+      
+
+
+
+      {/* Stats Section */}
+      
+
+
+        
+
+
+          
+
+
+            
+
+2.5M+
+
+
+            
+
+Active Users
+
+
+          
+
+
+          
+
+
+            
+
+150+
+
+
+            
+
+Countries
+
+
+          
+
+
+          
+
+
+            
+
+99.9%
+
+
+            
+
+Uptime
+
+
+          
+
+
+          
+
+
+            
+
+24/7
+
+
+            
+
+Support
+
+
+          
+
+
+        
+
+
+      
+
+
+    
+
+
+  );
+
+  const DashboardPage = () => (
+    
+
+
+      
+
+
+        
+
+Performance Dashboard
+
+
+        
+
+Monitor your metrics and analytics in real-time
+
+
+      
+
+
+      
+      
+
+
+        
+
+
+          
+
+
+            
+
+Active Sessions
+
+
+            +12%
+          
+
+
+          
+
+
+            
+
+2,847
+
+
+            
+
+Currently online
+
+
+          
+
+
+        
+
+
+        
+        
+
+
+          
+
+
+            
+
+Monthly Revenue
+
+
+            +8.2%
+          
+
+
+          
+
+
+            
+
+$12,943
+
+
+            
+
+This month
+
+
+          
+
+
+        
+
+
+        
+        
+
+
+          
+
+
+            
+
+Conversion Rate
+
+
+            -2.1%
+          
+
+
+          
+
+
+            
+
+23.7%
+
+
+            
+
+Last 30 days
+
+
+          
+
+
+        
+
+
+        
+        
+
+
+          
+
+
+            
+
+User Growth
+
+
+            +15.3%
+          
+
+
+          
+
+
+            
+
+1,284
+
+
+            
+
+New users
+
+
+          
+
+
+        
+
+
+      
+
+
+      
+      
+
+
+         navigateTo('team')}>
+          View Team 
+        
+         navigateTo('settings')}>
+          Manage Settings
+        
+      
+
+
+    
+
+
+  );
+
+  const TeamPage = () => (
+    
+
+
+      
+
+
+        
+
+Meet Our Team
+
+
+        
+
+The talented professionals behind FlashFusion-United
+
+
+      
+
+
+      
+      
+
+
+        {[
+          { name: 'Alex Johnson', role: 'CEO & Founder', avatar: '👨💼', expertise: 'Strategy & Vision' },
+          { name: 'Sarah Chen', role: 'Chief Technology Officer', avatar: '👩💻', expertise: 'Engineering & Architecture' },
+          { name: 'Mike Rodriguez', role: 'Head of Design', avatar: '👨🎨', expertise: 'UX & Product Design' },
+          { name: 'Emily Davis', role: 'Product Manager', avatar: '👩💼', expertise: 'Product Strategy' },
+          { name: 'David Kim', role: 'Lead Developer', avatar: '👨💻', expertise: 'Full-Stack Development' },
+          { name: 'Lisa Wang', role: 'Marketing Director', avatar: '👩📊', expertise: 'Growth & Analytics' }
+        ].map((member, index) => (
+          
+
+
+            
+
+{member.avatar}
+
+
+            
+
+{member.name}
+
+
+            
+
+{member.role}
+
+
+            
+
+{member.expertise}
+
+
+            
+
+
+              {[...Array(5)].map((_, i) => (
+                
+              ))}
+            
+
+
+          
+
+
+        ))}
+      
+
+
+      
+      
+
+
+         navigateTo('dashboard')}>
+          View Dashboard 
+        
+         navigateTo('home')}>
+          Back to Home
+        
+      
+
+
+    
+
+
+  );
+
+  const SettingsPage = () => (
+    
+
+
+      
+
+
+        
+
+Account Settings
+
+
+        
+
+Customize your FlashFusion-United experience
+
+
+      
+
+
+      
+      
+
+
+        
+
+
+          
+
+Account Preferences
+
+
+          
+
+
+            
+
+
+              Email Notifications
+              Receive updates about your account
+            
+
+
+            Enabled
+          
+
+
+          
+
+
+            
+
+
+              Two-Factor Authentication
+              Enhanced security for your account
+            
+
+
+            Disabled
+          
+
+
+          
+
+
+            
+
+
+              Auto-save
+              Automatically save your work
+            
+
+
+            Enabled
+          
+
+
+        
+
+
+        
+        
+
+
+          
+
+Appearance
+
+
+          
+
+
+            
+
+
+              Theme
+              Choose your preferred theme
+            
+
+
+            Light
+          
+
+
+          
+
+
+            
+
+
+              Animations
+              Enable smooth transitions
+            
+
+
+            Enabled
+          
+
+
+          
+
+
+            
+
+
+              Sound Effects
+              Audio feedback for interactions
+            
+
+
+            Enabled
+          
+
+
+        
+
+
+        
+        
+
+
+          
+
+Privacy & Security
+
+
+          
+
+
+            
+
+
+              Analytics
+              Help improve our service
+            
+
+
+            Enabled
+          
+
+
+          
+
+
+            
+
+
+              Marketing Communications
+              Product updates and news
+            
+
+
+            Disabled
+          
+
+
+          
+
+
+            
+
+
+              Profile Visibility
+              Who can see your profile
+            
+
+
+            Public
+          
+
+
+        
+
+
+      
+
+
+      
+      
+
+
+         navigateTo('home')}>
+          Save Changes 
+        
+        
+          Reset to Defaults
+        
+      
+
+
+    
+
+
+  );
+
+  const renderCurrentPage = () => {
+    switch(currentPage) {
+      case 'home': return ;
+      case 'dashboard': return ;
+      case 'team': return ;
+      case 'settings': return ;
+      default: return ;
+    }
+  };
+
+  // Modern, vibrant CSS
+  const styles = `
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  color: #1a202c;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Modern Navigation */
+.navbar {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.nav-brand:hover {
+  transform: scale(1.05);
+}
+
+.desktop-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  cursor: pointer;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.mobile-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  color: white;
+  text-align: left;
+  margin-bottom: 0.5rem;
+}
+
+.mobile-nav-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.mobile-nav-item.active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.page-content {
+  animation: slideIn 0.4s ease-out;
+}
+
+/* Hero Section */
+.hero-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  padding: 4rem 0;
+  min-height: 60vh;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 1.5rem 0;
+  color: #1a202c;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: #4a5568;
+  margin: 1.5rem 0;
+  line-height: 1.6;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.hero-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.metric {
+  text-align: center;
+}
+
+.metric-number {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 0.25rem;
+}
+
+.metric-label {
+  color: #718096;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Modern Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.875rem 2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-secondary:hover {
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.btn-team {
+  background: linear-gradient(135deg, #4ecdc4, #44a08d);
+  color: white;
+}
+
+.btn-settings {
+  background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+  color: #2d3436;
+}
+
+.btn-dashboard {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.btn-home {
+  background: linear-gradient(135deg, #ff7675, #fd79a8);
+  color: white;
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #00b894, #00cec9);
+  color: white;
+}
+
+.btn-reset {
+  background: linear-gradient(135deg, #e17055, #fd79a8);
+  color: white;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Features Section */
+.features-section {
+  padding: 4rem 0;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1a202c;
+}
+
+.section-header p {
+  font-size: 1.125rem;
+  color: #4a5568;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.performance-card:hover {
+  border-color: #667eea;
+}
+
+.security-card:hover {
+  border-color: #4ecdc4;
+}
+
+.global-card:hover {
+  border-color: #fd79a8;
+}
+
+.feature-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1a202c;
+}
+
+.feature-card p {
+  color: #4a5568;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.feature-arrow {
+  display: flex;
+  justify-content: flex-end;
+  color: #667eea;
+}
+
+/* Stats Section */
+.stats-section {
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  margin: 2rem 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+.stat-item {
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.stat-item:hover {
+  transform: scale(1.05);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: #718096;
+  font-weight: 500;
+}
+
+/* Dashboard */
+.dashboard-header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #1a202c;
+}
+
+.dashboard-header p {
+  color: #4a5568;
+  font-size: 1.125rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.dashboard-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.analytics-card:hover {
+  border-color: #667eea;
+}
+
+.revenue-card:hover {
+  border-color: #4ecdc4;
+}
+
+.conversion-card:hover {
+  border-color: #fd79a8;
+}
+
+.growth-card:hover {
+  border-color: #ffeaa7;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.card-header h3 {
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.trend-up {
+  color: #00b894;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.trend-neutral {
+  color: #fdcb6e;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.metric-large {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1a202c;
+  margin-bottom: 0.5rem;
+}
+
+.metric-subtitle {
+  color: #718096;
+  font-size: 0.875rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Team */
+.team-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.team-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1a202c;
+}
+
+.team-header p {
+  color: #4a5568;
+  font-size: 1.125rem;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.team-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+}
+
+.team-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.team-avatar {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.team-card h3 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1a202c;
+}
+
+.team-role {
+  color: #667eea;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.team-expertise {
+  color: #718096;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.team-rating {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.team-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Settings */
+.settings-header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.settings-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1a202c;
+}
+
+.settings-header p {
+  color: #4a5568;
+  font-size: 1.125rem;
+}
+
+.settings-sections {
+  display: grid;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.settings-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+  transition: all 0.2s ease;
+}
+
+.settings-card:hover {
+  transform: translateY(-2px);
+}
+
+.account-settings:hover {
+  border-color: #667eea;
+}
+
+.appearance-settings:hover {
+  border-color: #4ecdc4;
+}
+
+.privacy-settings:hover {
+  border-color: #fd79a8;
+}
+
+.settings-card h3 {
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #1a202c;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-info label {
+  font-weight: 500;
+  color: #1a202c;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.setting-desc {
+  color: #718096;
+  font-size: 0.875rem;
+}
+
+.toggle-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.toggle-btn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-color: #667eea;
+}
+
+.toggle-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.settings-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Floating Action Button */
+.fab-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+}
+
+.fab-main {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  transition: all 0.2s ease;
+}
+
+.fab-main:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+.fab-actions {
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fab-action {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0);
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.fab-container.fab-open .fab-action {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Subtle Animations */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.fadeIn { animation: fadeIn 0.5s ease; }
+.slideUp { animation: slideUp 0.5s ease; }
+.scaleIn { animation: scaleIn 0.5s ease; }
+
+/* Footer */
+.footer {
+  background: linear-gradient(135deg, #2d3436, #636e72);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-links button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.footer-links button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  color: #cbd5e0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .desktop-nav { display: none; }
+  .mobile-menu-btn { display: block; }
+  .mobile-nav { display: flex; }
+  
+  .hero-section {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 2rem;
+  }
+  
+  .hero-title { font-size: 2.5rem; }
+  .features-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr; }
+  .footer-content { grid-template-columns: 1fr; }
+  
+  .main-content { padding: 1rem; }
+  .nav-container { padding: 0 1rem; }
+  
+  .fab-container {
+    bottom: 1rem;
+    right: 1rem;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 2rem; }
+  .stats-grid { grid-template-columns: 1fr; }
+  
+  .setting-item {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .action-buttons,
+  .team-actions,
+  .settings-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+`;
+
+  // Inject styles
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const styleSheet = document.createElement('style');
+      styleSheet.textContent = styles;
+      document.head.appendChild(styleSheet);
+    }
+  }, [styles]);
+
+  return (
+    
+
+
+      {/* Navigation */}
+      
+
+
+        
+
+
+          
+
+ navigateTo('home')}>
+            
+            FlashFusion-United
+          
+
+
+          
+          {/* Desktop Navigation */}
+          
+            {navigationItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                 navigateTo(item.id)}
+                >
+                  
+                  {item.label}
+                
+              );
+            })}
+          
+          
+          {/* Mobile Menu Button */}
+           setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ?  : }
+          
+        
+
+
+        
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          
+            {navigationItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                 navigateTo(item.id)}
+                >
+                  
+                  {item.label}
+                
+              );
+            })}
+          
+        )}
+      
+
+
+
+      {/* Main Content */}
+      
+        {renderCurrentPage()}
+      
+
+      {/* Floating Action Button */}
+      
+
+
+        
+
+
+          {fabActions.map((action, index) => {
+            const Icon = action.icon;
+            return (
+               {
+                  triggerRandomAnimation();
+                  setFabOpen(false);
+                }}
+              >
+                
+              
+            );
+          })}
+        
+
+
+         setFabOpen(!fabOpen)}
+        >
+          
+        
+      
+
+
+
+      {/* Footer */}
+      
+
+
+        
+
+
+          
+
+
+            
+            FlashFusion-United
+          
+
+
+          
+
+
+             navigateTo('home')}>Home
+             navigateTo('dashboard')}>Dashboard
+             navigateTo('team')}>Team
+             navigateTo('settings')}>Settings
+          
+
+
+        
+
+
+        
+
+
+          
+
+© 2025 FlashFusion-United. All rights reserved.
+
+
+        
+
+
+      
+
+
+    
+
+
+  );
+};
+
+export default FlashFusionUnited;
+```
