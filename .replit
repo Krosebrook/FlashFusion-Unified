@@ -1,0 +1,59 @@
+run = "npm run dev"
+modules = ["nodejs-18"]
+
+[nix]
+channel = "stable-22_11"
+
+[env]
+XDG_CONFIG_HOME = "/home/runner/.config"
+PATH = "/home/runner/$REPL_NAME/.config/npm/node_global/bin:/home/runner/$REPL_NAME/node_modules/.bin"
+npm_config_prefix = "/home/runner/$REPL_NAME/.config/npm/node_global"
+
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix", ".config"]
+
+[packager]
+language = "nodejs"
+
+  [packager.features]
+  packageSearch = true
+  guessImports = true
+  enabledForHosting = false
+
+[unitTest]
+language = "nodejs"
+
+[debugger]
+support = true
+
+  [debugger.interactive]
+  transport = "localhost:0"
+  startCommand = ["dap-node"]
+
+    [debugger.interactive.initializeMessage]
+    command = "initialize"
+    type = "request"
+
+    [debugger.interactive.launchMessage]
+    command = "launch"
+    type = "request"
+    
+      [debugger.interactive.launchMessage.arguments]
+      console = "externalTerminal"
+      args = []
+      stopOnEntry = false
+      program = "./src/main.jsx"
+
+[languages]
+
+  [languages.javascript]
+  pattern = "**/{*.js,*.jsx,*.ts,*.tsx,*.mjs,*.cjs}"
+
+    [languages.javascript.languageServer]
+    start = "typescript-language-server --stdio"
+
+[deployment]
+run = ["sh", "-c", "npm run build && npm run preview"]
+deploymentTarget = "static"
+publicDir = "dist"
+build = ["sh", "-c", "npm run build"]
