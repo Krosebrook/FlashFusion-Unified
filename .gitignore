@@ -211,3 +211,4 @@ exports/
 build_temp/
 dist_temp/
 .vercel
+.env*.local
