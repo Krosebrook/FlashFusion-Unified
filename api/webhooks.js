@@ -38,7 +38,7 @@ module.exports = async (req, res) => {
 
         // Route to webhook manager for management endpoints
         if (url === '/' || url.startsWith('/manage') || url.startsWith('/stats') || url.startsWith('/register')) {
-            return webhookManager(req, res);
+            return webhookManager(req, res);\r
         }
 
         // Route to specific webhook handlers
