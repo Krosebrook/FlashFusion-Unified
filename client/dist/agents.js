@@ -61,38 +61,109 @@ function displayAgents(agents) {
         return;
     }
     
-    container.innerHTML = agents.map(agent => `
-        <div class="agent-card" onclick="showAgentDetails('${agent.id}')">
-            <div class="agent-header">
-                <h3>${agent.name}</h3>
-                <div class="status">
-                    <div class="status-dot ${agent.status}"></div>
-                    <span>${agent.status.charAt(0).toUpperCase() + agent.status.slice(1)}</span>
-                </div>
-            </div>
-            
-            <div class="agent-info">
-                <p><strong>Role:</strong> ${agent.role}</p>
-                <p><strong>Priority:</strong> ${agent.priority}</p>
-                ${agent.currentWorkflow ? `<p><strong>Current Workflow:</strong> ${agent.currentWorkflow}</p>` : ''}
-            </div>
-            
-            <div class="agent-capabilities">
-                <strong>Capabilities:</strong>
-                <div class="capabilities-tags">
-                    ${agent.capabilities.map(cap => `<span class="capability-tag">${cap}</span>`).join('')}
-                </div>
-            </div>
-            
-            <div class="agent-actions">
-                <button onclick="event.stopPropagation(); editAgent('${agent.id}')" class="btn-secondary">✏️ Edit</button>
-                <button onclick="event.stopPropagation(); chatWithAgent('${agent.id}')" class="btn-primary">💬 Chat</button>
-                <button onclick="event.stopPropagation(); toggleAgent('${agent.id}')" class="btn-secondary">
-                    ${agent.status === 'active' ? '⏸️ Pause' : '▶️ Activate'}
-                </button>
-            </div>
-        </div>
-    `).join('');
+    // Clear container safely
+    container.textContent = '';
+    
+    // Create elements using safe DOM methods
+    agents.forEach(agent => {
+        const agentCard = document.createElement('div');
+        agentCard.className = 'agent-card';
+        agentCard.onclick = () => showAgentDetails(agent.id);
+        
+        // Agent header
+        const header = document.createElement('div');
+        header.className = 'agent-header';
+        
+        const nameEl = document.createElement('h3');
+        nameEl.textContent = agent.name; // Safe text content
+        
+        const statusDiv = document.createElement('div');
+        statusDiv.className = 'status';
+        
+        const statusDot = document.createElement('div');
+        statusDot.className = `status-dot ${agent.status}`;
+        
+        const statusSpan = document.createElement('span');
+        statusSpan.textContent = agent.status.charAt(0).toUpperCase() + agent.status.slice(1);
+        
+        statusDiv.appendChild(statusDot);
+        statusDiv.appendChild(statusSpan);
+        header.appendChild(nameEl);
+        header.appendChild(statusDiv);
+        
+        // Agent info
+        const info = document.createElement('div');
+        info.className = 'agent-info';
+        
+        const roleP = document.createElement('p');
+        roleP.innerHTML = '<strong>Role:</strong> ';
+        roleP.appendChild(document.createTextNode(agent.role));
+        
+        const priorityP = document.createElement('p');
+        priorityP.innerHTML = '<strong>Priority:</strong> ';
+        priorityP.appendChild(document.createTextNode(agent.priority));
+        
+        info.appendChild(roleP);
+        info.appendChild(priorityP);
+        
+        if (agent.currentWorkflow) {
+            const workflowP = document.createElement('p');
+            workflowP.innerHTML = '<strong>Current Workflow:</strong> ';
+            workflowP.appendChild(document.createTextNode(agent.currentWorkflow));
+            info.appendChild(workflowP);
+        }
+        
+        // Capabilities
+        const capabilitiesDiv = document.createElement('div');
+        capabilitiesDiv.className = 'agent-capabilities';
+        
+        const capTitle = document.createElement('strong');
+        capTitle.textContent = 'Capabilities:';
+        capabilitiesDiv.appendChild(capTitle);
+        
+        const capTags = document.createElement('div');
+        capTags.className = 'capabilities-tags';
+        
+        agent.capabilities.forEach(cap => {
+            const tag = document.createElement('span');
+            tag.className = 'capability-tag';
+            tag.textContent = cap; // Safe text content
+            capTags.appendChild(tag);
+        });
+        
+        capabilitiesDiv.appendChild(capTags);
+        
+        // Actions
+        const actions = document.createElement('div');
+        actions.className = 'agent-actions';
+        
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn-secondary';
+        editBtn.textContent = '✏️ Edit';
+        editBtn.onclick = (e) => { e.stopPropagation(); editAgent(agent.id); };
+        
+        const chatBtn = document.createElement('button');
+        chatBtn.className = 'btn-primary';
+        chatBtn.textContent = '💬 Chat';
+        chatBtn.onclick = (e) => { e.stopPropagation(); chatWithAgent(agent.id); };
+        
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'btn-secondary';
+        toggleBtn.textContent = agent.status === 'active' ? '⏸️ Pause' : '▶️ Activate';
+        toggleBtn.onclick = (e) => { e.stopPropagation(); toggleAgent(agent.id); };
+        
+        actions.appendChild(editBtn);
+        actions.appendChild(chatBtn);
+        actions.appendChild(toggleBtn);
+        
+        // Assemble card
+        agentCard.appendChild(header);
+        agentCard.appendChild(info);
+        agentCard.appendChild(capabilitiesDiv);
+        agentCard.appendChild(actions);
+        
+        container.appendChild(agentCard);
+    });
 }
 
 async function showAgentDetails(agentId) {
