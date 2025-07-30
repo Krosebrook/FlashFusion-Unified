@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Integration Dashboard - FlashFusion</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .dashboard-container {
+            padding: 2rem;
+        }
+        
+        .platform-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .platform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .platform-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .platform-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .status-enabled { background-color: #28a745; }
+        .status-disabled { background-color: #dc3545; }
+        .status-warning { background-color: #ffc107; }
+        
+        .event-log {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .event-entry {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .event-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .event-timestamp {
+            color: #666;
+            font-size: 0.75rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .control-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .platform-ai { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+        .platform-development { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
+        .platform-productivity { background: linear-gradient(135deg, #45b7d1, #96c93d); }
+        .platform-deployment { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .platform-automation { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .platform-support { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        .platform-backend { background: linear-gradient(135deg, #fa709a, #fee140); }
+        .platform-backup { background: linear-gradient(135deg, #a8edea, #fed6e3); }
+        .platform-ai_development { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .platform-platform { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        
+        .test-results {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .test-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .test-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .refresh-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h1 class="text-white text-center mb-4">
+                        <i class="fas fa-network-wired me-3"></i>
+                        Platform Integration Pipeline
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Statistics Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalPlatforms">0</div>
+                    <div class="stat-label">Total Platforms</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="enabledPlatforms">0</div>
+                    <div class="stat-label">Enabled</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="eventsProcessed">0</div>
+                    <div class="stat-label">Events Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="successRate">0%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <h3 class="mb-3"><i class="fas fa-cogs me-2"></i>Pipeline Control</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-primary me-2" onclick="refreshDashboard()">
+                            <i class="fas fa-sync-alt me-1"></i> Refresh Status
+                        </button>
+                        <button class="btn btn-success me-2" onclick="testAllConnections()">
+                            <i class="fas fa-check-circle me-1"></i> Test All
+                        </button>
+                        <button class="btn btn-warning me-2" onclick="clearEventLog()">
+                            <i class="fas fa-trash me-1"></i> Clear Logs
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="autoRefresh" checked>
+                            <label class="form-check-label" for="autoRefresh">
+                                Auto Refresh (30s)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Platform Grid -->
+            <div class="row" id="platformGrid">
+                <!-- Platforms will be dynamically loaded here -->
+            </div>
+
+            <!-- Event Log -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="platform-card">
+                        <h4 class="mb-3"><i class="fas fa-list me-2"></i>Real-time Event Log</h4>
+                        <div class="event-log" id="eventLog">
+                            <div class="event-entry">
+                                <span class="event-timestamp">Loading events...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Refresh Button -->
+    <button class="btn btn-primary btn-lg refresh-btn" onclick="refreshDashboard()">
+        <i class="fas fa-sync-alt"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let eventLog = [];
+        let refreshInterval;
+
+        // Platform configuration with icons and colors
+        const platformConfig = {
+            chatgpt: { name: 'ChatGPT', icon: 'fas fa-robot', type: 'ai' },
+            claude: { name: 'Claude AI', icon: 'fas fa-brain', type: 'ai' },
+            cursor: { name: 'Cursor IDE', icon: 'fas fa-code', type: 'development' },
+            notion: { name: 'Notion', icon: 'fas fa-sticky-note', type: 'productivity' },
+            github: { name: 'GitHub', icon: 'fab fa-github', type: 'development' },
+            zapier: { name: 'Zapier', icon: 'fas fa-bolt', type: 'automation' },
+            vercel: { name: 'Vercel', icon: 'fas fa-rocket', type: 'deployment' },
+            docker: { name: 'Docker', icon: 'fab fa-docker', type: 'deployment' },
+            zendesk: { name: 'Zendesk', icon: 'fas fa-headset', type: 'support' },
+            firebase: { name: 'Firebase', icon: 'fas fa-fire', type: 'backend' },
+            supabase: { name: 'Supabase', icon: 'fas fa-database', type: 'backend' },
+            replit: { name: 'Replit', icon: 'fas fa-terminal', type: 'development' },
+            loveable: { name: 'Loveable.dev', icon: 'fas fa-heart', type: 'ai_development' },
+            base44: { name: 'Base44', icon: 'fas fa-cube', type: 'platform' },
+            trilio: { name: 'Trilio', icon: 'fas fa-shield-alt', type: 'backup' },
+            firebase_studio: { name: 'Firebase Studio', icon: 'fas fa-tools', type: 'development' },
+            codeguide: { name: 'CodeGuide Dev', icon: 'fas fa-map', type: 'development' }
+        };
+
+        async function loadPlatformStatus() {
+            try {
+                const response = await fetch('/api/webhooks/status');
+                const data = await response.json();
+                
+                updateStatistics(data);
+                renderPlatforms(data.platforms);
+                
+                logEvent('Dashboard loaded successfully', 'success');
+            } catch (error) {
+                console.error('Failed to load platform status:', error);
+                logEvent('Failed to load platform status: ' + error.message, 'error');
+            }
+        }
+
+        function updateStatistics(data) {
+            const platforms = Object.values(data.platforms);
+            const enabledCount = platforms.filter(p => p.enabled).length;
+            
+            document.getElementById('totalPlatforms').textContent = platforms.length;
+            document.getElementById('enabledPlatforms').textContent = enabledCount;
+            
+            // Simulate some statistics (in real implementation, these would come from the API)
+            document.getElementById('eventsProcessed').textContent = Math.floor(Math.random() * 1000) + 500;
+            document.getElementById('successRate').textContent = (95 + Math.random() * 5).toFixed(1) + '%';
+        }
+
+        function renderPlatforms(platforms) {
+            const grid = document.getElementById('platformGrid');
+            grid.innerHTML = '';
+
+            Object.entries(platforms).forEach(([platformName, config]) => {
+                const platformInfo = platformConfig[platformName] || {
+                    name: platformName,
+                    icon: 'fas fa-cog',
+                    type: 'unknown'
+                };
+
+                const card = createPlatformCard(platformName, config, platformInfo);
+                grid.appendChild(card);
+            });
+        }
+
+        function createPlatformCard(platformName, config, platformInfo) {
+            const col = document.createElement('div');
+            col.className = 'col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4';
+
+            const statusClass = config.enabled ? 'status-enabled' : 'status-disabled';
+            const statusText = config.enabled ? 'Enabled' : 'Disabled';
+
+            col.innerHTML = `
+                <div class="platform-card">
+                    <div class="platform-header">
+                        <div class="d-flex align-items-center">
+                            <div class="platform-icon platform-${platformInfo.type}">
+                                <i class="${platformInfo.icon}"></i>
+                            </div>
+                            <div class="ms-3">
+                                <h5 class="mb-0">${platformInfo.name}</h5>
+                                <small class="text-muted">${platformInfo.type.replace('_', ' ')}</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="status-indicator ${statusClass}"></span>
+                            <span class="small">${statusText}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="platform-details">
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <small class="text-muted">Webhook:</small>
+                                <br>
+                                <span class="badge ${config.hasWebhook ? 'bg-success' : 'bg-secondary'}">
+                                    ${config.hasWebhook ? 'Available' : 'Not Set'}
+                                </span>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">API:</small>
+                                <br>
+                                <span class="badge ${config.hasAPI ? 'bg-success' : 'bg-secondary'}">
+                                    ${config.hasAPI ? 'Available' : 'Not Set'}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-2 mt-3">
+                            <button class="btn btn-sm btn-outline-primary flex-fill" 
+                                    onclick="testPlatformConnection('${platformName}')"
+                                    ${!config.enabled ? 'disabled' : ''}>
+                                <i class="fas fa-plug me-1"></i> Test
+                            </button>
+                            <button class="btn btn-sm btn-outline-info flex-fill" 
+                                    onclick="showPlatformDetails('${platformName}')">
+                                <i class="fas fa-info-circle me-1"></i> Details
+                            </button>
+                        </div>
+                        
+                        <div class="test-results" id="testResults-${platformName}"></div>
+                    </div>
+                </div>
+            `;
+
+            return col;
+        }
+
+        async function testPlatformConnection(platformName) {
+            const resultsDiv = document.getElementById(`testResults-${platformName}`);
+            resultsDiv.style.display = 'block';
+            resultsDiv.className = 'test-results';
+            resultsDiv.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Testing connection...';
+
+            try {
+                const response = await fetch(`/api/webhooks/test/${platformName}`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    resultsDiv.className = 'test-results test-success';
+                    resultsDiv.innerHTML = '<i class="fas fa-check-circle me-2"></i>Connection successful!';
+                    logEvent(`${platformName} connection test passed`, 'success');
+                } else {
+                    resultsDiv.className = 'test-results test-error';
+                    resultsDiv.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i>Connection failed: ${result.error}`;
+                    logEvent(`${platformName} connection test failed: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                resultsDiv.className = 'test-results test-error';
+                resultsDiv.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i>Test failed: ${error.message}`;
+                logEvent(`${platformName} connection test error: ${error.message}`, 'error');
+            }
+
+            // Hide results after 5 seconds
+            setTimeout(() => {
+                resultsDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        async function testAllConnections() {
+            logEvent('Starting connection tests for all platforms...', 'info');
+            
+            const platforms = Object.keys(platformConfig);
+            for (const platform of platforms) {
+                await testPlatformConnection(platform);
+                // Small delay between tests to avoid overwhelming the server
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            logEvent('All connection tests completed', 'info');
+        }
+
+        function showPlatformDetails(platformName) {
+            const platformInfo = platformConfig[platformName] || { name: platformName };
+            
+            alert(`Platform: ${platformInfo.name}\nType: ${platformInfo.type || 'unknown'}\nName: ${platformName}\n\nDetailed configuration and logs would be shown here in a modal.`);
+        }
+
+        function logEvent(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = {
+                timestamp,
+                message,
+                type
+            };
+            
+            eventLog.unshift(entry);
+            
+            // Keep only last 100 events
+            if (eventLog.length > 100) {
+                eventLog = eventLog.slice(0, 100);
+            }
+            
+            updateEventLogDisplay();
+        }
+
+        function updateEventLogDisplay() {
+            const logContainer = document.getElementById('eventLog');
+            logContainer.innerHTML = '';
+            
+            eventLog.forEach(entry => {
+                const div = document.createElement('div');
+                div.className = 'event-entry';
+                
+                let icon = 'fas fa-info-circle';
+                let color = '#17a2b8';
+                
+                switch (entry.type) {
+                    case 'success':
+                        icon = 'fas fa-check-circle';
+                        color = '#28a745';
+                        break;
+                    case 'error':
+                        icon = 'fas fa-exclamation-triangle';
+                        color = '#dc3545';
+                        break;
+                    case 'warning':
+                        icon = 'fas fa-exclamation-circle';
+                        color = '#ffc107';
+                        break;
+                }
+                
+                div.innerHTML = `
+                    <div class="event-timestamp">${entry.timestamp}</div>
+                    <div style="color: ${color}">
+                        <i class="${icon} me-2"></i>${entry.message}
+                    </div>
+                `;
+                
+                logContainer.appendChild(div);
+            });
+        }
+
+        function clearEventLog() {
+            eventLog = [];
+            updateEventLogDisplay();
+            logEvent('Event log cleared', 'info');
+        }
+
+        function refreshDashboard() {
+            logEvent('Refreshing dashboard...', 'info');
+            loadPlatformStatus();
+        }
+
+        function setupAutoRefresh() {
+            const autoRefreshCheckbox = document.getElementById('autoRefresh');
+            
+            function updateRefreshInterval() {
+                if (refreshInterval) {
+                    clearInterval(refreshInterval);
+                }
+                
+                if (autoRefreshCheckbox.checked) {
+                    refreshInterval = setInterval(refreshDashboard, 30000);
+                    logEvent('Auto-refresh enabled (30s interval)', 'info');
+                } else {
+                    logEvent('Auto-refresh disabled', 'info');
+                }
+            }
+            
+            autoRefreshCheckbox.addEventListener('change', updateRefreshInterval);
+            updateRefreshInterval();
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            logEvent('Platform Integration Dashboard initialized', 'success');
+            loadPlatformStatus();
+            setupAutoRefresh();
+        });
+
+        // Handle visibility change to pause/resume auto-refresh
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                if (refreshInterval) {
+                    clearInterval(refreshInterval);
+                }
+            } else {
+                setupAutoRefresh();
+            }
+        });
+    </script>
+</body>
+</html>

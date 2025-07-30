@@ -57,7 +57,12 @@
     "automation:restart": "pm2 restart automation-machine zapier-manager notion-sync",
     "automation:logs": "pm2 logs",
     "checkpoint": "curl -X POST http://localhost:3001/api/zapier/automations/project-checkpoint/trigger",
-    "health:automation": "curl -s http://localhost:3001/api/zapier/health | jq ."
+    "health:automation": "curl -s http://localhost:3001/api/zapier/health | jq .",
+    "platform:start": "node src/index.js",
+    "platform:dev": "nodemon src/index.js",
+    "platform:test": "curl -s http://localhost:3000/api/webhooks/status | jq .",
+    "platform:dashboard": "open http://localhost:3000/platform-dashboard",
+    "platform:setup": "node scripts/setup-platform-integration.js"
   },
   "keywords": [
     "ai",
