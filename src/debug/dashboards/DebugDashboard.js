@@ -38,7 +38,7 @@ class DebugDashboard {
             requestCount: 0
         };
 
-        this.setupMiddleware();
+        this.setupMiddleware();<CRLF>
         this.setupRoutes();
         this.setupWebSocket();
         this.setupEventListeners();
