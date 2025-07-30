@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlashFusion - AI Business Operating System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .status {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        
+        .api-links {
+            margin-top: 2rem;
+        }
+        
+        .api-links a {
+            display: inline-block;
+            margin: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .api-links a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FlashFusion</h1>
+        <p class="subtitle">AI Business Operating System</p>
+        
+        <div class="status">
+            <div id="status-text">
+                <span class="loading"></span>
+                Checking system status...
+            </div>
+        </div>
+        
+        <div class="api-links">
+            <a href="/api/health" target="_blank">Health Check</a>
+            <a href="/api/status" target="_blank">API Status</a>
+            <a href="/api" target="_blank">API Dashboard</a>
+        </div>
+        
+        <p style="margin-top: 2rem; opacity: 0.7;">
+            Transform your business ideas into automated revenue streams with AI-powered agents.
+        </p>
+    </div>
+
+    <script>
+        // Check API health
+        async function checkHealth() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                if (data.status === 'healthy') {
+                    document.getElementById('status-text').innerHTML = 
+                        '✅ System Online - All services operational';
+                } else {
+                    document.getElementById('status-text').innerHTML = 
+                        '⚠️ System Status: ' + (data.message || 'Unknown');
+                }
+            } catch (error) {
+                document.getElementById('status-text').innerHTML = 
+                    '❌ API Offline - Functions may not be deployed';
+            }
+        }
+        
+        // Check health on load
+        setTimeout(checkHealth, 1000);
+    </script>
+</body>
+</html>
