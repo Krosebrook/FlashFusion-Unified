@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  flashfusion-app:
+    build: .
+    ports:
+      - "4173:4173"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - flashfusion-network
+
+  flashfusion-dev:
+    build: .
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev -- --host 0.0.0.0
+    networks:
+      - flashfusion-network
+
+  supabase-db:
+    image: supabase/postgres:14.1.0.89
+    ports:
+      - "54322:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your-super-secret-jwt-token-with-at-least-32-characters-long
+    volumes:
+      - supabase-db:/var/lib/postgresql/data
+    networks:
+      - flashfusion-network
+
+  supabase-studio:
+    image: supabase/studio:20230803-15a6762
+    ports:
+      - "54323:3000"
+    environment:
+      STUDIO_PG_META_URL: http://supabase-meta:8080
+      POSTGRES_PASSWORD: your-super-secret-jwt-token-with-at-least-32-characters-long
+    depends_on:
+      - supabase-db
+    networks:
+      - flashfusion-network
+
+networks:
+  flashfusion-network:
+    driver: bridge
+
+volumes:
+  supabase-db:
