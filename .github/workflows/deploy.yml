@@ -28,7 +28,7 @@ jobs:
     - name: 📦 Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'  # Updated to Node 20 to fix Firecrawl compatibility
         cache: 'npm'
     
     - name: 🔧 Install dependencies
@@ -44,11 +44,15 @@ jobs:
       uses: amondnet/vercel-action@v25
       id: vercel-deploy
       with:
-        vercel-token: ${{ secrets.VERCELSECRET }}
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
         vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        vercel-args: '--prod'
+        vercel-args: '--prod --confirm'
         working-directory: ./
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         
     - name: 🎯 Get deployment URL
       run: |
