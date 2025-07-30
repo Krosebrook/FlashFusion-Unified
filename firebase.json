@@ -9,7 +9,7 @@
     "rewrites": [
       {
         "source": "/api/**",
-        "function": "flashfusion-api"
+        "function": "flashfusionApi"
       },
       {
         "source": "**",
