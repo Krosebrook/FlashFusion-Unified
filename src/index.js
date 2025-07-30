@@ -21,6 +21,10 @@ const databaseService = require('./services/database');
 const aiService = require('./services/aiService');
 const notionService = require('./services/notionService');
 const zapierService = require('./services/zapierService');
+const { PlatformIntegrationService } = require('./services/platformIntegrationService');
+
+// Platform Integration Router
+const platformRouter = require('../api/webhooks/platform-router');
 
 // Configuration
 const config = require('./config/environment');
@@ -33,9 +37,11 @@ class FlashFusionUnified {
         this.orchestrator = new AgentOrchestrator();
         this.workflowEngine = new WorkflowEngine();
         this.dashboard = new UnifiedDashboard(this.orchestrator, this.workflowEngine);
+        this.platformService = new PlatformIntegrationService();
         
         this.setupMiddleware();
         this.setupRoutes();
+        this.setupPlatformIntegration();
         this.setupErrorHandling();
     }
 
@@ -54,74 +60,123 @@ class FlashFusionUnified {
         this.app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
         // Static files
-        this.app.use(express.static(path.join(__dirname, '../client/dist')));
+        this.app.use(express.static(path.join(__dirname, '../client')));
+        this.app.use('/assets', express.static(path.join(__dirname, '../assets')));
     }
 
     setupRoutes() {
+        // API Routes
+        this.app.use('/api/dashboard', this.dashboard.router);
+        this.app.use('/api/agents', this.orchestrator.router);
+        this.app.use('/api/workflows', this.workflowEngine.router);
+        this.app.use('/api/database', databaseService.router);
+        this.app.use('/api/ai', aiService.router);
+        this.app.use('/api/notion', notionService.router);
+        this.app.use('/api/zapier', zapierService.router);
+
         // Health check
         this.app.get('/health', (req, res) => {
             res.json({
                 status: 'healthy',
-                version: config.APP_VERSION,
                 timestamp: new Date().toISOString(),
-                services: {
-                    core: this.core.getHealth ? this.core.getHealth() : { status: 'healthy' },
-                    orchestrator: this.orchestrator.getHealth(),
-                    workflowEngine: this.workflowEngine.getHealth()
-                }
+                version: process.env.npm_package_version || '1.0.0',
+                uptime: process.uptime(),
+                platforms: this.platformService.getEnabledPlatforms().length
             });
         });
 
-        // API routes
-        this.app.use('/api/v1', this.dashboard.getRouter());
-        
-        // Workflow routes
-        this.app.use('/api/workflows', require('./api/routes/workflows'));
-        
-        // Agent routes
-        this.app.use('/api/agents', require('./api/routes/agents'));
-        
-        // Integration routes
-        this.app.use('/api/integrations', require('./api/routes/integrations'));
-        
-        // Notion integration routes
-        this.app.use('/api/notion', require('./api/routes/notion'));
-        
-        // Zapier integration routes
-        this.app.use('/api/zapier', require('./api/routes/zapier'));
-
-        // Analytics routes
-        this.app.use('/api/analytics', require('./api/routes/analytics'));
-
-        // Replit-style interface route
-        this.app.get('/replit', (req, res) => {
-            res.sendFile(path.join(__dirname, '../client/dist/replit-interface.html'));
-        });
-        
-        // Zapier automation hub route
-        this.app.get('/zapier-automation', (req, res) => {
-            res.sendFile(path.join(__dirname, '../client/dist/zapier-automation.html'));
-        });
-        
-        // Default to Replit interface for root
+        // Root route
         this.app.get('/', (req, res) => {
-            res.sendFile(path.join(__dirname, '../client/dist/replit-interface.html'));
+            res.sendFile(path.join(__dirname, '../client/index.html'));
         });
-        
-        // Original dashboard route
-        this.app.get('/dashboard', (req, res) => {
-            res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+
+        // Platform Integration Dashboard
+        this.app.get('/platform-dashboard', (req, res) => {
+            res.sendFile(path.join(__dirname, '../client/platform-integration-dashboard.html'));
         });
+    }
+
+    setupPlatformIntegration() {
+        // Mount platform webhook router
+        this.app.use('/api/webhooks', platformRouter);
+
+        // Set up platform event listeners
+        this.platformService.on('platform_event_sent', (data) => {
+            logger.info(`Platform event sent: ${data.platform} - ${data.event}`, {
+                success: data.success,
+                error: data.error
+            });
+        });
+
+        this.platformService.on('event_failed', (eventData) => {
+            logger.error(`Platform event failed after retries: ${eventData.event}`, {
+                eventId: eventData.id,
+                retries: eventData.retries
+            });
+        });
+
+        // Initialize platform connections
+        this.initializePlatformConnections();
+    }
+
+    async initializePlatformConnections() {
+        logger.info('Initializing platform connections...');
         
-        // Serve original dashboard for iframe in personal dashboard modal
-        this.app.get('*', (req, res) => {
-            // Check if it's a static file request
-            if (req.path.includes('.')) {
-                res.sendFile(path.join(__dirname, '../client/dist', req.path));
-            } else {
-                res.sendFile(path.join(__dirname, '../client/dist/replit-interface.html'));
+        const enabledPlatforms = this.platformService.getEnabledPlatforms();
+        logger.info(`Found ${enabledPlatforms.length} enabled platforms:`, 
+            enabledPlatforms.map(p => p.name).join(', ')
+        );
+
+        // Test connections for critical platforms
+        const criticalPlatforms = ['notion', 'github', 'zapier', 'firebase'];
+        for (const platform of criticalPlatforms) {
+            try {
+                const result = await this.platformService.testPlatformConnection(platform);
+                if (result.success) {
+                    logger.info(`✅ ${platform} connection verified`);
+                } else {
+                    logger.warn(`⚠️ ${platform} connection failed: ${result.error}`);
+                }
+            } catch (error) {
+                logger.error(`❌ ${platform} connection test error:`, error.message);
             }
+        }
+
+        // Set up automated event triggers
+        this.setupAutomatedEventTriggers();
+    }
+
+    setupAutomatedEventTriggers() {
+        // Trigger platform events based on internal system events
+        this.core.on('workflow_completed', (data) => {
+            this.platformService.queueEvent('workflow_completed', {
+                workflowId: data.workflowId,
+                type: data.type,
+                duration: data.duration,
+                results: data.results
+            });
         });
+
+        this.orchestrator.on('agent_action_completed', (data) => {
+            this.platformService.queueEvent('agent_action_completed', {
+                agentId: data.agentId,
+                action: data.action,
+                result: data.result,
+                metadata: data.metadata
+            });
+        });
+
+        // System health monitoring
+        setInterval(() => {
+            const healthData = {
+                uptime: process.uptime(),
+                memory: process.memoryUsage(),
+                platforms: this.platformService.getEnabledPlatforms().length,
+                timestamp: new Date().toISOString()
+            };
+
+            this.platformService.queueEvent('system_health_check', healthData, ['notion', 'firebase']);
+        }, 300000); // Every 5 minutes
     }
 
     setupErrorHandling() {
@@ -129,8 +184,8 @@ class FlashFusionUnified {
         this.app.use((req, res) => {
             res.status(404).json({
                 error: 'Not Found',
-                message: `Route ${req.originalUrl} not found`,
-                timestamp: new Date().toISOString()
+                message: 'The requested resource was not found',
+                path: req.path
             });
         });
 
@@ -138,137 +193,85 @@ class FlashFusionUnified {
         this.app.use((err, req, res, next) => {
             logger.error('Unhandled error:', err);
             
-            res.status(err.status || 500).json({
+            // Send error event to platforms
+            this.platformService.queueEvent('system_error', {
+                error: err.message,
+                stack: err.stack,
+                path: req.path,
+                method: req.method,
+                timestamp: new Date().toISOString()
+            }, ['notion', 'zapier']);
+
+            res.status(500).json({
                 error: 'Internal Server Error',
-                message: config.NODE_ENV === 'development' ? err.message : 'Something went wrong',
-                timestamp: new Date().toISOString(),
-                ...(config.NODE_ENV === 'development' && { stack: err.stack })
+                message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
             });
         });
     }
 
-    async initialize() {
+    async start(port = process.env.PORT || 3000) {
         try {
-            logger.info('🚀 Initializing FlashFusion Unified Platform...');
-            
-            // Initialize database service with graceful fallback
-            const dbInitialized = await databaseService.initialize();
-            if (dbInitialized) {
-                console.log('✅ Database service initialized');
-            } else {
-                console.warn('⚠️ Database service failed to initialize - running in offline mode');
-                console.warn('   Application will continue with limited functionality');
-                // Don't treat this as a failure - continue with other services
-            }
-            
-            // Initialize AI service
-            const aiInitialized = await aiService.initialize();
-            if (aiInitialized) {
-                console.log('✅ AI service initialized');
-            } else {
-                console.warn('⚠️ AI service failed to initialize - agents will have limited functionality');
-            }
-            
-            // Initialize Notion service
-            const notionInitialized = await notionService.initialize();
-            if (notionInitialized) {
-                console.log('✅ Notion service initialized');
-            } else {
-                console.warn('⚠️ Notion service failed to initialize - integration disabled');
-            }
-            
-            // Initialize Zapier service
-            const zapierInitialized = await zapierService.initialize();
-            if (zapierInitialized) {
-                console.log('✅ Zapier service initialized');
-            } else {
-                console.warn('⚠️ Zapier service failed to initialize - webhooks disabled');
-            }
-            
             // Initialize core services
             await this.core.initialize();
-            logger.info('✅ Core services initialized');
-            
-            // Initialize agent orchestrator
             await this.orchestrator.initialize();
-            console.log('✅ Agent orchestrator initialized');
-            
-            // Initialize workflow engine
             await this.workflowEngine.initialize();
-            console.log('✅ Workflow engine initialized');
-            
-            // Dashboard ready (no initialization needed)
-            console.log('📊 Dashboard ready');
-            console.log('✅ Unified dashboard initialized');
-            
-            // Run database cleanup
-            if (dbInitialized) {
-                await databaseService.cleanup();
-            }
-            
-            console.log('🎉 FlashFusion Unified Platform ready!');
-            
-        } catch (error) {
-            console.error('❌ Failed to initialize FlashFusion:', error);
-            throw error;
-        }
-    }
 
-    async start(port = config.PORT || 3000) {
-        try {
-            await this.initialize();
-            
+            // Start the server
             this.server = this.app.listen(port, () => {
-                console.log(`🌟 FlashFusion Unified Platform running on port ${port}`);
-                console.log(`📊 Dashboard: http://localhost:${port}`);
-                console.log(`🔍 Health check: http://localhost:${port}/health`);
-                console.log(`📚 API docs: http://localhost:${port}/api/docs`);
+                logger.info(`🚀 FlashFusion Unified Platform started on port ${port}`);
+                logger.info(`📊 Dashboard: http://localhost:${port}`);
+                logger.info(`🔗 Platform Integration: http://localhost:${port}/platform-dashboard`);
+                logger.info(`🏥 Health Check: http://localhost:${port}/health`);
+                
+                // Send startup event to platforms
+                this.platformService.queueEvent('system_startup', {
+                    port,
+                    timestamp: new Date().toISOString(),
+                    version: process.env.npm_package_version || '1.0.0',
+                    platforms: this.platformService.getEnabledPlatforms().length
+                });
             });
 
-            // Graceful shutdown handling
+            // Graceful shutdown
             process.on('SIGTERM', () => this.shutdown());
             process.on('SIGINT', () => this.shutdown());
-            
+
         } catch (error) {
-            console.error('❌ Failed to start FlashFusion:', error);
+            logger.error('Failed to start FlashFusion:', error);
             process.exit(1);
         }
     }
 
     async shutdown() {
-        console.log('🛑 Shutting down FlashFusion Unified Platform...');
+        logger.info('Shutting down FlashFusion...');
         
-        try {
-            // Close server
-            if (this.server) {
-                await new Promise((resolve) => this.server.close(resolve));
-            }
-            
-            // Cleanup services
-            await this.workflowEngine.shutdown();
-            await this.orchestrator.shutdown();
-            await this.core.shutdown();
-            
-            // Final database cleanup
-            if (databaseService.isConnected) {
-                await databaseService.cleanup();
-            }
-            
-            console.log('✅ FlashFusion shutdown complete');
+        // Send shutdown event to platforms
+        this.platformService.queueEvent('system_shutdown', {
+            timestamp: new Date().toISOString(),
+            uptime: process.uptime()
+        });
+
+        // Wait a moment for events to be sent
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        if (this.server) {
+            this.server.close(() => {
+                logger.info('FlashFusion shutdown complete');
+                process.exit(0);
+            });
+        } else {
             process.exit(0);
-            
-        } catch (error) {
-            console.error('❌ Error during shutdown:', error);
-            process.exit(1);
         }
     }
 }
 
-// Export for testing
-module.exports = FlashFusionUnified;
-
-// Start server if this file is run directly
+// Initialize and start the application
 if (require.main === module) {
-    const platform = new FlashFusionUnified();
-    platform.start();
+    const app = new FlashFusionUnified();
+    app.start().catch(error => {
+        logger.error('Failed to start application:', error);
+        process.exit(1);
+    });
 }
+
+module.exports = FlashFusionUnified;
