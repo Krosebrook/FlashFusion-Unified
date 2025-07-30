@@ -59,7 +59,7 @@ module.exports = async (req, res) => {
         return res.status(200).json({
             message: 'FlashFusion API Authentication',
             endpoints: [
-                'POST /generate-key - Generate new API key',
+                'POST /generate-key - Generate new API key', // Ensure this line ends with CRLF
                 'GET /validate-key - Validate API key',
                 'DELETE /revoke-key/:keyId - Revoke API key',
                 'GET /usage - Get API usage statistics',
