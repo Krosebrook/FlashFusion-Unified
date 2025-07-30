@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow all operations for now (Firebase Functions can read/write)
+    // TODO: Implement proper authentication-based rules in production
+    match /{document=**} {
+      allow read, write: if true;
+    }
+    
+    // Conversations - users can access their own conversations
+    match /conversations/{conversationId} {
+      allow read, write: if true; // For demo purposes
+    }
+    
+    // Workflows - users can manage their own workflows
+    match /workflows/{workflowId} {
+      allow read, write: if true; // For demo purposes
+    }
+    
+    // Agent definitions and configurations
+    match /agents/{agentId} {
+      allow read: if true;
+      allow write: if true; // For demo purposes
+    }
+    
+    // System analytics and monitoring
+    match /analytics/{document=**} {
+      allow read, write: if true; // For demo purposes
+    }
+    
+    // User profiles and settings
+    match /users/{userId} {
+      allow read, write: if true; // For demo purposes
+    }
+  }
+}

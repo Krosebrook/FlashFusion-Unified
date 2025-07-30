@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration Hub - FlashFusion Unified</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>🔗 Integration Hub</h1>
+        <p>Connect FlashFusion with 30+ external services and platforms</p>
+        <nav class="nav">
+            <a href="index.html">Dashboard</a>
+            <a href="agents.html">Agents</a>
+            <a href="workflows.html">Workflows</a>
+            <a href="integrations.html" class="active">Integrations</a>
+            <a href="help.html">Help</a>
+        </nav>
+    </header>
+    
+    <main class="main">
+        <div class="integration-tabs">
+            <button class="tab-button active" onclick="showIntegrationTab('all')">🌐 All Services</button>
+            <button class="tab-button" onclick="showIntegrationTab('ai')">🤖 AI Services</button>
+            <button class="tab-button" onclick="showIntegrationTab('productivity')">📝 Productivity</button>
+            <button class="tab-button" onclick="showIntegrationTab('automation')">⚡ Automation</button>
+            <button class="tab-button" onclick="showIntegrationTab('commerce')">🛒 Commerce</button>
+            <button class="tab-button" onclick="showIntegrationTab('social')">📱 Social Media</button>
+            <button class="tab-button" onclick="showIntegrationTab('dev')">⚙️ Development</button>
+            <button class="tab-button" onclick="showIntegrationTab('analytics')">📊 Analytics</button>
+        </div>
+        
+        <div class="toolbar">
+            <div class="search-bar">
+                <input type="text" id="integration-search" placeholder="Search integrations..." onkeyup="filterIntegrations()">
+                <button onclick="clearSearch()" class="btn-secondary">Clear</button>
+            </div>
+            <button onclick="refreshIntegrations()" class="btn-secondary">🔄 Refresh</button>
+            <button onclick="testAllConnections()" class="btn-primary">🧪 Test All</button>
+        </div>
+        
+        <div class="integration-stats">
+            <div class="stat-card">
+                <h4>Connected</h4>
+                <span id="connected-count" class="stat-number">0</span>
+            </div>
+            <div class="stat-card">
+                <h4>Available</h4>
+                <span id="available-count" class="stat-number">0</span>
+            </div>
+            <div class="stat-card">
+                <h4>Failed</h4>
+                <span id="failed-count" class="stat-number">0</span>
+            </div>
+        </div>
+        
+        <div id="integrations-container" class="integrations-grid">
+            <!-- Integrations will be loaded here -->
+        </div>
+        
+        <!-- Integration Detail Modal -->
+        <div id="integration-modal" class="modal">
+            <div class="modal-content large">
+                <span class="close">&times;</span>
+                <h2 id="integration-modal-title">Integration Details</h2>
+                <div id="integration-modal-body">
+                    <!-- Integration details will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Analytics Dashboard -->
+        <div id="analytics-dashboard" class="analytics-section" style="display: none;">
+            <h3>📊 Integration Analytics</h3>
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h4>API Usage</h4>
+                    <canvas id="usage-chart"></canvas>
+                </div>
+                <div class="analytics-card">
+                    <h4>Response Times</h4>
+                    <canvas id="response-chart"></canvas>
+                </div>
+                <div class="analytics-card">
+                    <h4>Success Rates</h4>
+                    <canvas id="success-chart"></canvas>
+                </div>
+                <div class="analytics-card">
+                    <h4>Cost Analysis</h4>
+                    <canvas id="cost-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="integrations.js"></script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+{
+	"servers": {
+		"github": {
+			"type": "http",
+			"url": "https://api.githubcopilot.com/mcp/",
+			"headers": {
+				"Authorization": "Bearer ${input:github_token}"
+			},
+			"gallery": true
+		},
+		"figma": {
+			"type": "http",
+			"url": "http://127.0.0.1:3845/sse",
+			"gallery": true
+		},
+		"microsoft-docs": {
+			"type": "http",
+			"url": "https://learn.microsoft.com/api/mcp",
+			"gallery": true
+		},
+		"markitdown": {
+			"type": "stdio",
+			"command": "uvx",
+			"args": [
+				"markitdown-mcp"
+			],
+			"gallery": true
+		},
+		"imagesorcery": {
+			"type": "stdio",
+			"command": "uvx",
+			"args": [
+				"imagesorcery-mcp==latest"
+			],
+			"gallery": true
+		},
+		"codacy": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@codacy/codacy-mcp@latest"
+			],
+			"env": {
+				"CODACY_ACCOUNT_TOKEN": "${input:codacy_account_token}"
+			},
+			"gallery": true
+		},
+		"deepwiki": {
+			"type": "http",
+			"url": "https://mcp.deepwiki.com/sse",
+			"gallery": true
+		},
+		"huggingface": {
+			"type": "http",
+			"url": "https://hf.co/mcp",
+			"gallery": true
+		},
+		"playwright": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"@playwright/mcp@latest"
+			],
+			"gallery": true
+		},
+		"sentry": {
+			"type": "http",
+			"url": "https://mcp.sentry.dev/mcp",
+			"gallery": true
+		},
+		"context7": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@upstash/context7-mcp@latest"
+			],
+			"gallery": true
+		},
+		"notion": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@notionhq/notion-mcp-server"
+			],
+			"env": {
+				"OPENAPI_MCP_HEADERS": "{\"Authorization\": \"Bearer ${input:notion_token}\", \"Notion-Version\": \"2022-06-28\" }"
+			},
+			"gallery": true
+		},
+		"sequentialthinking": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-sequential-thinking@latest"
+			],
+			"gallery": true
+		},
+		"memory": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-memory@latest"
+			],
+			"env": {
+				"MEMORY_FILE_PATH": "${input:memory_file_path}"
+			},
+			"gallery": true
+		},
+		"linear": {
+			"type": "http",
+			"url": "https://mcp.linear.app/sse",
+			"gallery": true
+		},
+		"zapier": {
+			"type": "http",
+			"url": "https://api.zapier.com/v1/mcp/sse",
+			"gallery": true
+		},
+		"mongodb": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"mongodb-mcp-server@latest"
+			],
+			"gallery": true
+		},
+		"stripe": {
+			"type": "http",
+			"url": "https://mcp.stripe.com/",
+			"headers": {
+				"Authorization": "Bearer ${input:stripe_api_key}"
+			},
+			"gallery": true
+		},
+		"wix": {
+			"type": "http",
+			"url": "https://mcp.wix.com/sse",
+			"gallery": true
+		},
+		"intercom": {
+			"type": "http",
+			"url": "https://mcp.intercom.com/sse",
+			"gallery": true
+		},
+		"webflow": {
+			"type": "http",
+			"url": "https://mcp.webflow.com/sse",
+			"gallery": true
+		},
+		"azure": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@azure/mcp@latest",
+				"server",
+				"start"
+			],
+			"gallery": true
+		},
+		"terraform": {
+			"type": "stdio",
+			"command": "docker",
+			"args": [
+				"run",
+				"-i",
+				"--rm",
+				"hashicorp/terraform-mcp-server:latest"
+			],
+			"gallery": true
+		},
+		"supabase": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@supabase/mcp-server@latest"
+			],
+			"env": {
+				"SUPABASE_URL": "${input:supabase_url}",
+				"SUPABASE_SERVICE_ROLE_KEY": "${input:supabase_service_key}"
+			},
+			"gallery": true
+		},
+		"replit": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-fetch@latest"
+			],
+			"env": {
+				"REPLIT_API_TOKEN": "${input:replit_api_token}"
+			},
+			"gallery": false
+		},
+		"flashfusion": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-fetch@latest"
+			],
+			"env": {
+				"FLASHFUSION_API_KEY": "${input:flashfusion_api_key}",
+				"FLASHFUSION_OTE_KEY": "${input:flashfusion_ote_key}"
+			},
+			"gallery": false
+		},
+		"openai": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/create-openai-mcp-server@latest"
+			],
+			"env": {
+				"OPENAI_API_KEY": "${input:openai_api_key}"
+			},
+			"gallery": false
+		},
+		"firebase": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@google-cloud/firebase-mcp@latest"
+			],
+			"env": {
+				"GOOGLE_APPLICATION_CREDENTIALS": "${input:firebase_credentials}",
+				"FIREBASE_PROJECT_ID": "${input:firebase_project_id}"
+			},
+			"gallery": false
+		},
+		"gemini": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@google-ai/generativelanguage-mcp@latest"
+			],
+			"env": {
+				"GEMINI_API_KEY": "${input:gemini_api_key}"
+			},
+			"gallery": false
+		},
+		"printify": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-fetch@latest"
+			],
+			"env": {
+				"PRINTIFY_API_KEY": "${input:printify_api_key}"
+			},
+			"gallery": false
+		},
+		"godaddy": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-fetch@latest"
+			],
+			"env": {
+				"GODADDY_API_KEY": "${input:godaddy_api_key}",
+				"GODADDY_API_SECRET": "${input:godaddy_api_secret}",
+				"GODADDY_OTE": "${input:godaddy_ote}"
+			},
+			"gallery": false
+		},
+		"langchain": {
+			"type": "stdio",
+			"command": "python",
+			"args": [
+				"-m", "langchain_community.chat_models.mcp"
+			],
+			"env": {
+				"LANGCHAIN_API_KEY": "${input:langchain_api_key}",
+				"OPENAI_API_KEY": "${input:openai_api_key}"
+			},
+			"gallery": false
+		}
+	},
+	"inputs": [
+		{
+			"id": "codacy_account_token",
+			"type": "promptString",
+			"description": "Codacy Account Token for API access",
+			"password": true
+		},
+		{
+			"id": "notion_token",
+			"type": "promptString",
+			"description": "Notion Integration Token (starts with ntn_)",
+			"password": true
+		},
+		{
+			"id": "memory_file_path",
+			"type": "promptString",
+			"description": "Path to the memory storage file",
+			"password": false
+		},
+		{
+			"id": "stripe_api_key",
+			"type": "promptString",
+			"description": "Stripe API Key (https://dashboard.stripe.com/apikeys)",
+			"password": true
+		},
+		{
+			"id": "github_token",
+			"type": "promptString",
+			"description": "GitHub Personal Access Token",
+			"password": true
+		},
+		{
+			"id": "supabase_url",
+			"type": "promptString",
+			"description": "Supabase Project URL",
+			"password": false
+		},
+		{
+			"id": "supabase_service_key",
+			"type": "promptString",
+			"description": "Supabase Service Role Key",
+			"password": true
+		},
+		{
+			"id": "replit_api_token",
+			"type": "promptString",
+			"description": "Replit API Token",
+			"password": true
+		},
+		{
+			"id": "flashfusion_api_key",
+			"type": "promptString",
+			"description": "Flashfusion Production API Key",
+			"password": true
+		},
+		{
+			"id": "flashfusion_ote_key",
+			"type": "promptString",
+			"description": "Flashfusion OTE API Key",
+			"password": true
+		},
+		{
+			"id": "openai_api_key",
+			"type": "promptString",
+			"description": "OpenAI API Key",
+			"password": true
+		},
+		{
+			"id": "firebase_credentials",
+			"type": "promptString",
+			"description": "Firebase Service Account JSON path",
+			"password": false
+		},
+		{
+			"id": "firebase_project_id",
+			"type": "promptString",
+			"description": "Firebase Project ID",
+			"password": false
+		},
+		{
+			"id": "gemini_api_key",
+			"type": "promptString",
+			"description": "Google Gemini API Key",
+			"password": true
+		},
+		{
+			"id": "printify_api_key",
+			"type": "promptString",
+			"description": "Printify API Key",
+			"password": true
+		},
+		{
+			"id": "godaddy_api_key",
+			"type": "promptString",
+			"description": "GoDaddy API Key",
+			"password": true
+		},
+		{
+			"id": "godaddy_api_secret",
+			"type": "promptString",
+			"description": "GoDaddy API Secret",
+			"password": true
+		},
+		{
+			"id": "godaddy_ote",
+			"type": "promptString",
+			"description": "GoDaddy OTE Environment (true/false)",
+			"password": false
+		},
+		{
+			"id": "langchain_api_key",
+			"type": "promptString",
+			"description": "LangChain API Key",
+			"password": true
+		}
+	]
+}

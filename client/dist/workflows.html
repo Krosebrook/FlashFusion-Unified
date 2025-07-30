@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Management - FlashFusion Unified</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>⚙️ Workflow Management</h1>
+        <p>Design, manage, and optimize your business workflows</p>
+        <nav class="nav">
+            <a href="index.html">Dashboard</a>
+            <a href="agents.html">Agents</a>
+            <a href="workflows.html" class="active">Workflows</a>
+            <a href="integrations.html">Integrations</a>
+            <a href="help.html">Help</a>
+        </nav>
+    </header>
+    
+    <main class="main">
+        <div class="workflow-tabs">
+            <button class="tab-button active" onclick="showTab('templates')">📋 Templates</button>
+            <button class="tab-button" onclick="showTab('active')">🏃 Active</button>
+            <button class="tab-button" onclick="showTab('completed')">✅ Completed</button>
+            <button class="tab-button" onclick="showTab('hierarchy')">📊 Hierarchy</button>
+        </div>
+        
+        <div class="toolbar">
+            <button onclick="createWorkflow()" class="btn-primary">➕ Create Workflow</button>
+            <button onclick="refreshWorkflows()" class="btn-secondary">🔄 Refresh</button>
+            <button onclick="exportWorkflows()" class="btn-secondary">📤 Export</button>
+            <button onclick="importWorkflows()" class="btn-secondary">📥 Import</button>
+        </div>
+        
+        <!-- Templates Tab -->
+        <div id="templates-tab" class="tab-content active">
+            <h3>Workflow Templates</h3>
+            <div id="templates-container" class="workflows-grid">
+                <!-- Templates will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Active Tab -->
+        <div id="active-tab" class="tab-content">
+            <h3>Active Workflows</h3>
+            <div id="active-container" class="workflows-grid">
+                <!-- Active workflows will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Completed Tab -->
+        <div id="completed-tab" class="tab-content">
+            <h3>Completed Workflows</h3>
+            <div id="completed-container" class="workflows-grid">
+                <!-- Completed workflows will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Hierarchy Tab -->
+        <div id="hierarchy-tab" class="tab-content">
+            <h3>Workflow Hierarchy Management</h3>
+            <div class="hierarchy-controls">
+                <h4>Execution Priority Order</h4>
+                <div id="hierarchy-list" class="sortable-list">
+                    <!-- Sortable workflow list will be loaded here -->
+                </div>
+                <div class="hierarchy-actions">
+                    <button onclick="saveHierarchy()" class="btn-primary">💾 Save Order</button>
+                    <button onclick="resetHierarchy()" class="btn-secondary">🔄 Reset to Default</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Workflow Detail Modal -->
+        <div id="workflow-modal" class="modal">
+            <div class="modal-content large">
+                <span class="close">&times;</span>
+                <h2 id="workflow-modal-title">Workflow Details</h2>
+                <div id="workflow-modal-body">
+                    <!-- Workflow details will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Create Workflow Modal -->
+        <div id="create-workflow-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Create New Workflow</h2>
+                <form id="workflow-form">
+                    <div class="form-group">
+                        <label for="workflow-type">Workflow Type:</label>
+                        <select id="workflow-type" required>
+                            <option value="">Select type...</option>
+                            <option value="development">Development Workflow</option>
+                            <option value="commerce">Commerce Workflow</option>
+                            <option value="content">Content Workflow</option>
+                            <option value="hybrid">Hybrid Workflow</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="workflow-name">Custom Name:</label>
+                        <input type="text" id="workflow-name" placeholder="Optional custom name">
+                    </div>
+                    <div class="form-group">
+                        <label for="workflow-description">Description:</label>
+                        <textarea id="workflow-description" rows="3" placeholder="What does this workflow accomplish?"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="workflow-priority">Priority:</label>
+                        <select id="workflow-priority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">🚀 Create & Start</button>
+                        <button type="button" onclick="createWorkflowDraft()" class="btn-secondary">📝 Save as Draft</button>
+                        <button type="button" onclick="closeCreateModal()" class="btn-secondary">❌ Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <script src="workflows.js"></script>
+</body>
+</html>
