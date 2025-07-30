@@ -157,19 +157,51 @@ function displayCodeSnippets() {
         snippetsToShow = codeSnippets[category] || [];
     }
     
-    container.innerHTML = snippetsToShow.map((snippet, index) => `
-        <div class="snippet-card" onclick="loadSnippet(${index}, '${category}')">
-            <h4>${snippet.title}</h4>
-            <p>${snippet.description}</p>
-            <div class="snippet-preview">
-                <code>${snippet.code.substring(0, 100)}...</code>
-            </div>
-            <div class="snippet-actions">
-                <button onclick="event.stopPropagation(); copySnippet(${index}, '${category}')" class="btn-secondary">📋 Copy</button>
-                <button onclick="event.stopPropagation(); editSnippet(${index}, '${category}')" class="btn-primary">✏️ Edit</button>
-            </div>
-        </div>
-    `).join('');
+    // Clear container safely
+    container.textContent = '';
+    
+    // Create snippet cards using safe DOM methods
+    snippetsToShow.forEach((snippet, index) => {
+        const card = document.createElement('div');
+        card.className = 'snippet-card';
+        card.onclick = () => loadSnippet(index, category);
+        
+        const title = document.createElement('h4');
+        title.textContent = snippet.title;
+        
+        const description = document.createElement('p');
+        description.textContent = snippet.description;
+        
+        const preview = document.createElement('div');
+        preview.className = 'snippet-preview';
+        
+        const code = document.createElement('code');
+        code.textContent = snippet.code.substring(0, 100) + '...';
+        preview.appendChild(code);
+        
+        const actions = document.createElement('div');
+        actions.className = 'snippet-actions';
+        
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'btn-secondary';
+        copyBtn.textContent = '📋 Copy';
+        copyBtn.onclick = (e) => { e.stopPropagation(); copySnippet(index, category); };
+        
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn-primary';
+        editBtn.textContent = '✏️ Edit';
+        editBtn.onclick = (e) => { e.stopPropagation(); editSnippet(index, category); };
+        
+        actions.appendChild(copyBtn);
+        actions.appendChild(editBtn);
+        
+        card.appendChild(title);
+        card.appendChild(description);
+        card.appendChild(preview);
+        card.appendChild(actions);
+        
+        container.appendChild(card);
+    });
 }
 
 function filterSnippets() {
@@ -262,11 +294,19 @@ async function runCode() {
     const output = document.getElementById('code-output');
     
     if (!code.trim()) {
-        output.innerHTML = '<div class="error">No code to execute</div>';
+        output.textContent = '';
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error';
+        errorDiv.textContent = 'No code to execute';
+        output.appendChild(errorDiv);
         return;
     }
     
-    output.innerHTML = '<div class="loading">Executing code...</div>';
+    output.textContent = '';
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'loading';
+    loadingDiv.textContent = 'Executing code...';
+    output.appendChild(loadingDiv);
     
     try {
         let result;
@@ -297,21 +337,45 @@ async function runCode() {
                 result = 'Language not supported';
         }
         
-        output.innerHTML = `
-            <div class="output-header">
-                <strong>Output (${language}):</strong>
-                <span class="execution-time">${new Date().toLocaleTimeString()}</span>
-            </div>
-            <pre class="output-content">${result}</pre>
-        `;
+        // Create safe output display
+        output.textContent = '';
+        
+        const outputHeader = document.createElement('div');
+        outputHeader.className = 'output-header';
+        
+        const outputLabel = document.createElement('strong');
+        outputLabel.textContent = `Output (${language}):`;
+        
+        const executionTime = document.createElement('span');
+        executionTime.className = 'execution-time';
+        executionTime.textContent = new Date().toLocaleTimeString();
+        
+        outputHeader.appendChild(outputLabel);
+        outputHeader.appendChild(executionTime);
+        
+        const outputContent = document.createElement('pre');
+        outputContent.className = 'output-content';
+        outputContent.textContent = result;
+        
+        output.appendChild(outputHeader);
+        output.appendChild(outputContent);
         
     } catch (error) {
-        output.innerHTML = `
-            <div class="error">
-                <strong>Execution Error:</strong>
-                <pre>${error.message}</pre>
-            </div>
-        `;
+        output.textContent = '';
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error';
+        
+        const errorLabel = document.createElement('strong');
+        errorLabel.textContent = 'Execution Error:';
+        
+        const errorPre = document.createElement('pre');
+        errorPre.textContent = error.message;
+        
+        errorDiv.appendChild(errorLabel);
+        errorDiv.appendChild(errorPre);
+        
+        output.appendChild(errorDiv);
     }
 }
 
@@ -379,19 +443,46 @@ function shareCode() {
     navigator.clipboard.writeText(shareableLink).then(() => {
         showSuccess('Shareable link copied to clipboard!');
     }).catch(() => {
-        // Fallback: show link in modal
+        // Fallback: show link in modal using safe DOM methods
         const modal = document.createElement('div');
         modal.className = 'modal';
         modal.style.display = 'block';
-        modal.innerHTML = `
-            <div class="modal-content">
-                <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
-                <h3>Share Code</h3>
-                <p>Copy this link to share your code:</p>
-                <textarea readonly style="width: 100%; height: 100px;">${shareableLink}</textarea>
-                <button onclick="navigator.clipboard.writeText('${shareableLink}'); showSuccess('Link copied!');" class="btn-primary">Copy Link</button>
-            </div>
-        `;
+        
+        const modalContent = document.createElement('div');
+        modalContent.className = 'modal-content';
+        
+        const closeBtn = document.createElement('span');
+        closeBtn.className = 'close';
+        closeBtn.textContent = '×';
+        closeBtn.onclick = () => modal.remove();
+        
+        const title = document.createElement('h3');
+        title.textContent = 'Share Code';
+        
+        const description = document.createElement('p');
+        description.textContent = 'Copy this link to share your code:';
+        
+        const textarea = document.createElement('textarea');
+        textarea.readOnly = true;
+        textarea.style.width = '100%';
+        textarea.style.height = '100px';
+        textarea.value = shareableLink;
+        
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'btn-primary';
+        copyBtn.textContent = 'Copy Link';
+        copyBtn.onclick = () => {
+            navigator.clipboard.writeText(shareableLink);
+            showSuccess('Link copied!');
+        };
+        
+        modalContent.appendChild(closeBtn);
+        modalContent.appendChild(title);
+        modalContent.appendChild(description);
+        modalContent.appendChild(textarea);
+        modalContent.appendChild(copyBtn);
+        
+        modal.appendChild(modalContent);
         document.body.appendChild(modal);
     });
 }

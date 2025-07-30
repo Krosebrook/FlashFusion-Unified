@@ -57,7 +57,11 @@ function displayAgents(agents) {
     const container = document.getElementById('agents-container');
     
     if (agents.length === 0) {
-        container.innerHTML = '<div class="loading">No agents found</div>';
+        container.textContent = '';
+        const noAgentsDiv = document.createElement('div');
+        noAgentsDiv.className = 'loading';
+        noAgentsDiv.textContent = 'No agents found';
+        container.appendChild(noAgentsDiv);
         return;
     }
     
@@ -175,48 +179,152 @@ async function showAgentDetails(agentId) {
     const body = document.getElementById('modal-body');
     
     title.textContent = agent.name + ' - Details';
-    body.innerHTML = `
-        <div class="agent-details">
-            <div class="detail-section">
-                <h4>Basic Information</h4>
-                <p><strong>ID:</strong> ${agent.id}</p>
-                <p><strong>Name:</strong> ${agent.name}</p>
-                <p><strong>Status:</strong> <span class="status-${agent.status}">${agent.status}</span></p>
-                <p><strong>Priority:</strong> ${agent.priority}</p>
-            </div>
-            
-            <div class="detail-section">
-                <h4>Role & Capabilities</h4>
-                <p><strong>Role:</strong> ${agent.role}</p>
-                <p><strong>Capabilities:</strong></p>
-                <ul>
-                    ${agent.capabilities.map(cap => `<li>${cap.replace(/_/g, ' ').toUpperCase()}</li>`).join('')}
-                </ul>
-            </div>
-            
-            ${agent.currentWorkflow ? `
-                <div class="detail-section">
-                    <h4>Current Activity</h4>
-                    <p><strong>Workflow:</strong> ${agent.currentWorkflow}</p>
-                    <p><strong>Task:</strong> ${agent.currentTask || 'Not specified'}</p>
-                </div>
-            ` : ''}
-            
-            <div class="detail-section">
-                <h4>Performance Metrics</h4>
-                <p><strong>Total Tasks Completed:</strong> ${Math.floor(Math.random() * 100) + 1}</p>
-                <p><strong>Success Rate:</strong> ${(Math.random() * 20 + 80).toFixed(1)}%</p>
-                <p><strong>Average Response Time:</strong> ${(Math.random() * 2 + 0.5).toFixed(2)}s</p>
-            </div>
-            
-            <div class="detail-actions">
-                <button onclick="editAgent('${agent.id}')" class="btn-primary">✏️ Edit Agent</button>
-                <button onclick="chatWithAgent('${agent.id}')" class="btn-primary">💬 Chat</button>
-                <button onclick="cloneAgent('${agent.id}')" class="btn-secondary">📋 Clone</button>
-                <button onclick="exportAgent('${agent.id}')" class="btn-secondary">📤 Export</button>
-            </div>
-        </div>
-    `;
+    
+    // Clear and create safe DOM structure
+    body.textContent = '';
+    
+    const detailsDiv = document.createElement('div');
+    detailsDiv.className = 'agent-details';
+    
+    // Basic Information section
+    const basicSection = document.createElement('div');
+    basicSection.className = 'detail-section';
+    
+    const basicTitle = document.createElement('h4');
+    basicTitle.textContent = 'Basic Information';
+    basicSection.appendChild(basicTitle);
+    
+    const idP = document.createElement('p');
+    idP.innerHTML = '<strong>ID:</strong> ';
+    idP.appendChild(document.createTextNode(agent.id));
+    
+    const nameP = document.createElement('p');
+    nameP.innerHTML = '<strong>Name:</strong> ';
+    nameP.appendChild(document.createTextNode(agent.name));
+    
+    const statusP = document.createElement('p');
+    statusP.innerHTML = '<strong>Status:</strong> ';
+    const statusSpan = document.createElement('span');
+    statusSpan.className = `status-${agent.status}`;
+    statusSpan.textContent = agent.status;
+    statusP.appendChild(statusSpan);
+    
+    const priorityP = document.createElement('p');
+    priorityP.innerHTML = '<strong>Priority:</strong> ';
+    priorityP.appendChild(document.createTextNode(agent.priority));
+    
+    basicSection.appendChild(idP);
+    basicSection.appendChild(nameP);
+    basicSection.appendChild(statusP);
+    basicSection.appendChild(priorityP);
+    
+    // Role & Capabilities section
+    const roleSection = document.createElement('div');
+    roleSection.className = 'detail-section';
+    
+    const roleTitle = document.createElement('h4');
+    roleTitle.textContent = 'Role & Capabilities';
+    roleSection.appendChild(roleTitle);
+    
+    const roleP = document.createElement('p');
+    roleP.innerHTML = '<strong>Role:</strong> ';
+    roleP.appendChild(document.createTextNode(agent.role));
+    roleSection.appendChild(roleP);
+    
+    const capP = document.createElement('p');
+    capP.innerHTML = '<strong>Capabilities:</strong>';
+    roleSection.appendChild(capP);
+    
+    const capList = document.createElement('ul');
+    agent.capabilities.forEach(cap => {
+        const li = document.createElement('li');
+        li.textContent = cap.replace(/_/g, ' ').toUpperCase();
+        capList.appendChild(li);
+    });
+    roleSection.appendChild(capList);
+    
+    detailsDiv.appendChild(basicSection);
+    detailsDiv.appendChild(roleSection);
+    
+    // Current Activity section (if exists)
+    if (agent.currentWorkflow) {
+        const activitySection = document.createElement('div');
+        activitySection.className = 'detail-section';
+        
+        const activityTitle = document.createElement('h4');
+        activityTitle.textContent = 'Current Activity';
+        activitySection.appendChild(activityTitle);
+        
+        const workflowP = document.createElement('p');
+        workflowP.innerHTML = '<strong>Workflow:</strong> ';
+        workflowP.appendChild(document.createTextNode(agent.currentWorkflow));
+        
+        const taskP = document.createElement('p');
+        taskP.innerHTML = '<strong>Task:</strong> ';
+        taskP.appendChild(document.createTextNode(agent.currentTask || 'Not specified'));
+        
+        activitySection.appendChild(workflowP);
+        activitySection.appendChild(taskP);
+        detailsDiv.appendChild(activitySection);
+    }
+    
+    // Performance Metrics section
+    const metricsSection = document.createElement('div');
+    metricsSection.className = 'detail-section';
+    
+    const metricsTitle = document.createElement('h4');
+    metricsTitle.textContent = 'Performance Metrics';
+    metricsSection.appendChild(metricsTitle);
+    
+    const tasksP = document.createElement('p');
+    tasksP.innerHTML = '<strong>Total Tasks Completed:</strong> ';
+    tasksP.appendChild(document.createTextNode(Math.floor(Math.random() * 100) + 1));
+    
+    const successP = document.createElement('p');
+    successP.innerHTML = '<strong>Success Rate:</strong> ';
+    successP.appendChild(document.createTextNode((Math.random() * 20 + 80).toFixed(1) + '%'));
+    
+    const responseP = document.createElement('p');
+    responseP.innerHTML = '<strong>Average Response Time:</strong> ';
+    responseP.appendChild(document.createTextNode((Math.random() * 2 + 0.5).toFixed(2) + 's'));
+    
+    metricsSection.appendChild(tasksP);
+    metricsSection.appendChild(successP);
+    metricsSection.appendChild(responseP);
+    
+    // Actions section
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'detail-actions';
+    
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn-primary';
+    editBtn.textContent = '✏️ Edit Agent';
+    editBtn.onclick = () => editAgent(agent.id);
+    
+    const chatBtn = document.createElement('button');
+    chatBtn.className = 'btn-primary';
+    chatBtn.textContent = '💬 Chat';
+    chatBtn.onclick = () => chatWithAgent(agent.id);
+    
+    const cloneBtn = document.createElement('button');
+    cloneBtn.className = 'btn-secondary';
+    cloneBtn.textContent = '📋 Clone';
+    cloneBtn.onclick = () => cloneAgent(agent.id);
+    
+    const exportBtn = document.createElement('button');
+    exportBtn.className = 'btn-secondary';
+    exportBtn.textContent = '📤 Export';
+    exportBtn.onclick = () => exportAgent(agent.id);
+    
+    actionsDiv.appendChild(editBtn);
+    actionsDiv.appendChild(chatBtn);
+    actionsDiv.appendChild(cloneBtn);
+    actionsDiv.appendChild(exportBtn);
+    
+    detailsDiv.appendChild(metricsSection);
+    detailsDiv.appendChild(actionsDiv);
+    
+    body.appendChild(detailsDiv);
     
     modal.style.display = 'block';
 }
@@ -288,11 +396,21 @@ function chatWithAgent(agentId) {
     chatHistory = [];
     
     document.getElementById('chat-title').textContent = 'Chat with ' + agent.name;
-    document.getElementById('chat-history').innerHTML = `
-        <div class="chat-message agent">
-            <strong>${agent.name}:</strong> Hello! I'm ${agent.name}. How can I assist you today?
-        </div>
-    `;
+    
+    // Create safe initial message
+    const chatHistoryEl = document.getElementById('chat-history');
+    chatHistoryEl.textContent = '';
+    
+    const initialMsg = document.createElement('div');
+    initialMsg.className = 'chat-message agent';
+    
+    const agentLabel = document.createElement('strong');
+    agentLabel.textContent = agent.name + ':';
+    
+    initialMsg.appendChild(agentLabel);
+    initialMsg.appendChild(document.createTextNode(' Hello! I\'m ' + agent.name + '. How can I assist you today?'));
+    
+    chatHistoryEl.appendChild(initialMsg);
     
     document.getElementById('chat-modal').style.display = 'block';
     document.getElementById('chat-message').focus();
@@ -304,13 +422,19 @@ async function sendMessage() {
     
     if (!message || !currentAgent) return;
     
-    // Add user message to history
+    // Add user message to history safely
     const chatHistory = document.getElementById('chat-history');
-    chatHistory.innerHTML += `
-        <div class="chat-message user">
-            <strong>You:</strong> ${message}
-        </div>
-    `;
+    
+    const userMsg = document.createElement('div');
+    userMsg.className = 'chat-message user';
+    
+    const userLabel = document.createElement('strong');
+    userLabel.textContent = 'You:';
+    
+    userMsg.appendChild(userLabel);
+    userMsg.appendChild(document.createTextNode(' ' + message));
+    
+    chatHistory.appendChild(userMsg);
     
     messageInput.value = '';
     
@@ -331,24 +455,39 @@ async function sendMessage() {
         const data = await response.json();
         
         if (data.success) {
-            chatHistory.innerHTML += `
-                <div class="chat-message agent">
-                    <strong>${currentAgent.name}:</strong> ${data.data.response}
-                </div>
-            `;
+            const agentMsg = document.createElement('div');
+            agentMsg.className = 'chat-message agent';
+            
+            const agentLabel = document.createElement('strong');
+            agentLabel.textContent = currentAgent.name + ':';
+            
+            agentMsg.appendChild(agentLabel);
+            agentMsg.appendChild(document.createTextNode(' ' + data.data.response));
+            
+            chatHistory.appendChild(agentMsg);
         } else {
-            chatHistory.innerHTML += `
-                <div class="chat-message agent error">
-                    <strong>Error:</strong> ${data.error}
-                </div>
-            `;
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'chat-message agent error';
+            
+            const errorLabel = document.createElement('strong');
+            errorLabel.textContent = 'Error:';
+            
+            errorMsg.appendChild(errorLabel);
+            errorMsg.appendChild(document.createTextNode(' ' + data.error));
+            
+            chatHistory.appendChild(errorMsg);
         }
     } catch (error) {
-        chatHistory.innerHTML += `
-            <div class="chat-message agent error">
-                <strong>Network Error:</strong> ${error.message}
-            </div>
-        `;
+        const networkErrorMsg = document.createElement('div');
+        networkErrorMsg.className = 'chat-message agent error';
+        
+        const networkErrorLabel = document.createElement('strong');
+        networkErrorLabel.textContent = 'Network Error:';
+        
+        networkErrorMsg.appendChild(networkErrorLabel);
+        networkErrorMsg.appendChild(document.createTextNode(' ' + error.message));
+        
+        chatHistory.appendChild(networkErrorMsg);
     }
     
     // Scroll to bottom
