@@ -38,8 +38,35 @@ module.exports = (req, res) => {
                 platform: 'FlashFusion',
                 version: '2.0.0-bulletproof',
                 environment: 'vercel',
+                features: {
+                    webhooks: 'active',
+                    zapier: 'active',
+                    authentication: 'active',
+                    rate_limiting: 'active'
+                },
+                endpoints: {
+                    webhooks: '/api/webhooks',
+                    auth: '/api/auth',
+                    zapier: '/api/webhooks/zapier'
+                },
                 timestamp: new Date().toISOString()
             });
+        }
+
+        // Route to webhook system
+        if (url.startsWith('/api/webhooks')) {
+            const webhookPath = url.replace('/api/webhooks', '') || '/';
+            const webhookReq = { ...req, url: webhookPath };
+            const webhookHandler = require('./webhooks');
+            return webhookHandler(webhookReq, res);
+        }
+
+        // Route to authentication system
+        if (url.startsWith('/api/auth')) {
+            const authPath = url.replace('/api/auth', '') || '/';
+            const authReq = { ...req, url: authPath };
+            const authHandler = require('./auth');
+            return authHandler(authReq, res);
         }
 
         // Root page - Full FlashFusion Dashboard
