@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
+    "start:enhanced": "node src/enhanced-index.js",
     "dev": "nodemon src/index.js",
     "dev:full": "concurrently \"npm run dev\" \"npm run dev:client\"",
     "dev:client": "cd client && npm start",
