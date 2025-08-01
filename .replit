@@ -1,4 +1,8 @@
 modules = ["nodejs-20"]
+language = "nodejs"
+run = "npm start"
+entrypoint = "src/index.js"
+onBoot = "npm install && npm run devops:start"
 
 [nix]
 channel = "stable-24_05"
@@ -15,3 +19,14 @@ externalPort = 80
 [env]
 NODE_ENV = "production"
 PORT = "3000"
+
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix", "package.json"]
+
+[packager]
+language = "nodejs"
+
+[packager.features]
+packageSearch = true
+guessImports = true
+enabledForHosting = false

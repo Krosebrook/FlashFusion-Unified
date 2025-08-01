@@ -1,0 +1,1 @@
+export const ExtensionChromeTemplate = `// Chrome Extension manifest\n{\n  "manifest_version": 3,\n  "name": "Chrome Extension",\n  "version": "1.0",\n  "action": { "default_popup": "index.html" },\n  "permissions": ["storage"]\n}`;

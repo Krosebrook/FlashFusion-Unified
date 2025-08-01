@@ -1,0 +1,1 @@
+export const WebReactBasicTemplate = `// React Web App Template\nimport React from 'react';\nconst App = () => <div>Hello Web</div>;\nexport default App;`;

@@ -1,12 +1,97 @@
+# Node.js
 node_modules
-npm-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Git
 .git
 .gitignore
-README.md
-CHECKPOINT.md
-.env
-.env.local
-.env.production
+.gitattributes
+
+# Documentation
+*.md
+!README.md
+docs/
+coverage/
+
+# Tests
+tests/
+**/*.test.js
+**/*.spec.js
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Build artifacts
 dist
+build
+out
 coverage
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Logs
+logs/
+*.log
+
+# Security sensitive files
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+secrets/
+private/
+
+# Temporary files
+tmp/
+temp/
+.cache/
+
+# Backup files
+*.backup
+*.bak
+*.orig
+
+# Database files
+*.sqlite
+*.db
+
+# FlashFusion specific
+CHECKPOINT*.md
+DEPLOYMENT*.md
+SECURITY*.md
+PROJECT_STATUS.*
+AUTOMATION_MACHINE.md
+MIGRATION_SUMMARY.md
+NOTION_*.md
+ZAPIER_*.md
+CURSOR_SETUP.md

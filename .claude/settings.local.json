@@ -7,7 +7,23 @@
       "Bash(vercel:*)",
       "Bash(npm install:*)",
       "WebFetch(domain:flashfusion-unified-c6z0ttye5-minidrama.vercel.app)",
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "Bash(npx husky:*)",
+      "Bash(npm run devops:start:*)",
+      "Bash(npm audit:*)",
+      "Bash(rg:*)",
+      "Bash(rm:*)",
+      "Bash(npm run env:setup:*)",
+      "Bash(ls:*)",
+      "Bash(notepad .env)",
+      "Bash(cursor .env)",
+      "Bash(cursor:*)",
+      "Bash(claude terminal-setup)",
+      "Bash(mkdir:*)",
+      "Bash(git checkout:*)",
+      "Bash(git clone:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }

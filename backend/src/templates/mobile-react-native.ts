@@ -1,0 +1,1 @@
+export const MobileReactNativeTemplate = `// React Native App Template\nimport { Text, View } from 'react-native';\nexport default function App() { return <View><Text>Hello Mobile</Text></View>; }`;

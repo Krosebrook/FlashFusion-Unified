@@ -1,0 +1,31 @@
+Contact: security@flashfusion.ai
+Contact: https://github.com/Krosebrook/FlashFusion-Unified/security/advisories/new
+Encryption: https://flashfusion.ai/.well-known/pgp-key.txt
+Acknowledgments: https://flashfusion.ai/security/hall-of-fame
+Preferred-Languages: en
+Policy: https://flashfusion.ai/security/policy
+Hiring: https://flashfusion.ai/careers/security
+Expires: 2026-08-01T00:00:00.000Z
+
+# FlashFusion Unified Security Information
+# 
+# We take security seriously. If you discover a security vulnerability,
+# please report it responsibly through the channels listed above.
+#
+# Please DO NOT report security vulnerabilities through public GitHub issues.
+# 
+# Scope:
+# - Main application: https://flashfusion.ai
+# - API endpoints: https://api.flashfusion.ai
+# - Developer tools and CLI
+#
+# Out of scope:
+# - Social engineering attacks
+# - Physical attacks
+# - DoS/DDoS attacks
+# - Issues in third-party dependencies (please report to the respective maintainers)
+#
+# We typically respond to security reports within 48 hours and aim to
+# provide a timeline for resolution within 7 days.
+#
+# Thank you for helping keep FlashFusion secure!

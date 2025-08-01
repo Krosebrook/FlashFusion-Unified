@@ -1,0 +1,1 @@
+export const CliNodejsTemplate = `#!/usr/bin/env node\nconsole.log('Hello CLI World');`;
