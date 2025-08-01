@@ -1,16 +1,15 @@
 {
   "version": 2,
-  "public": false,
+  "public": true,
   "github": {
     "silent": true
   },
   "env": {
     "NODE_ENV": "production",
-    "SUPABASE_URL": "@supabase_url",
-    "SUPABASE_ANON_KEY": "@supabase_anon_key",
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
     "ANTHROPIC_API_KEY": "@anthropic_api_key",
     "OPENAI_API_KEY": "@openai_api_key",
+    "SUPABASE_URL": "@supabase_url",
+    "SUPABASE_ANON_KEY": "@supabase_anon_key",
     "NOTION_API_KEY": "@notion_api_key",
     "GITHUB_TOKEN": "@github_token"
   },
