@@ -1,36 +1,9 @@
 {
-  "name": "flashfusion-unified",
   "version": 2,
   "public": false,
   "github": {
     "silent": true
   },
-  "builds": [
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
-    },
-    {
-      "src": "client/index.html",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "client/dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/client/index.html"
-    }
-  ],
   "env": {
     "NODE_ENV": "production",
     "SUPABASE_URL": "@supabase_url",
