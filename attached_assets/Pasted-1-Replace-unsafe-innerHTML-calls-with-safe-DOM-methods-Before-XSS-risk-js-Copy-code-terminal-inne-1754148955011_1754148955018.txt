@@ -1,0 +1,122 @@
+1. Replace unsafe innerHTML calls with safe DOM methods
+Before (XSS risk)
+js
+Copy code
+terminal.innerHTML += `<div class="terminal-line">${command}</div>`;
+After (safe)
+js
+Copy code
+// create a helper to append text safely
+function appendText(container, tag, className, text) {
+  const el = document.createElement(tag);
+  el.className = className;
+  el.textContent = text;
+  container.appendChild(el);
+}
+
+// usage
+appendText(terminal, 'div', 'terminal-line terminal-command', `flashfusion@unified:~$ ${command}`);
+Apply this pattern to every innerHTML += ... and template literal in:
+
+client/dist/dashboard-interactive.js (all 7 occurrences)
+
+client/dist/integrations.js (cards, details, features lists)
+
+client/dist/workflows.js (template cards, active/completed lists, hierarchy)
+
+If you absolutely must render HTML (e.g. links), sanitize with DOMPurify first:
+
+js
+Copy code
+import DOMPurify from 'dompurify';
+
+const cleanHtml = DOMPurify.sanitize(dirtyHtml);
+container.innerHTML = cleanHtml;
+2. Remove hard-coded API keys
+Before
+js
+Copy code
+const OPENAI_API_KEY = 'sk-proj-6NN690…';
+After
+js
+Copy code
+// .env (gitignored)
+OPENAI_API_KEY=sk-proj-6NN690GuWa1xYy4HnCsXjshw-Pnvq7drZvOODY6XABUjUipuJwrHOJ17qvAdzlYQ0rmi5iOwW
+
+// in code
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+if (!OPENAI_API_KEY) {
+  throw new Error('Missing OPENAI_API_KEY in environment');
+}
+Apply to all scripts under:
+
+scripts/key-rotation.js
+
+scripts_legacy/*.js
+
+src/server/routes/agents.js
+
+src/server/services/*.js
+
+src/services/mcpService.js (validate any child_process inputs – see below)
+
+3. Sanitize or validate child_process usage to prevent command injection
+Before
+js
+Copy code
+const { spawn } = require('child_process');
+spawn(command, sanitizedArgs, …);
+After
+js
+Copy code
+const { spawn } = require('child_process');
+
+// whitelist allowed commands
+const ALLOWED = new Set(['ls', 'git', 'docker']);
+if (!ALLOWED.has(command)) {
+  throw new Error(`Command not permitted: ${command}`);
+}
+
+// ensure args are clean strings
+const args = sanitizedArgs.map(a => String(a).replace(/[^\w\-./]/g, ''));
+spawn(command, args, { shell: false });
+Apply in src/services/mcpService.js and anywhere else you invoke spawn, exec, or execFile.
+
+4. Row-level security & logging (bonus, since you asked previously)
+PostgreSQL RLS policy example for projects:
+
+sql
+Copy code
+ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
+CREATE POLICY user_can_view
+  ON projects FOR SELECT
+  USING (owner_id = current_setting('jwt.claims.user_id')::uuid);
+Audit trigger to log mutations:
+
+sql
+Copy code
+CREATE TABLE audit_log (
+  id SERIAL PRIMARY KEY, table_name TEXT, operation TEXT, changed_by UUID, changed_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE FUNCTION log_changes() RETURNS trigger AS $$
+BEGIN
+  INSERT INTO audit_log(table_name, operation, changed_by)
+  VALUES (TG_TABLE_NAME, TG_OP, current_setting('jwt.claims.user_id')::uuid);
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER audit_trigger
+  AFTER INSERT OR UPDATE OR DELETE ON projects
+  FOR EACH STATEMENT EXECUTE FUNCTION log_changes();
+Next steps
+Batch-apply the DOM refactor across all client files.
+
+Strip every hard-coded key and replace with process.env.
+
+Lock down your child_process calls with a whitelist and sanitized args.
+
+Deploy a quick smoke test: navigate through each UI path, confirm no XSS errors in console.
+
+Review your CI build to ensure NODE_ENV=production and no secret leakage.
+
+This will eliminate the 23 flagged issues and harden your app against XSS, credential leaks, and code injection. Let me know once you’ve pushed these changes and I’ll help verify or dig into any remaining findings.
