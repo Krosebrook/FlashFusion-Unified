@@ -436,7 +436,16 @@ Last Updated: ${new Date().toISOString()}
                 const agentList = document.getElementById('activeAgents');
                 const newAgent = document.createElement('div');
                 newAgent.className = 'workflow-item';
-                newAgent.innerHTML = '<span class="agent-status"></span><strong>' + name + '</strong> - ' + role;
+                // Create safe DOM elements instead of innerHTML
+                const statusSpan = document.createElement('span');
+                statusSpan.className = 'agent-status';
+                
+                const nameStrong = document.createElement('strong');
+                nameStrong.textContent = name;
+                
+                newAgent.appendChild(statusSpan);
+                newAgent.appendChild(nameStrong);
+                newAgent.appendChild(document.createTextNode(' - ' + role));
                 agentList.appendChild(newAgent);
                 
                 // Clear form
@@ -458,7 +467,12 @@ Last Updated: ${new Date().toISOString()}
                 const workflowList = document.getElementById('activeWorkflows');
                 const newWorkflow = document.createElement('div');
                 newWorkflow.className = 'workflow-item';
-                newWorkflow.innerHTML = '<strong>' + name + '</strong> - Trigger: ' + trigger;
+                // Create safe DOM elements instead of innerHTML
+                const nameStrong = document.createElement('strong');
+                nameStrong.textContent = name;
+                
+                newWorkflow.appendChild(nameStrong);
+                newWorkflow.appendChild(document.createTextNode(' - Trigger: ' + trigger));
                 workflowList.appendChild(newWorkflow);
                 
                 // Clear form
@@ -479,7 +493,16 @@ Last Updated: ${new Date().toISOString()}
                 const servicesList = document.getElementById('connectedServices');
                 const newService = document.createElement('div');
                 newService.className = 'workflow-item';
-                newService.innerHTML = '<span class="agent-status"></span><strong>' + service + '</strong> - Connected';
+                // Create safe DOM elements instead of innerHTML
+                const statusSpan = document.createElement('span');
+                statusSpan.className = 'agent-status';
+                
+                const serviceStrong = document.createElement('strong');
+                serviceStrong.textContent = service;
+                
+                newService.appendChild(statusSpan);
+                newService.appendChild(serviceStrong);
+                newService.appendChild(document.createTextNode(' - Connected'));
                 servicesList.appendChild(newService);
                 
                 // Clear form
