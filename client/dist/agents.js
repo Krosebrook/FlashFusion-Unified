@@ -100,20 +100,26 @@ function displayAgents(agents) {
         info.className = 'agent-info';
         
         const roleP = document.createElement('p');
-        roleP.innerHTML = '<strong>Role:</strong> ';
-        roleP.appendChild(document.createTextNode(agent.role));
+        const roleStrong = document.createElement('strong');
+        roleStrong.textContent = 'Role:';
+        roleP.appendChild(roleStrong);
+        roleP.appendChild(document.createTextNode(' ' + agent.role));
         
         const priorityP = document.createElement('p');
-        priorityP.innerHTML = '<strong>Priority:</strong> ';
-        priorityP.appendChild(document.createTextNode(agent.priority));
+        const priorityStrong = document.createElement('strong');
+        priorityStrong.textContent = 'Priority:';
+        priorityP.appendChild(priorityStrong);
+        priorityP.appendChild(document.createTextNode(' ' + agent.priority));
         
         info.appendChild(roleP);
         info.appendChild(priorityP);
         
         if (agent.currentWorkflow) {
             const workflowP = document.createElement('p');
-            workflowP.innerHTML = '<strong>Current Workflow:</strong> ';
-            workflowP.appendChild(document.createTextNode(agent.currentWorkflow));
+            const workflowStrong = document.createElement('strong');
+            workflowStrong.textContent = 'Current Workflow:';
+            workflowP.appendChild(workflowStrong);
+            workflowP.appendChild(document.createTextNode(' ' + agent.currentWorkflow));
             info.appendChild(workflowP);
         }
         
