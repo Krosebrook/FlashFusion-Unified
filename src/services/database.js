@@ -1,7 +1,7 @@
 // Database Service Layer for FlashFusion
-const { createClient } = require('@supabase/supabase-js');
-const path = require('path');
-const fs = require('fs');
+import { createClient } from '@supabase/supabase-js';
+import path from 'path';
+import fs from 'fs';
 
 class DatabaseService {
     constructor() {
@@ -400,4 +400,5 @@ class DatabaseService {
 
 // Export singleton instance
 const databaseService = new DatabaseService();
-module.exports = databaseService;
+export { DatabaseService };
+export default databaseService;

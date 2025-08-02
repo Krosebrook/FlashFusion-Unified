@@ -115,6 +115,15 @@ class IntegrationManager {
                 name: 'Performance Monitoring Agent',
                 type: 'monitoring-agent',
                 capabilities: ['metrics-collection', 'alerting', 'performance-analysis']
+            },
+            {
+                name: 'AI App Creation Agent',
+                type: 'app-creation-agent',
+                capabilities: [
+                    'requirements-analysis', 'tech-stack-selection', 'architecture-design',
+                    'secure-implementation', 'documentation-generation', 'deployment-preparation',
+                    'quality-assurance', 'user-experience-optimization'
+                ]
             }
         ];
 

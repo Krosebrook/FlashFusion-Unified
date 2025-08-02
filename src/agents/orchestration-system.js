@@ -3,11 +3,11 @@
 // Complete Implementation of All 7 Features
 // =====================================================
 
-const Redis = require('redis');
-const EventEmitter = require('events');
-const crypto = require('crypto');
-const fs = require('fs').promises;
-const path = require('path');
+import Redis from 'redis';
+import { EventEmitter } from 'events';
+import crypto from 'crypto';
+import fs from 'fs/promises';
+import path from 'path';
 
 // =====================================================
 // 1. REAL-TIME AGENT COMMUNICATION & HANDOFF SYSTEM
@@ -563,7 +563,7 @@ class DigitalProductOrchestrator {
 // EXPORT FOR MODULE USAGE
 // =====================================================
 
-module.exports = {
+export {
   DigitalProductOrchestrator,
   AgentCommunicationSystem,
   DynamicRoleSelector
@@ -579,4 +579,4 @@ async function createOrchestrator() {
   return orchestrator;
 }
 
-module.exports.createOrchestrator = createOrchestrator;
+export { createOrchestrator };

@@ -72,4 +72,8 @@ next-env.d.ts
 
 # ────────────────🧼 MISC────────────────
 .DS_Store
-Thumbs.db.env.production
+Thumbs.db
+
+# Additional env protection
+.env.*
+!.env.example

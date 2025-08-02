@@ -23,7 +23,15 @@
       "Bash(git checkout:*)",
       "Bash(git clone:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm run start:enhanced:*)",
+      "Bash(npm run start:*)",
+      "Bash(tasklist:*)",
+      "Bash(node:*)",
+      "Bash(PORT=3001 npm run start:enhanced)",
+      "Bash(npm run:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)"
     ],
     "deny": []
   }
