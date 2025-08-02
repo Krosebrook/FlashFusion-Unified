@@ -29,7 +29,7 @@ async function startServer() {
   // Setup API routes and WebSocket
   const httpServer = await registerRoutes(app);
 
-  const port = process.env.PORT || 3000;
+  const port = parseInt(process.env.PORT || "3000", 10);
   httpServer.listen(port, "0.0.0.0", () => {
     console.log(`🚀 Server running on http://0.0.0.0:${port}`);
     console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);

@@ -11,7 +11,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
 // Session storage table (required for auth)
@@ -130,50 +130,59 @@ export const smsMessagesRelations = relations(smsMessages, ({ one }) => ({
   }),
 }));
 
-// Zod schemas for validation
-export const insertUserSchema = createInsertSchema(users).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+// Zod schemas for validation (temporarily using basic z.object to avoid drizzle-zod compatibility issues)
+export const insertUserSchema = z.object({
+  email: z.string().email().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  profileImageUrl: z.string().optional(),
+  phoneNumber: z.string().optional(),
+  stripeCustomerId: z.string().optional(),
+  stripeSubscriptionId: z.string().optional(),
+  subscriptionStatus: z.string().optional(),
+  isActive: z.boolean().optional(),
 });
 
-export const insertChatSchema = createInsertSchema(chats).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export const insertChatSchema = z.object({
+  name: z.string().optional(),
+  isGroup: z.boolean().optional(),
+  createdBy: z.string().optional(),
 });
 
-export const insertMessageSchema = createInsertSchema(messages).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export const insertMessageSchema = z.object({
+  chatId: z.string().optional(),
+  senderId: z.string().optional(),
+  content: z.string(),
+  messageType: z.string().optional(),
+  metadata: z.any().optional(),
 });
 
-export const insertSmsMessageSchema = createInsertSchema(smsMessages).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  twilioMessageSid: true,
+export const insertSmsMessageSchema = z.object({
+  fromUserId: z.string().optional(),
+  toPhoneNumber: z.string(),
+  content: z.string(),
+  status: z.string().optional(),
 });
 
-export const insertChatParticipantSchema = createInsertSchema(chatParticipants).omit({
-  id: true,
-  joinedAt: true,
+export const insertChatParticipantSchema = z.object({
+  chatId: z.string().optional(),
+  userId: z.string().optional(),
+  isAdmin: z.boolean().optional(),
 });
 
 // Types
 export type User = typeof users.$inferSelect;
 export type UpsertUser = typeof users.$inferInsert;
-export type InsertUser = z.infer<typeof insertUserSchema>;
+export type InsertUser = typeof users.$inferInsert;
 
 export type Chat = typeof chats.$inferSelect;
-export type InsertChat = z.infer<typeof insertChatSchema>;
+export type InsertChat = typeof chats.$inferInsert;
 
 export type Message = typeof messages.$inferSelect;
-export type InsertMessage = z.infer<typeof insertMessageSchema>;
+export type InsertMessage = typeof messages.$inferInsert;
 
 export type SmsMessage = typeof smsMessages.$inferSelect;
-export type InsertSmsMessage = z.infer<typeof insertSmsMessageSchema>;
+export type InsertSmsMessage = typeof smsMessages.$inferInsert;
 
 export type ChatParticipant = typeof chatParticipants.$inferSelect;
-export type InsertChatParticipant = z.infer<typeof insertChatParticipantSchema>;
+export type InsertChatParticipant = typeof chatParticipants.$inferInsert;

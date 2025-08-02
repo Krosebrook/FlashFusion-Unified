@@ -12,7 +12,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2023-10-16",
+  apiVersion: "2025-06-30.basil",
 });
 
 // WebSocket connections map
@@ -65,7 +65,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         res.json({
           subscriptionId: subscription.id,
-          clientSecret: (invoice.payment_intent as any)?.client_secret,
+          clientSecret: (invoice as any).payment_intent?.client_secret,
         });
         return;
       }
@@ -205,7 +205,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Notify all participants via WebSocket
       const participants = await storage.getChatParticipants(chatId);
       participants.forEach(participant => {
-        const ws = wsConnections.get(participant.userId);
+        const ws = wsConnections.get(participant.userId || '');
         if (ws && ws.readyState === WebSocket.OPEN) {
           ws.send(JSON.stringify({
             type: 'new_message',
@@ -244,7 +244,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       const result = await smsService.sendSms(
-        smsData.fromUserId,
+        smsData.fromUserId || '',
         smsData.toPhoneNumber,
         smsData.content
       );

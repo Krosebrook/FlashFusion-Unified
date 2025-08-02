@@ -2,11 +2,17 @@ import Twilio from 'twilio';
 import { storage } from './storage';
 import type { InsertSmsMessage } from '../shared/schema';
 
-if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN || !process.env.TWILIO_PHONE_NUMBER) {
-  console.warn('Twilio credentials not configured. SMS functionality will not work.');
+// Check for Twilio credentials
+const hasTwilioCredentials = process.env.TWILIO_ACCOUNT_SID && 
+  process.env.TWILIO_AUTH_TOKEN && 
+  process.env.TWILIO_PHONE_NUMBER &&
+  process.env.TWILIO_ACCOUNT_SID.startsWith('AC');
+
+if (!hasTwilioCredentials) {
+  console.warn('Twilio credentials not properly configured. SMS functionality will not work.');
 }
 
-const twilioClient = process.env.TWILIO_ACCOUNT_SID 
+const twilioClient = hasTwilioCredentials
   ? Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
   : null;
 
