@@ -6,6 +6,11 @@ FlashFusion-Unified/flashfusion-dashboard/
 client_legacy/
 FlashFusion-Unified/client_legacy/
 
+# CRITICAL: Ignore large directories causing deployment failures
+external-repos/
+node_modules/
+.git/
+
 # Ignore development files
 *.log
 .env.local
@@ -57,3 +62,23 @@ src/utils/logger.js.backup
 
 # Key rotation logs
 .key-rotation-log.json
+
+# Ignore large external repositories (causing deployment size issues)
+**/external-repos/**
+**/node_modules/**
+
+# Ignore backup and temporary files
+*.backup
+*.tmp
+UserskylerDownloadsflashfusion-united.env
+
+# Ignore large documentation and checkpoint files
+*CHECKPOINT*.md
+*STATUS*.md
+*.sql
+sample-data.csv
+logs/
+
+# Ignore test files
+test-*.js
+*-test.js

@@ -212,4 +212,5 @@ const ConfigurationWizard: React.FC<ConfigurationWizardProps> = ({
   );
 };
 
+export { ConfigurationWizard };
 export default ConfigurationWizard;

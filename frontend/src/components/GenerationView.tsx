@@ -147,4 +147,5 @@ const GenerationView: React.FC<GenerationViewProps> = ({
   );
 };
 
+export { GenerationView };
 export default GenerationView;

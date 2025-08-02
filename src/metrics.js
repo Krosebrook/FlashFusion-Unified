@@ -143,6 +143,11 @@ export function registerMetricsEndpoint(app) {
   });
 }
 
+// Get all metrics
+export function getMetrics() {
+  return client.register.metrics();
+}
+
 // Clear metrics (useful for testing)
 export function clearMetrics() {
   client.register.clear();

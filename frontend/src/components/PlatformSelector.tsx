@@ -100,4 +100,5 @@ const PlatformSelector: React.FC<PlatformSelectorProps> = ({
   );
 };
 
+export { PlatformSelector };
 export default PlatformSelector;

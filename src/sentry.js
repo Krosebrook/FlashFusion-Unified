@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/node';
-import { ProfilingIntegration } from '@sentry/profiling-node';
 
 export function initSentry() {
   if (!process.env.SENTRY_DSN) {
@@ -9,6 +8,8 @@ export function initSentry() {
 
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
+    org: "flashfusion",
+    project: "javascript-nextjs",
     environment: process.env.NODE_ENV || 'development',
     release: process.env.npm_package_version || '1.0.0',
     
@@ -18,11 +19,8 @@ export function initSentry() {
     // Session tracking
     autoSessionTracking: true,
     
-    // Profiling
-    profilesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-    integrations: [
-      new ProfilingIntegration(),
-    ],
+    // Profiling disabled (profiling-node package removed)
+    // profilesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
     
     // Error filtering
     beforeSend(event, hint) {

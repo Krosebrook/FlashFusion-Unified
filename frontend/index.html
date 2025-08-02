@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#3B82F6" />
+    <meta
+      name="description"
+      content="Universal App Generator - Generate production-ready applications for any platform including Web, Mobile, Desktop, CLI, and Browser Extensions"
+    />
+    <meta name="keywords" content="app generator, universal app, react, mobile, desktop, cli, extension, automation" />
+    <meta name="author" content="FlashFusion Team" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://flashfusion.ai/" />
+    <meta property="og:title" content="Universal App Generator" />
+    <meta property="og:description" content="Generate production-ready applications for any platform" />
+    <meta property="og:image" content="/og-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://flashfusion.ai/" />
+    <meta property="twitter:title" content="Universal App Generator" />
+    <meta property="twitter:description" content="Generate production-ready applications for any platform" />
+    <meta property="twitter:image" content="/og-image.png" />
+
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <title>Universal App Generator - FlashFusion</title>
+    
+    <style>
+      /* Loading spinner for initial load */
+      #root:empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      
+      #root:empty::after {
+        content: '';
+        width: 50px;
+        height: 50px;
+        border: 3px solid #ffffff;
+        border-radius: 50%;
+        border-top-color: transparent;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+        <h1>JavaScript Required</h1>
+        <p>You need to enable JavaScript to run the Universal App Generator.</p>
+        <p>This application requires JavaScript to function properly.</p>
+      </div>
+    </noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>

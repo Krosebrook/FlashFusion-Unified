@@ -1,0 +1,18 @@
+table_name,sample_data
+ai_providers,"name,display_name,api_endpoint
+openai,OpenAI,https://api.openai.com/v1
+anthropic,Anthropic,https://api.anthropic.com/v1
+google,Google AI,https://generativelanguage.googleapis.com/v1"
+subscription_plans,"name,display_name,price_monthly_usd,api_calls_limit,projects_limit
+free,Free Tier,0,1000,3
+pro,Pro Plan,19.99,10000,25
+enterprise,Enterprise,99.99,100000,100"
+code_templates,"name,category,language,framework,description
+React Component,component,javascript,react,Basic functional component
+Express Route,api,javascript,express,REST API endpoint
+Vue Component,component,javascript,vue,Vue 3 composition API component
+Python Function,function,python,fastapi,FastAPI endpoint function"
+deployment_providers,"name,display_name,api_endpoint
+vercel,Vercel,https://api.vercel.com
+netlify,Netlify,https://api.netlify.com
+aws,AWS,https://aws.amazon.com"

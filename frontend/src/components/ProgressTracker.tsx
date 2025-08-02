@@ -56,4 +56,5 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
   );
 };
 
+export { ProgressTracker };
 export default ProgressTracker;
