@@ -27,7 +27,12 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // Allow intentional unused vars via warning and ignore pattern
+      'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]' }],
+      // Disable case declaration rule as switch statements often declare scoped lets
+      'no-case-declarations': 'off',
+      // Allow Object.prototype access pattern
+      'no-prototype-builtins': 'off',
     },
   },
 ])

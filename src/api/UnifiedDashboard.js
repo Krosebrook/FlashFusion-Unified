@@ -176,6 +176,7 @@ class UnifiedDashboard {
   async chatWithAgent(req, res) {
     try {
       const { agentId, message, context } = req.body;
+      const requestedAgentId = agentId || 'coordinator';
 
       if (!message) {
         return res.status(400).json({
@@ -186,13 +187,13 @@ class UnifiedDashboard {
 
       // Emit agent message event
       this.agentOrchestrator.emit('agent_message', {
-        agentId: agentId || 'coordinator',
+        agentId: requestedAgentId,
         message,
         context,
         timestamp: new Date()
       });
 
-      const targetAgentId = agentId || 'coordinator';
+      const targetAgentId = requestedAgentId;
       
       // Use real AI service to generate response
       const aiResponse = await aiService.generateAgentResponse(
@@ -232,11 +233,12 @@ class UnifiedDashboard {
       logger.error('Chat with agent error:', error);
       
       // Fallback response if AI service fails
+      const fallbackAgentId = req?.body?.agentId || 'coordinator';
       const fallbackResponse = {
         success: false,
         error: error.message,
         fallback: {
-          agentId: agentId || 'coordinator',
+          agentId: fallbackAgentId,
           response: `I apologize, but I'm currently experiencing technical difficulties. Please try again in a moment. Error: ${error.message}`,
           timestamp: new Date().toISOString(),
           model: 'fallback'

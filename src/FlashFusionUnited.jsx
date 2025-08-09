@@ -8,13 +8,13 @@ const FlashFusionUnited = () => {
   const [fabOpen, setFabOpen] = useState(false);
 
   // Subtle animation effects
-  const animations = ['fadeIn', 'slideUp', 'scaleIn'];
+  const animations = React.useMemo(() => ['fadeIn', 'slideUp', 'scaleIn'], []);
   
-  const triggerRandomAnimation = () => {
+  const triggerRandomAnimation = React.useCallback(() => {
     const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
     setAnimationClass(randomAnimation);
     setTimeout(() => setAnimationClass(''), 600);
-  };
+  }, [animations]);
 
   // Occasional animations
   useEffect(() => {
@@ -24,7 +24,7 @@ const FlashFusionUnited = () => {
       }
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [triggerRandomAnimation]);
 
   const navigationItems = [
     { id: 'home', label: 'Home', icon: Home },
