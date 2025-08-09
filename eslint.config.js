@@ -27,8 +27,8 @@ export default defineConfig([
       },
     },
     rules: {
-      // Allow intentional unused vars via warning and ignore pattern
-      'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]' }],
+      // Disable unused variable warnings across legacy codebase
+      'no-unused-vars': 'off',
       // Disable case declaration rule as switch statements often declare scoped lets
       'no-case-declarations': 'off',
       // Allow Object.prototype access pattern
