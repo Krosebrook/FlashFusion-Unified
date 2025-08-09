@@ -44,6 +44,7 @@ export interface IStorage {
   createSmsMessage(smsMessage: InsertSmsMessage): Promise<SmsMessage>;
   updateSmsMessageStatus(messageId: string, status: string, twilioSid?: string): Promise<SmsMessage>;
   getUserSmsMessages(userId: string): Promise<SmsMessage[]>;
+  findSmsMessageByTwilioSid(twilioSid: string): Promise<SmsMessage | undefined>; // NEW
 }
 
 export class DatabaseStorage implements IStorage {
@@ -242,6 +243,14 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(smsMessages.createdAt));
     
     return userSmsMessages;
+  }
+
+  async findSmsMessageByTwilioSid(twilioSid: string): Promise<SmsMessage | undefined> {
+    const [row] = await db
+      .select()
+      .from(smsMessages)
+      .where(eq(smsMessages.twilioMessageSid, twilioSid));
+    return row as SmsMessage | undefined;
   }
 }
 

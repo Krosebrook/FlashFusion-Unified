@@ -18,6 +18,21 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 // WebSocket connections map
 const wsConnections = new Map<string, WebSocket>();
 
+function parsePositiveInt(value: any, fallback: number, max: number): number {
+  const parsed = Number.parseInt(String(value), 10);
+  if (Number.isNaN(parsed) || parsed <= 0) return fallback;
+  return Math.min(parsed, max);
+}
+
+function assertBodySize(req: any, maxBytes = 1024 * 1024) {
+  const length = Number(req.headers['content-length'] || 0);
+  if (length > maxBytes) {
+    const err: any = new Error('Payload too large');
+    err.status = 413;
+    throw err;
+  }
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
@@ -37,9 +52,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Stripe payment routes
   app.post("/api/create-payment-intent", isAuthenticated, async (req: any, res) => {
     try {
-      const { amount } = req.body;
+      assertBodySize(req, 256 * 1024);
+      const amountNumber = Number(req.body?.amount);
+      if (!Number.isFinite(amountNumber) || amountNumber <= 0) {
+        return res.status(400).json({ message: "Invalid amount" });
+      }
+
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(amount * 100), // Convert to cents
+        amount: Math.round(amountNumber * 100), // Convert to cents
         currency: "usd",
       });
       res.json({ clientSecret: paymentIntent.client_secret });
@@ -50,6 +70,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/get-or-create-subscription', isAuthenticated, async (req: any, res) => {
     try {
+      assertBodySize(req, 256 * 1024);
       const userId = req.user.claims.sub;
       let user = await storage.getUser(userId);
 
@@ -84,16 +105,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      const priceId = process.env.STRIPE_PRICE_ID;
+      if (!priceId || !priceId.startsWith('price_')) {
+        return res.status(500).json({ message: 'Stripe price ID not configured' });
+      }
+
       const subscription = await stripe.subscriptions.create({
-        customer: customer.id,
-        items: [{
-          price: process.env.STRIPE_PRICE_ID || 'price_1234567890', // Set your price ID
-        }],
+        customer: (customer as any).id,
+        items: [{ price: priceId }],
         payment_behavior: 'default_incomplete',
         expand: ['latest_invoice.payment_intent'],
       });
 
-      await storage.updateUserStripeInfo(userId, customer.id, subscription.id);
+      await storage.updateUserStripeInfo(userId, (customer as any).id, subscription.id);
 
       const invoice = subscription.latest_invoice as any;
       res.json({
@@ -108,6 +132,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Chat routes
   app.post('/api/chats', isAuthenticated, async (req: any, res) => {
     try {
+      assertBodySize(req, 256 * 1024);
       const userId = req.user.claims.sub;
       const chatData = insertChatSchema.parse({
         ...req.body,
@@ -159,6 +184,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/chats/:chatId/participants', isAuthenticated, async (req: any, res) => {
     try {
+      assertBodySize(req, 128 * 1024);
       const { chatId } = req.params;
       const participantData = insertChatParticipantSchema.parse({
         chatId,
@@ -187,6 +213,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Message routes
   app.post('/api/chats/:chatId/messages', isAuthenticated, async (req: any, res) => {
     try {
+      assertBodySize(req, 256 * 1024);
       const userId = req.user.claims.sub;
       const { chatId } = req.params;
       
@@ -224,7 +251,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/chats/:chatId/messages', isAuthenticated, async (req: any, res) => {
     try {
       const { chatId } = req.params;
-      const limit = parseInt(req.query.limit as string) || 50;
+      const limit = parsePositiveInt(req.query.limit, 50, 200);
       
       const messages = await storage.getChatMessages(chatId, limit);
       res.json(messages);
@@ -237,6 +264,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // SMS routes
   app.post('/api/sms/send', isAuthenticated, async (req: any, res) => {
     try {
+      assertBodySize(req, 64 * 1024);
       const userId = req.user.claims.sub;
       const smsData = insertSmsMessageSchema.parse({
         fromUserId: userId,

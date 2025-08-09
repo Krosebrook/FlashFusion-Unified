@@ -16,10 +16,22 @@ const twilioClient = hasTwilioCredentials
   ? Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
   : null;
 
+function isE164(phone: string): boolean {
+  return /^\+?[1-9]\d{1,14}$/.test(phone);
+}
+
 export class SmsService {
   async sendSms(fromUserId: string, toPhoneNumber: string, content: string): Promise<{ success: boolean; messageId?: string; error?: string }> {
     if (!twilioClient) {
       return { success: false, error: 'SMS service not configured' };
+    }
+
+    if (!isE164(toPhoneNumber)) {
+      return { success: false, error: 'Invalid phone number format. Use E.164 (e.g., +15551234567).' };
+    }
+
+    if (!content || content.trim().length === 0) {
+      return { success: false, error: 'Message content is required.' };
     }
 
     try {
@@ -42,9 +54,9 @@ export class SmsService {
       await storage.updateSmsMessageStatus(smsMessage.id, 'sent', message.sid);
 
       return { success: true, messageId: smsMessage.id };
-    } catch (error) {
+    } catch (error: any) {
       console.error('SMS sending failed:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+      return { success: false, error: error?.message || 'Unknown error' };
     }
   }
 
@@ -54,20 +66,24 @@ export class SmsService {
 
   // Webhook handler for Twilio status updates
   async handleTwilioWebhook(body: any) {
-    const { MessageSid, MessageStatus } = body;
+    const { MessageSid, MessageStatus } = body || {};
     
     if (!MessageSid || !MessageStatus) {
       return { success: false, error: 'Invalid webhook data' };
     }
 
     try {
-      // Find message by Twilio SID and update status
-      // Note: We'd need to add a method to find by Twilio SID
-      console.log(`SMS ${MessageSid} status updated to: ${MessageStatus}`);
+      const existing = await storage.findSmsMessageByTwilioSid(MessageSid);
+      if (!existing) {
+        // Nothing to update; acknowledge to avoid retries
+        return { success: true, message: 'No matching message; acknowledged' };
+      }
+
+      await storage.updateSmsMessageStatus(existing.id, MessageStatus.toLowerCase());
       return { success: true };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Webhook processing failed:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+      return { success: false, error: error?.message || 'Unknown error' };
     }
   }
 }
