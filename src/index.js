@@ -74,45 +74,70 @@ class FlashFusionUnified {
 
         // API routes
         this.app.use('/api/v1', this.dashboard.getRouter());
-        
+
         // Workflow routes
         this.app.use('/api/workflows', require('./api/routes/workflows'));
-        
+
         // Agent routes
         this.app.use('/api/agents', require('./api/routes/agents'));
-        
+
         // Integration routes
         this.app.use('/api/integrations', require('./api/routes/integrations'));
-        
+
         // Notion integration routes
         this.app.use('/api/notion', require('./api/routes/notion'));
-        
+
         // Zapier integration routes
         this.app.use('/api/zapier', require('./api/routes/zapier'));
 
         // Analytics routes
         this.app.use('/api/analytics', require('./api/routes/analytics'));
 
+        // Web scraping routes
+        this.app.use('/api/web-scraping', require('./server/routes/webScraping'));
+
+        // API docs (Swagger UI)
+        try {
+            const swaggerUi = require('swagger-ui-express');
+            const path = require('path');
+            const fs = require('fs');
+
+            // Serve a static prebuilt Swagger UI if openapi.json exists, otherwise serve default UI
+            const openApiPath = path.join(__dirname, '../public/openapi.json');
+            if (fs.existsSync(openApiPath)) {
+                const openApiSpec = JSON.parse(fs.readFileSync(openApiPath, 'utf-8'));
+                this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openApiSpec));
+            } else {
+                this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup({
+                    openapi: '3.0.0',
+                    info: { title: 'FlashFusion API', version: config.APP_VERSION },
+                    paths: {}
+                }));
+            }
+        } catch (e) {
+            console.warn('Swagger UI not available, /api/docs disabled:', e.message);
+        }
+
         // Replit-style interface route
         this.app.get('/replit', (req, res) => {
             res.sendFile(path.join(__dirname, '../client/dist/replit-interface.html'));
         });
-        
+
         // Zapier automation hub route
         this.app.get('/zapier-automation', (req, res) => {
             res.sendFile(path.join(__dirname, '../client/dist/zapier-automation.html'));
         });
-        
+
         // Default to Replit interface for root
         this.app.get('/', (req, res) => {
             res.sendFile(path.join(__dirname, '../client/dist/replit-interface.html'));
         });
-        
+
         // Original dashboard route
         this.app.get('/dashboard', (req, res) => {
             res.sendFile(path.join(__dirname, '../client/dist/index.html'));
         });
-        
+
         // Serve original dashboard for iframe in personal dashboard modal
         this.app.get('*', (req, res) => {
             // Check if it's a static file request
@@ -245,9 +270,15 @@ class FlashFusionUnified {
             }
             
             // Cleanup services
-            await this.workflowEngine.shutdown();
-            await this.orchestrator.shutdown();
-            await this.core.shutdown();
+            if (this.workflowEngine && typeof this.workflowEngine.shutdown === 'function') {
+                await this.workflowEngine.shutdown();
+            }
+            if (this.orchestrator && typeof this.orchestrator.shutdown === 'function') {
+                await this.orchestrator.shutdown();
+            }
+            if (this.core && typeof this.core.shutdown === 'function') {
+                await this.core.shutdown();
+            }
             
             // Final database cleanup
             if (databaseService.isConnected) {

@@ -255,6 +255,28 @@ class AgentOrchestrator extends EventEmitter {
   }
 
   /**
+   * Gracefully shutdown agent orchestrator
+   */
+  async shutdown() {
+    try {
+      this.isInitialized = false;
+      this.agentCommunicationQueue = [];
+
+      // Reset agents to idle state
+      for (const agent of this.agents.values()) {
+        agent.status = 'idle';
+        delete agent.currentWorkflow;
+        delete agent.currentTask;
+      }
+
+      return { success: true };
+    } catch (error) {
+      logger.error('AgentOrchestrator shutdown error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  /**
    * Get orchestrator health
    */
   getHealth() {

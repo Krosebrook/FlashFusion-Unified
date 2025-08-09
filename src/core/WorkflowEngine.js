@@ -349,6 +349,30 @@ class WorkflowEngine extends EventEmitter {
   }
 
   /**
+   * Gracefully shutdown the workflow engine
+   */
+  async shutdown() {
+    try {
+      // Mark engine as not initialized and clear queues
+      this.isInitialized = false;
+      this.executionQueue = [];
+
+      // Optionally cancel running workflows (mark as terminated)
+      for (const [workflowId, workflow] of this.workflows.entries()) {
+        if (workflow.status === 'running') {
+          workflow.status = 'terminated';
+          workflow.updatedAt = new Date();
+        }
+      }
+
+      return { success: true };
+    } catch (error) {
+      logger.error('WorkflowEngine shutdown error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  /**
    * Get engine health
    */
   getHealth() {
