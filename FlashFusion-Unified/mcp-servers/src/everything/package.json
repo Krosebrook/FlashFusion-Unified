@@ -1,0 +1,13 @@
+{
+  "name": "mcp-everything-server",
+  "version": "1.0.0", 
+  "description": "Everything MCP Server - Reference implementation",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "latest"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "flashfusion-unified",
+  "version": "2.0.0",
+  "description": "AI-powered business operating system with Open Lovable integration",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "ff": "node ff-cli.js",
+    "ol:init": "node ff-cli.js ol:init",
+    "ol:status": "node ff-cli.js ol:status",
+    "ol:list": "node ff-cli.js ol:list"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.57.0",
+    "@e2b/code-interpreter": "^1.5.1",
+    "@supabase/supabase-js": "^2.0.0",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "e2b": "^1.13.2",
+    "express": "^4.21.2",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1",
+    "next": "14.0.0",
+    "openai": "^4.0.0",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.10",
+    "@typescript-eslint/eslint-plugin": "^8.39.1",
+    "@typescript-eslint/parser": "^8.39.1",
+    "eslint": "^9.33.0",
+    "nodemon": "^3.0.0",
+    "typescript": "5.9.2"
+  }
+}

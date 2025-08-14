@@ -1,0 +1,70 @@
+name: Key Rotation Reminder
+
+on:
+  schedule:
+    # Run on the 1st of every month at 9 AM UTC
+    - cron: '0 9 1 * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check last rotation
+        uses: actions/checkout@v3
+        
+      - name: Create reminder issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const title = '🔐 Monthly API Key Rotation Reminder';
+            const body = `## It's time for monthly API key rotation!
+
+### Security Checklist:
+- [ ] Run \`npm run rotate-keys\` locally
+- [ ] Rotate OpenAI API keys
+- [ ] Rotate Anthropic API keys
+- [ ] Rotate Supabase keys
+- [ ] Rotate GitHub tokens
+- [ ] Rotate Vercel tokens
+- [ ] Update keys in Vercel dashboard
+- [ ] Run \`npm run validate-keys\` to verify
+- [ ] Deploy and test with new keys
+
+### Important URLs:
+- [OpenAI Keys](https://platform.openai.com/api-keys)
+- [Anthropic Keys](https://console.anthropic.com/settings/keys)
+- [Supabase Dashboard](https://supabase.com/dashboard)
+- [GitHub Tokens](https://github.com/settings/tokens)
+- [Vercel Tokens](https://vercel.com/account/tokens)
+
+### Why rotate keys?
+Regular key rotation helps:
+- Limit exposure from compromised keys
+- Comply with security best practices
+- Identify unused or obsolete keys
+- Maintain audit trail
+
+Remember: Never commit keys to the repository!`;
+
+            // Check if reminder issue already exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'security,key-rotation',
+              state: 'open'
+            });
+
+            if (issues.data.length === 0) {
+              // Create new issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['security', 'key-rotation', 'monthly-task']
+              });
+              console.log('Created key rotation reminder issue');
+            } else {
+              console.log('Key rotation reminder already exists');
+            }

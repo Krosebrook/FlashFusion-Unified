@@ -1,0 +1,224 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "description": "Tool configurations and best practices for FlashFusion development",
+    "updated": "2025-07-26"
+  },
+  "development": {
+    "ide": {
+      "primary": "cursor",
+      "backup": "vscode",
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-json"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit",
+          "source.organizeImports": "explicit"
+        },
+        "cursor.aiProvider": "anthropic",
+        "cursor.chat.defaultModel": "claude-3.5-sonnet"
+      }
+    },
+    "linting": {
+      "primary": "biome",
+      "fallback": "eslint",
+      "config": {
+        "biome": "biome.json",
+        "eslint": ".eslintrc.json"
+      },
+      "commands": {
+        "check": "npm run lint",
+        "fix": "npm run lint:fix",
+        "format": "npm run format"
+      }
+    },
+    "testing": {
+      "framework": "jest",
+      "commands": {
+        "run": "npm test",
+        "watch": "npm run test:watch",
+        "coverage": "npm run test:coverage"
+      },
+      "coverage": {
+        "threshold": 80,
+        "excludePaths": [
+          "node_modules",
+          "dist",
+          "coverage",
+          "src/config"
+        ]
+      }
+    },
+    "bundling": {
+      "client": "webpack",
+      "server": "node",
+      "commands": {
+        "build": "npm run build",
+        "dev": "npm run dev",
+        "start": "npm start"
+      }
+    }
+  },
+  "deployment": {
+    "platform": "vercel",
+    "commands": {
+      "deploy": "npm run deploy",
+      "preview": "vercel --prod",
+      "dev": "vercel dev"
+    },
+    "configuration": {
+      "functions": "api/",
+      "build": {
+        "env": {
+          "NODE_ENV": "production"
+        }
+      },
+      "routes": [
+        {
+          "src": "/.*",
+          "dest": "/api/main.js"
+        }
+      ]
+    }
+  },
+  "ai": {
+    "providers": {
+      "anthropic": {
+        "models": ["claude-3.5-sonnet", "claude-3-haiku"],
+        "apiKey": "ANTHROPIC_API_KEY",
+        "usage": "primary AI interactions"
+      },
+      "openai": {
+        "models": ["gpt-4", "gpt-3.5-turbo"],
+        "apiKey": "OPENAI_API_KEY", 
+        "usage": "fallback and specialized tasks"
+      }
+    },
+    "agents": {
+      "researcher": "data analysis and research",
+      "creator": "content and code generation",
+      "optimizer": "performance improvements",
+      "automator": "workflow automation",
+      "analyzer": "code review and debugging",
+      "coordinator": "multi-agent orchestration"
+    }
+  },
+  "database": {
+    "provider": "supabase",
+    "connection": {
+      "url": "SUPABASE_URL",
+      "key": "SUPABASE_ANON_KEY"
+    },
+    "migrations": "scripts/migrate.js",
+    "backup": "automated via Supabase"
+  },
+  "monitoring": {
+    "logging": {
+      "framework": "winston",
+      "levels": ["error", "warn", "info", "debug"],
+      "destinations": ["console", "file", "external"]
+    },
+    "metrics": {
+      "performance": "@vercel/analytics",
+      "speed": "@vercel/speed-insights",
+      "custom": "winston structured logs"
+    },
+    "health": {
+      "endpoint": "/health",
+      "command": "npm run health"
+    }
+  },
+  "security": {
+    "validation": {
+      "input": "joi schemas",
+      "api": "express-validator",
+      "environment": "scripts/validate_env.js"
+    },
+    "authentication": {
+      "jwt": "jsonwebtoken",
+      "bcrypt": "bcryptjs"
+    },
+    "middleware": [
+      "helmet",
+      "cors",
+      "compression",
+      "morgan"
+    ],
+    "commands": {
+      "audit": "npm audit",
+      "validate": "npm run validate-keys",
+      "security-check": "npm run security-check"
+    }
+  },
+  "integrations": {
+    "notion": {
+      "sdk": "@notionhq/client",
+      "apiKey": "NOTION_API_KEY",
+      "sync": "scripts/notion-sync.js"
+    },
+    "zapier": {
+      "webhooks": "ZAPIER_WEBHOOK_URL",
+      "service": "src/services/zapierService.js"
+    },
+    "webscraping": {
+      "firecrawl": "@mendable/firecrawl-js",
+      "playwright": "for custom scraping",
+      "test": "npm run test-webscraping"
+    }
+  },
+  "workflows": {
+    "development": [
+      "npm run dev:install",
+      "npm run dev:full"
+    ],
+    "testing": [
+      "npm run lint",
+      "npm test",
+      "npm run security-check"
+    ],
+    "deployment": [
+      "npm run test",
+      "npm run build",
+      "npm run deploy"
+    ],
+    "maintenance": [
+      "npm run validate-keys",
+      "npm audit",
+      "npm run health"
+    ]
+  },
+  "git": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    },
+    "workflows": [
+      ".github/workflows/code-quality.yml",
+      ".github/workflows/deploy.yml"
+    ]
+  },
+  "bestPractices": {
+    "code": {
+      "naming": "camelCase for variables, PascalCase for classes",
+      "structure": "modular services and clear separation",
+      "comments": "JSDoc for functions, inline for complex logic",
+      "errorHandling": "try-catch with proper logging"
+    },
+    "performance": {
+      "caching": "Redis for session data",
+      "compression": "gzip middleware",
+      "optimization": "lazy loading and code splitting"
+    },
+    "security": {
+      "keys": "environment variables only",
+      "validation": "all user inputs",
+      "logging": "no sensitive data in logs",
+      "cors": "properly configured origins"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm audit:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx lucide-react-icons list)",
+      "WebFetch(domain:lucide.dev)",
+      "Bash(node:*)",
+      "Bash(rm:*)",
+      "Bash(npm run build:*)",
+      "Bash(timeout 10s npm run dev)",
+      "Bash(npm run lint:*)",
+      "Bash(tasklist)",
+      "Bash(taskkill:*)",
+      "Bash(npm test:*)",
+      "Bash(cmd /c:*)",
+      "Bash(lsof:*)",
+      "Bash(npm run dev:full:*)",
+      "Bash(.check-connections.bat)",
+      "Bash(npm run:*)",
+      "Bash(powershell:*)",
+      "Bash(ls:*)",
+      "Bash(chmod:*)",
+      "Bash(mkdir:*)",
+      "Bash(ng version)",
+      "Bash(ng new:*)",
+      "Bash(ng add:*)",
+      "Bash(docker login:*)",
+      "Bash(git checkout:*)",
+      "Bash(find:*)",
+      "Bash(npx eslint:*)",
+      "Bash(grep:*)",
+      "Bash(ssh-keygen:*)",
+      "Bash(cat:*)",
+      "Bash(ssh-add:*)"
+    ],
+    "deny": []
+  }
+}

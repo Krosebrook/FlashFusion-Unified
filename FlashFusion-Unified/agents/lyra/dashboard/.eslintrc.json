@@ -1,0 +1,17 @@
+{
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "linebreak-style": "off",
+    "semi": "off",
+    "comma-dangle": "off",
+    "indent": "off",
+    "no-undef": "off",
+    "quotes": "off",
+    "curly": "off",
+    "no-trailing-spaces": "off",
+    "max-len": "off",
+    "no-unused-vars": "off",
+    "react/no-unescaped-entities": "off",
+    "eol-last": "off"
+  }
+}

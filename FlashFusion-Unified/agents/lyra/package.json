@@ -1,0 +1,33 @@
+{
+  "name": "lyra-agent",
+  "version": "1.0.0",
+  "description": "🧠 LYRA — Strategic Multimodal Agent for system design and problem mapping",
+  "main": "lyra-agent.js",
+  "bin": {
+    "lyra": "./lyra-cli.js"
+  },
+  "scripts": {
+    "start": "node lyra-cli.js",
+    "test": "jest",
+    "dev": "nodemon lyra-cli.js"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "analysis",
+    "system-design",
+    "problem-solving",
+    "strategic-thinking"
+  ],
+  "author": "FlashFusion Team",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.5",
+    "mermaid": "^10.6.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2"
+  }
+}

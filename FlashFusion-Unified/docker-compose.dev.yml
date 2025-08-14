@@ -1,0 +1,109 @@
+# =====================================================
+# FlashFusion Unified - Development Docker Compose
+# Development environment with hot reloading
+# =====================================================
+
+version: '3.8'
+
+services:
+  # ===================================================
+  # FlashFusion Development
+  # ===================================================
+  flashfusion-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+      args:
+        - NODE_ENV=development
+    image: flashfusion/unified:dev
+    container_name: flashfusion-dev
+    restart: unless-stopped
+    ports:
+      - "3333:3333"
+    environment:
+      - NODE_ENV=development
+      - PORT=3333
+      - LOG_LEVEL=debug
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - app_data_dev:/app/src/orchestration/data
+      - app_logs_dev:/app/logs
+    depends_on:
+      - postgres-dev
+      - redis-dev
+    networks:
+      - flashfusion-dev-network
+    command: npm run dev
+
+  # ===================================================
+  # PostgreSQL Development
+  # ===================================================
+  postgres-dev:
+    image: postgres:15-alpine
+    container_name: flashfusion-postgres-dev
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=flashfusion_dev
+      - POSTGRES_USER=flashfusion_dev
+      - POSTGRES_PASSWORD=dev_password
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    ports:
+      - "5433:5432"
+    networks:
+      - flashfusion-dev-network
+
+  # ===================================================
+  # Redis Development
+  # ===================================================
+  redis-dev:
+    image: redis:7-alpine
+    container_name: flashfusion-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    networks:
+      - flashfusion-dev-network
+
+  # ===================================================
+  # Lyra Dashboard Development
+  # ===================================================
+  lyra-dev:
+    build:
+      context: ./agents/lyra/dashboard
+      dockerfile: Dockerfile
+    container_name: flashfusion-lyra-dev
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:3333
+    volumes:
+      - ./agents/lyra/dashboard:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - flashfusion-dev-network
+    command: npm run dev
+
+# =====================================================
+# Development Volumes
+# =====================================================
+volumes:
+  postgres_data_dev:
+    driver: local
+  app_data_dev:
+    driver: local
+  app_logs_dev:
+    driver: local
+
+# =====================================================
+# Development Network
+# =====================================================
+networks:
+  flashfusion-dev-network:
+    driver: bridge

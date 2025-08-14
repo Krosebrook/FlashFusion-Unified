@@ -1,0 +1,59 @@
+# Ignore Angular dashboard - using static client instead
+flashfusion-dashboard/
+FlashFusion-Unified/flashfusion-dashboard/
+
+# Ignore legacy client
+client_legacy/
+FlashFusion-Unified/client_legacy/
+
+# Ignore development files
+*.log
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Ignore build artifacts
+# dist/ - Allow dist directory for Vercel build output
+build/
+.next/
+.nuxt/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore test files
+tests/
+__tests__/
+*.test.js
+*.spec.js
+
+# Ignore documentation
+docs/
+README*.md
+CONTRIBUTING.md
+LICENSE
+
+# Ignore scripts that are not needed for production
+scripts_legacy/
+replit.nix
+replit-deploy.sh
+
+# CRITICAL: Ignore Winston logger files (prevent crashes)
+**/winston/**
+**/logs/**
+src/utils/logger.js.backup
+
+# Ignore Git files
+.git/
+.gitignore
+
+# Key rotation logs
+.key-rotation-log.json

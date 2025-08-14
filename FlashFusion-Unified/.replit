@@ -1,0 +1,64 @@
+# FlashFusion Unified - Replit Configuration
+modules = ["nodejs-20"]
+run = "npm run dev"
+entrypoint = "src/index.js"
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+run = ["npm", "run", "build"]
+deploymentTarget = "cloudrun"
+ignorePorts = false
+
+[languages.typescript]
+pattern = "**/{*.ts,*.tsx}"
+syntax = "typescript"
+
+[languages.javascript]
+pattern = "**/{*.js,*.jsx}"
+syntax = "javascript"
+
+[languages.json]
+pattern = "**/*.json"
+syntax = "json"
+
+[gitHubImport]
+requiredFiles = [".replit", "package.json", "replit.nix"]
+
+[env]
+NODE_ENV = "development"
+PORT = "3333"
+
+[unitTest]
+language = "nodejs"
+
+[packager]
+language = "nodejs"
+
+[packager.features]
+packageSearch = true
+guessImports = true
+enabledForHosting = false
+
+[debugger]
+support = true
+
+# Multiple ports for different services
+[[ports]]
+localPort = 3333
+externalPort = 80
+description = "Main FlashFusion API"
+
+[[ports]]
+localPort = 3000
+externalPort = 3000
+description = "Client Dashboard"
+
+[[ports]]
+localPort = 8080
+externalPort = 8080
+description = "Lyra Agent Dashboard"
+
+[objectStorage]
+defaultBucketID = "flashfusion-assets"

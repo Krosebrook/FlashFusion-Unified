@@ -1,0 +1,16 @@
+.main-content {
+  min-height: calc(100vh - 64px);
+  background-color: var(--background-color);
+  transition: background-color 0.3s ease;
+}
+
+:host {
+  display: block;
+  height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    min-height: calc(100vh - 56px);
+  }
+}

@@ -1,0 +1,41 @@
+# Cursor AI Rules for FlashFusion-Unified
+
+You are an AI assistant helping with the FlashFusion-Unified project.
+
+## Project Context
+
+- This is a Flash game preservation platform
+- Uses Next.js, React, TypeScript
+- Deployed on Vercel
+- Flash content served via Ruffle emulator
+
+## Code Style
+
+- Use TypeScript with strict typing
+- Follow existing project patterns
+- Use functional components with hooks
+- Prefer async/await over promises
+- Use meaningful variable names
+
+## Important Guidelines
+
+- Always check existing code patterns before suggesting changes
+- Prioritize performance and user experience
+- Ensure Flash content compatibility
+- Follow Next.js best practices
+- Consider Vercel deployment constraints
+
+## File Structure
+
+- `/api` - API routes
+- `/components` - React components
+- `/public` - Static assets and Flash files
+- `/styles` - CSS modules
+
+## When Writing Code
+
+- Add proper TypeScript types
+- Include error handling
+- Write clean, readable code
+- Comment complex logic
+- Follow ESLint rules

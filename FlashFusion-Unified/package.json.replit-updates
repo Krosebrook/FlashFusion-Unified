@@ -1,0 +1,18 @@
+{
+  "scripts": {
+    "replit:setup": "node scripts/replit-env-setup.js",
+    "replit:install": "npm install && cd agents/lyra/dashboard && npm install",
+    "replit:dev": "npm run dev",
+    "replit:test": "npm test && npm run health",
+    "replit:deploy": "npm run build && npm run deploy"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "replit": {
+    "main": "src/index.js",
+    "language": "nodejs",
+    "version": "18"
+  }
+}

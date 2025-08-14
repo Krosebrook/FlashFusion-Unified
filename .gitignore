@@ -1,0 +1,117 @@
+# System directories
+Desktop/
+Documents/
+Downloads/
+Favorites/
+Links/
+Music/
+OneDrive/
+Pictures/
+Videos/
+Saved Games/
+Searches/
+Contacts/
+CrossDevice/
+
+# IDE and tool directories
+.vs-kubernetes/
+.aitk/
+AutoGPT/
+docker-projects/
+google-cloud-sdk/
+
+# Temporary and backup files
+*.backup
+.ff
+.dockerignore
+.claude.json
+.claude.json.backup
+
+# Project directories
+ecommerce-content-hub/
+flashfusion-app/
+flashfusion-starter/
+frontend-app/
+glide/
+lottie-android/
+loveable-supabase/
+my-backend/
+notion-mcp-server/
+server/
+simple-claude-ui/
+supabase/
+context7/
+
+# Python
+*.py
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+package-lock.json
+
+# Exclude specific files instead of broad patterns
+temp-*
+*.backup
+*.tmp
+*.log
+logs/
+nul
+
+# Windows system files
+NTUSER.DAT*
+ntuser.dat*
+ntuser.ini
+AppData/
+
+# Development tools and caches
+.aws/
+.bash_profile
+.bashrc
+.cache/
+.claude/
+.codeium/
+.config/
+.continue/
+.cursor/
+.dbclient/
+.docker/
+.git-for-windows-updater
+.gitconfig
+.lmstudio-home-pointer
+.lmstudio/
+.nvmrc
+.ollama/
+.ssh/
+.vercel/
+.vscode/
+.windsurf/
+scoop/
+
+# Development files in user directory
+*.md
+*.cs
+*.sql
+*.bat
+*.ps1
+*.sh
+*.html
+*.js
+*.json
+claudefiles
+gpt4all/
+firebase-admin-node/
+repos/
+
+# Large data files
+*.jsonl
+*.csv
+
+# But allow important config files
+!package.json
+!tsconfig.json
+!.eslintrc.json
+!vercel.json
+!next.config.*
+!tailwind.config.*

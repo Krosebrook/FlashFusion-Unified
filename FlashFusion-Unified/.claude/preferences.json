@@ -1,0 +1,150 @@
+{
+  "$schema": "https://claude.ai/schemas/preferences.json",
+  "version": "1.0.0",
+  "metadata": {
+    "project": "FlashFusion-Unified",
+    "description": "Claude preferences for AI-powered business operating system",
+    "updated": "2025-07-26",
+    "author": "FlashFusion Team"
+  },
+  "permissions": {
+    "criticalChanges": {
+      "requireApproval": true,
+      "description": "Claude must not make major build-critical changes without user approval",
+      "scope": [
+        "package.json dependencies",
+        "build configurations",
+        "deployment settings", 
+        "database schemas",
+        "API endpoints",
+        "security configurations",
+        "environment variables"
+      ]
+    },
+    "autoActions": {
+      "enabled": true,
+      "allowedOperations": [
+        "file reading",
+        "code analysis",
+        "documentation updates",
+        "minor formatting fixes",
+        "test creation",
+        "debugging assistance"
+      ]
+    }
+  },
+  "codeStyle": {
+    "primary": "biome",
+    "fallback": "eslint",
+    "formatting": {
+      "indentStyle": "space",
+      "indentWidth": 2,
+      "lineWidth": 100,
+      "quoteStyle": "double",
+      "semicolons": "asNeeded",
+      "trailingComma": "es5"
+    },
+    "linting": {
+      "strictMode": true,
+      "typescript": true,
+      "security": "high"
+    }
+  },
+  "development": {
+    "framework": "node-express",
+    "architecture": "multi-agent-system",
+    "deployment": "vercel-serverless",
+    "database": "supabase",
+    "aiProviders": ["anthropic", "openai"],
+    "testingFramework": "jest",
+    "packageManager": "npm"
+  },
+  "bestPractices": {
+    "security": {
+      "enforceApiKeyValidation": true,
+      "requireEnvironmentVariables": true,
+      "enableInputValidation": true,
+      "logSecurityEvents": true
+    },
+    "performance": {
+      "cacheStrategies": true,
+      "lazyLoading": true,
+      "compressionMiddleware": true,
+      "databasePooling": true
+    },
+    "codeQuality": {
+      "requireTests": true,
+      "enforceTypeScript": "preferred",
+      "documentAPIs": true,
+      "followNamingConventions": true
+    }
+  },
+  "workflows": {
+    "preCommit": [
+      "lint",
+      "format",
+      "test",
+      "security-check"
+    ],
+    "preDeploy": [
+      "test-coverage",
+      "build-validation",
+      "security-audit",
+      "performance-check"
+    ],
+    "development": [
+      "npm run dev",
+      "npm run dev:full"
+    ]
+  },
+  "ai": {
+    "agentPersonalities": {
+      "researcher": "analytical, thorough, fact-based",
+      "creator": "innovative, creative, solution-oriented", 
+      "optimizer": "efficiency-focused, performance-aware",
+      "automator": "systematic, process-oriented",
+      "analyzer": "detail-oriented, critical-thinking",
+      "coordinator": "collaborative, strategic"
+    },
+    "communicationStyle": {
+      "tone": "professional",
+      "verbosity": "concise",
+      "explanations": "when-requested",
+      "errorHandling": "graceful-degradation"
+    }
+  },
+  "integrations": {
+    "required": [
+      "anthropic-claude",
+      "supabase-database",
+      "vercel-hosting"
+    ],
+    "optional": [
+      "notion-docs",
+      "zapier-webhooks",
+      "firecrawl-scraping"
+    ],
+    "development": [
+      "cursor-ide",
+      "vscode-extensions",
+      "github-actions"
+    ]
+  },
+  "monitoring": {
+    "logging": {
+      "level": "info",
+      "format": "structured",
+      "destination": "winston"
+    },
+    "metrics": {
+      "performance": true,
+      "usage": true,
+      "errors": true
+    },
+    "alerts": {
+      "criticalErrors": true,
+      "performanceDegradation": true,
+      "securityEvents": true
+    }
+  }
+}

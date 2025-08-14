@@ -1,0 +1,88 @@
+{
+  "metadata": {
+    "title": "AI Development Workflow Research",
+    "audience": "AI Developers & Automation Specialists",
+    "framework": "Jobs to Be Done Framework",
+    "duration": "45 minutes",
+    "generatedAt": "2025-07-24T15:31:02.955Z",
+    "version": "1.0"
+  },
+  "introduction": {
+    "welcome": "Hi [Name], thank you so much for taking the time to talk with me today.",
+    "purpose": "Understanding how developers work with AI services and automation",
+    "logistics": "This should take about 45 minutes. I'll be recording this session for analysis - is that okay with you?",
+    "consent": "Before we start, do you have any questions about this research or how we'll use the information?"
+  },
+  "sections": [
+    {
+      "section": "Context Setting",
+      "questions": [
+        "Tell me about your role and how long you've been working with AI/ML.",
+        "What types of AI-powered applications do you typically build?",
+        "How many different AI services or APIs do you usually integrate?"
+      ]
+    },
+    {
+      "section": "Current Workflow Deep Dive",
+      "questions": [
+        "Walk me through your last AI project from conception to deployment.",
+        "When you need to integrate multiple AI services, what's your process?",
+        "Where do you typically get stuck or spend unexpected time?",
+        "Can you show me (screen share) how you currently manage API keys and configurations?"
+      ]
+    },
+    {
+      "section": "Pain Points & Frustrations",
+      "questions": [
+        "What's the most frustrating part of working with multiple AI APIs?",
+        "Tell me about a time when AI integration took much longer than expected.",
+        "How do you handle errors and debugging across different AI services?",
+        "What manual tasks do you do repeatedly that you wish were automated?"
+      ]
+    },
+    {
+      "section": "Jobs to Be Done",
+      "questions": [
+        "When you're starting a new AI project, what job are you trying to get done?",
+        "What would success look like for your ideal AI development workflow?",
+        "If you had a magic wand, what would you automate first?",
+        "How do you measure the success of an AI integration project?"
+      ]
+    },
+    {
+      "section": "Solution Exploration",
+      "questions": [
+        "Have you tried any AI orchestration or workflow tools? What was your experience?",
+        "What would make you 10x more productive in AI development?",
+        "If there was a tool that could orchestrate AI agents for you, what would it need to do?",
+        "How much time per week would you save with perfect AI automation?"
+      ]
+    }
+  ],
+  "closing": {
+    "gratitude": "This has been incredibly valuable. Thank you for sharing your insights.",
+    "nextSteps": "We'll be analyzing all the feedback we receive and may follow up with additional questions.",
+    "compensation": "You should receive your [incentive] within 3-5 business days.",
+    "contact": "If you have any questions after this call, feel free to reach out to [email]."
+  },
+  "moderatorNotes": {
+    "preparation": [
+      "Review participant's background and screening responses",
+      "Prepare follow-up questions based on their specific context",
+      "Test recording equipment and backup recording method",
+      "Have consent form ready if not already signed"
+    ],
+    "duringInterview": [
+      "Listen for emotional language and probe deeper",
+      "Ask for specific examples and stories",
+      "Watch for non-verbal cues and body language",
+      "Keep track of time but prioritize valuable insights"
+    ],
+    "followUp": [
+      "Send thank you email within 24 hours",
+      "Upload and transcribe recording immediately",
+      "Note key insights while memory is fresh",
+      "Schedule analysis session within 48 hours"
+    ]
+  }
+}

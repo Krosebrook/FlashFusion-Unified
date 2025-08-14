@@ -1,0 +1,47 @@
+# Development files
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+*.map
+coverage/
+tests/
+__tests__/
+.git/
+.github/
+docs/
+
+# Angular build artifacts
+dist/
+.angular/
+*.tsbuildinfo
+
+# Large directories
+mcp-servers/
+FlashFusion-Unified/FlashFusion-Unified/
+client_legacy/
+flashfusion-app/flashfusion/node_modules/
+flashfusion-dashboard/node_modules/
+agents/lyra/dashboard/node_modules/
+
+# Logs and temp files
+*.log
+logs/
+tmp/
+temp/
+.cache/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Other unnecessary files
+*.md
+!README.md
+!CLAUDE.md
+*.yml
+!vercel.json
+*.yaml
+!app.yaml

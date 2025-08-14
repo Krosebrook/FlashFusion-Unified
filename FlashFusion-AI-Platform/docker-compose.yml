@@ -1,0 +1,138 @@
+version: '3.8'
+
+services:
+  # Open WebUI - Main AI Interface
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: flashfusion-open-webui
+    ports:
+      - "3000:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - WEBUI_SECRET_KEY=your-secret-key-here
+      - WEBUI_AUTH=False  # Set to True for production
+    volumes:
+      - open-webui:/app/backend/data
+      - ./config/open-webui:/app/backend/config
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+
+  # Ollama - Local LLM Server
+  ollama:
+    image: ollama/ollama:latest
+    container_name: flashfusion-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+      - ./models:/models
+    environment:
+      - OLLAMA_ORIGINS=*
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+    # Uncomment for GPU support
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # FlashFusion IDE - Main Development Interface
+  flashfusion-ide:
+    build: 
+      context: ./repos/Krosebrook/flashfusion-ide
+      dockerfile: Dockerfile
+    container_name: flashfusion-ide
+    ports:
+      - "8080:3000"
+    environment:
+      - NODE_ENV=development
+      - OPEN_WEBUI_URL=http://open-webui:8080
+      - CLAUDE_CODE_INTEGRATION=true
+    volumes:
+      - ./workspace:/workspace
+      - ./repos:/repos
+      - ./.claude:/claude-config
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+
+  # Code Server - VS Code in Browser (Backup IDE)
+  code-server:
+    image: codercom/code-server:latest
+    container_name: flashfusion-code-server
+    ports:
+      - "8443:8080"
+    environment:
+      - PASSWORD=flashfusion2024
+    volumes:
+      - ./workspace:/home/coder/workspace
+      - ./repos:/home/coder/repos
+      - ./.claude:/home/coder/.claude
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+
+  # Redis - For caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: flashfusion-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+
+  # PostgreSQL - Database for projects and AI data
+  postgres:
+    image: postgres:15-alpine
+    container_name: flashfusion-postgres
+    environment:
+      - POSTGRES_DB=flashfusion
+      - POSTGRES_USER=flashfusion
+      - POSTGRES_PASSWORD=flashfusion_secure_2024
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+
+  # Nginx - Reverse Proxy and Load Balancer
+  nginx:
+    image: nginx:alpine
+    container_name: flashfusion-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/html:/usr/share/nginx/html
+    depends_on:
+      - open-webui
+      - flashfusion-ide
+      - code-server
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+
+volumes:
+  open-webui:
+  ollama:
+  redis-data:
+  postgres-data:
+
+networks:
+  flashfusion-network:
+    driver: bridge
