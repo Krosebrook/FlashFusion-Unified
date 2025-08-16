@@ -11,7 +11,12 @@
     "ff": "node ff-cli.js",
     "ol:init": "node ff-cli.js ol:init",
     "ol:status": "node ff-cli.js ol:status",
-    "ol:list": "node ff-cli.js ol:list"
+    "ol:list": "node ff-cli.js ol:list",
+    "monitoring:start": "node monitoring-init.js",
+    "monitoring:setup": "node scripts/setup-monitoring.js",
+    "monitoring:health": "curl -s http://localhost:3000/api/monitoring/health | jq",
+    "monitoring:status": "curl -s http://localhost:3000/api/monitoring/status | jq",
+    "monitoring:alerts": "curl -s http://localhost:3000/api/monitoring/alerts | jq"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.57.0",
@@ -29,7 +34,8 @@
     "openai": "^4.0.0",
     "react": "^18",
     "react-dom": "^18",
-    "tailwindcss": "^3.3.6"
+    "tailwindcss": "^3.3.6",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@types/react": "19.1.10",
