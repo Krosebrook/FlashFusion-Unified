@@ -108,6 +108,13 @@ repos/
 *.jsonl
 *.csv
 
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
 # But allow important config files
 !package.json
 !tsconfig.json

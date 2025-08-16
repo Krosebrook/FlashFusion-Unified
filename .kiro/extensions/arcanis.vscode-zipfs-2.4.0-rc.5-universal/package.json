@@ -1,0 +1,115 @@
+{
+	"name": "vscode-zipfs",
+	"private": true,
+	"license": "BSD-2-Clause",
+	"publisher": "arcanis",
+	"displayName": "ZipFS - a zip file system",
+	"description": "Allows to easily inspect and modify files stored within zip archives.",
+	"homepage": "https://github.com/yarnpkg/berry/blob/master/packages/vscode-zipfs",
+	"icon": "icon.png",
+	"version": "2.4.0-rc.5",
+	"engines": {
+		"vscode": "^1.54.0",
+		"node": ">=12 <14 || 14.2 - 14.9 || >14.10.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"workspaceContains:**/*.zip",
+		"onLanguage:zip",
+		"onFileSystem:zip",
+		"onCommand:zipfs.mountZipFile",
+		"onCommand:zipfs.mountZipEditor",
+		"onStartupFinished"
+	],
+	"main": "./build/index.js",
+	"sideEffects": false,
+	"contributes": {
+		"languages": [
+			{
+				"id": "zip",
+				"aliases": [
+					"Zip Archive",
+					"ZIP"
+				],
+				"extensions": [
+					".zip"
+				]
+			}
+		],
+		"commands": [
+			{
+				"command": "zipfs.mountZipFile",
+				"title": "Mount as Zip",
+				"category": "Zip"
+			},
+			{
+				"command": "zipfs.mountZipEditor",
+				"title": "Mount the current file as a workspace",
+				"category": "Zip"
+			}
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"when": "resourceLangId == zip",
+					"command": "zipfs.mountZipFile",
+					"group": "navigation"
+				}
+			],
+			"commandPalette": [
+				{
+					"when": "false",
+					"command": "zipfs.mountZipFile"
+				},
+				{
+					"when": "editorLangId == zip",
+					"command": "zipfs.mountZipEditor"
+				}
+			]
+		}
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.54.0",
+		"@yarnpkg/fslib": "workspace:^",
+		"@yarnpkg/libzip": "workspace:^",
+		"@yarnpkg/pnpify": "workspace:^",
+		"ts-loader": "^7.0.5",
+		"typescript": "^4.4.2",
+		"vsce": "^1.85.1",
+		"webpack": "^5.1.1",
+		"webpack-cli": "^4.0.0-beta.8"
+	},
+	"scripts": {
+		"vscode:prepublish": "run build",
+		"package:vscode-zipfs": "run package",
+		"package": "run vsce package --yarn",
+		"build:vscode-zipfs": "run build",
+		"build": "webpack-cli",
+		"watch": "NODE_ENV=development webpack-cli --watch",
+		"code": "code --extensionDevelopmentPath=\"$(pwd)\" \"$(pwd)\""
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/yarnpkg/berry",
+		"directory": "packages/vscode-zipfs"
+	},
+	"dependencies": {
+		"tslib": "^1.13.0"
+	},
+	"stableVersion": "2.3.0",
+	"__metadata": {
+		"id": "b14d47f6-5230-4a65-9366-82edc70d5dfd",
+		"publisherId": "659f24e1-7f98-4a8d-9904-b5f9064a1343",
+		"publisherDisplayName": "arcanis",
+		"targetPlatform": "universal",
+		"isApplicationScoped": false,
+		"isPreReleaseVersion": false,
+		"hasPreReleaseVersion": false,
+		"installedTimestamp": 1755362158076,
+		"pinned": false,
+		"preRelease": false,
+		"source": "gallery"
+	}
+}

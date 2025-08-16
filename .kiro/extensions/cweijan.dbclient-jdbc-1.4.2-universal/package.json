@@ -1,0 +1,51 @@
+{
+	"name": "dbclient-jdbc",
+	"displayName": "Database Client JDBC",
+	"description": "JDBC Adapter For Database Client",
+	"version": "1.4.2",
+	"icon": "icon.png",
+	"publisher": "cweijan",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/database-client/jdbc-adapter-server.git"
+	},
+	"bugs": {
+		"url": "https://github.com/cweijan/vscode-database-client/issues",
+		"email": "support@database-client.com"
+	},
+	"engines": {
+		"vscode": "^1.60.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"keywords": [
+		"Oracle"
+	],
+	"activationEvents": [],
+	"main": "./extension.js",
+	"contributes": {
+		"commands": []
+	},
+	"scripts": {
+		"package": "rm -rf *.vsix && vsce package",
+		"publish": "vsce publish"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.60.0",
+		"@types/node": "14.x"
+	},
+	"__metadata": {
+		"id": "1fe0d785-8db6-44ef-8113-cb0d98a88473",
+		"publisherId": "43004267-e6e4-497f-b826-dda371e4ec49",
+		"publisherDisplayName": "cweijan",
+		"targetPlatform": "universal",
+		"isApplicationScoped": false,
+		"isPreReleaseVersion": false,
+		"hasPreReleaseVersion": false,
+		"installedTimestamp": 1755362168577,
+		"pinned": false,
+		"preRelease": false,
+		"source": "gallery"
+	}
+}

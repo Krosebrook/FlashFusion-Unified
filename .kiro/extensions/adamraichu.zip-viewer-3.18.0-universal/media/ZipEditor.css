@@ -1,0 +1,57 @@
+body {
+  margin-bottom: 50px;
+}
+
+#toolbar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  padding: 10px;
+  background-color: var(--vscode-editor-background);
+}
+
+#toolbar button {
+  background-color: var(--vscode-button-background, darkblue);
+  color: var(--vscode-button-foreground, white);
+  padding: 3px;
+  cursor: pointer;
+}
+
+textarea {
+  width: 100%;
+  min-height: 150px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  resize: vertical;
+}
+
+#target div {
+  margin-block: 1em;
+  display: flex;
+  align-items: center;
+}
+
+#target span {
+  pointer-events: none;
+}
+
+vscode-button {
+  margin-inline: 10px;
+}
+
+#preview img {
+  background-image: url("./transparent-background.avif");
+  background-size: contain;
+  background-repeat: repeat;
+}
+
+/* #target span::before {
+  pointer-events: all;
+  display: inline-block;
+  margin-right: 8px;
+  content: "Get Preview";
+  background-color: var(--vscode-button-background, darkblue);
+  color: var(--vscode-button-foreground, white);
+  padding: 2px;
+  cursor: pointer;
+} */

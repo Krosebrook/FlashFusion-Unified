@@ -1,0 +1,105 @@
+{
+	"name": "htmltagwrap",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/bgashler1/vscode-htmltagwrap"
+	},
+	"description": "Wraps selected code with HTML tags",
+	"categories": [
+		"Other"
+	],
+	"keywords": [
+		"wrap tags",
+		"wrap html",
+		"wrap code",
+		"wrap text"
+	],
+	"version": "1.0.0",
+	"publisher": "bradgashler",
+	"engines": {
+		"vscode": "^1.7.5"
+	},
+	"main": "./out/src/extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.htmlTagWrap",
+				"title": "Wrap in HTML Tags"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "extension.htmlTagWrap",
+				"key": "alt+w",
+				"mac": "alt+w",
+				"when": "editorTextFocus"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "Htmltagwrap configuration",
+			"properties": {
+				"htmltagwrap.tag": {
+					"type": "string",
+					"default": "p",
+					"description": "The default HTML tag to insert when using htmltagwrap."
+				},
+				"htmltagwrap.autoDeselectClosingTag": {
+					"type": "boolean",
+					"default": true,
+					"description": "Automatically deselect the closing tag after inserting a space."
+				}
+			}
+		}
+	},
+	"activationEvents": [
+		"onCommand:extension.htmlTagWrap"
+	],
+	"scripts": {
+		"vscode:prepublish": "tsc -p ./",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"lint": "eslint \"src/**/*.ts\"",
+		"typings": "typings",
+		"test:LinuxAndOSX": "node ./out/test/runTests.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.1",
+		"@types/node": "^16.11.7",
+		"@types/mocha": "^10.0.1",
+		"@types/vscode": "^1.7.5",
+		"@vscode/test-electron": "^2.3.0",
+		"@typescript-eslint/eslint-plugin": "^5.56.0",
+		"@typescript-eslint/parser": "^5.56.0",
+		"chai": "^4.3.7",
+		"fs-extra": "^11.1.1",
+		"glob": "^7.1.1",
+		"mocha": "^10.2.0",
+		"eslint": "^8.36.0",
+		"source-map-support": "0.5.21",
+		"typescript": "^5.0.2"
+	},
+	"icon": "images/htmlTagWrap_icon.png",
+	"galleryBanner": {
+		"color": "#596877",
+		"theme": "dark"
+	},
+	"bugs": {
+		"url": "https://github.com/bgashler1/vscode-htmltagwrap/issues"
+	},
+	"homepage": "https://github.com/bgashler1/vscode-htmltagwrap/README.md",
+	"__metadata": {
+		"id": "c16f95f6-9b42-4a24-9bf4-245d4ea54fc5",
+		"publisherId": "ca7f8bd1-9975-4624-9507-225609f5193f",
+		"publisherDisplayName": "bradgashler",
+		"targetPlatform": "universal",
+		"isApplicationScoped": false,
+		"isPreReleaseVersion": false,
+		"hasPreReleaseVersion": false,
+		"installedTimestamp": 1755362246181,
+		"pinned": false,
+		"preRelease": false,
+		"source": "gallery"
+	}
+}

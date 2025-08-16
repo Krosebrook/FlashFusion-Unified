@@ -1,0 +1,160 @@
+{
+	"name": "pythonsnippets3",
+	"displayName": "Python Snippets 3",
+	"description": "New auto suggestion for Python updated in 2023",
+	"version": "3.3.18",
+	"publisher": "EricSia",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ericsia/vscode-python-snippet-pack-2.0/"
+	},
+	"icon": "icon.png",
+	"engines": {
+		"vscode": "^1.8.0"
+	},
+	"sponsor": {
+		"url": "https://www.paypal.com/paypalme/medlexo"
+	},
+	"categories": [
+		"Snippets",
+		"Extension Packs",
+		"Data Science",
+		"Machine Learning",
+		"Education",
+		"Testing",
+		"Other"
+	],
+	"keywords": [
+		"snippets",
+		"python",
+		"python2",
+		"python3",
+		"python 2",
+		"python 3",
+		"python ai",
+		"python hint",
+		"python typehint",
+		"python snippets",
+		"python_snippets",
+		"pythonSnippets",
+		"python autocompletion",
+		"python IntelliSense",
+		"python suggestion",
+		"IntelliSense",
+		"suggestion",
+		"completion",
+		"autocompletion",
+		"hint",
+		"typehint",
+		"tutorial",
+		"documentation",
+		"parameter",
+		"function",
+		"methods"
+	],
+	"contributes": {
+		"snippets": [
+			{
+				"language": "python",
+				"path": "./snippets/python_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/dict_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/sets_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/str_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/list_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/tuple_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/shortcut.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/def_function.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/end_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/print_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/control_flow.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/algo_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/datetime_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/np_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/plt_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/PyMySQL_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/django_snippets.json"
+			},
+			{
+				"language": "django-html",
+				"path": "./snippets/django_template.json"
+			},
+			{
+				"language": "django-txt",
+				"path": "./snippets/django_template.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/random_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/file_snippets.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/class_snippets.json"
+			}
+		]
+	},
+	"__metadata": {
+		"id": "6a6a4cee-4022-4904-81d7-59b3a2e0302a",
+		"publisherId": "90e1f88c-6be1-478b-b28f-988a6e9daf61",
+		"publisherDisplayName": "EricSia",
+		"targetPlatform": "universal",
+		"isApplicationScoped": false,
+		"isPreReleaseVersion": false,
+		"hasPreReleaseVersion": false,
+		"installedTimestamp": 1755362137675,
+		"pinned": false,
+		"preRelease": false,
+		"source": "gallery"
+	}
+}
