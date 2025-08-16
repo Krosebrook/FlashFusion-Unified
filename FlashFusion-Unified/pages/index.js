@@ -86,6 +86,7 @@ const FlashFusionLoveable = () => {
             </h1>
           </div>
           <nav className="flex items-center gap-6 text-sm">
+            <a href="/fusion-dashboard" className="text-gray-300 hover:text-white transition-colors">Fusion IDE</a>
             <a href="#" className="text-gray-300 hover:text-white transition-colors">Projects</a>
             <a href="#" className="text-gray-300 hover:text-white transition-colors">Templates</a>
             <a href="#" className="text-gray-300 hover:text-white transition-colors">Documentation</a>
@@ -222,6 +223,12 @@ const FlashFusionLoveable = () => {
                             </svg>
                           )}
                         </button>
+                        <a 
+                          href="/fusion-dashboard"
+                          className="ml-3 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg transition-all text-sm text-gray-300 hover:text-white"
+                        >
+                          Try Fusion IDE →
+                        </a>
                       </div>
                     </div>
                   </div>
