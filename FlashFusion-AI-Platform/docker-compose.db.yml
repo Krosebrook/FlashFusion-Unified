@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Redis - For caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: flashfusion-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+    profiles:
+      - db
+
+  # PostgreSQL - Database for projects and AI data
+  postgres:
+    image: postgres:15-alpine
+    container_name: flashfusion-postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-flashfusion}
+      - POSTGRES_USER=${POSTGRES_USER:-flashfusion}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-flashfusion_secure_2024}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+    profiles:
+      - db
+
+volumes:
+  redis-data:
+  postgres-data:
+
+networks:
+  flashfusion-network:
+    driver: bridge
+

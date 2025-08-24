@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # Nginx - Reverse Proxy and Load Balancer
+  nginx:
+    image: nginx:alpine
+    container_name: flashfusion-nginx
+    ports:
+      - "${NGINX_HTTP_PORT:-80}:80"
+      - "${NGINX_HTTPS_PORT:-443}:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/html:/usr/share/nginx/html
+    depends_on:
+      - open-webui
+      - flashfusion-ide
+      - code-server
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+    profiles:
+      - proxy
+
+networks:
+  flashfusion-network:
+    driver: bridge
+
