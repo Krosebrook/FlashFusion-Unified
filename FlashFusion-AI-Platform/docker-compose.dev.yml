@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # FlashFusion IDE - Main Development Interface
+  flashfusion-ide:
+    build:
+      context: ./repos/Krosebrook/flashfusion-ide
+      dockerfile: Dockerfile
+    container_name: flashfusion-ide
+    ports:
+      - "${FF_IDE_PORT:-8080}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - OPEN_WEBUI_URL=${OPEN_WEBUI_URL:-http://open-webui:8080}
+      - CLAUDE_CODE_INTEGRATION=${CLAUDE_CODE_INTEGRATION:-true}
+    volumes:
+      - ./workspace:/workspace
+      - ./repos:/repos
+      - ./.claude:/claude-config
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+    profiles:
+      - dev
+
+  # Code Server - VS Code in Browser (Backup IDE)
+  code-server:
+    image: codercom/code-server:latest
+    container_name: flashfusion-code-server
+    ports:
+      - "${CODE_SERVER_PORT:-8443}:8080"
+    environment:
+      - PASSWORD=${CODE_SERVER_PASSWORD:-flashfusion2024}
+    volumes:
+      - ./workspace:/home/coder/workspace
+      - ./repos:/home/coder/repos
+      - ./.claude:/home/coder/.claude
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+    profiles:
+      - dev
+
+networks:
+  flashfusion-network:
+    driver: bridge
+

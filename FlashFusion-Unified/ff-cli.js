@@ -8,75 +8,20 @@
  * @version 2.0.0
  */
 
-const { execSync, spawn } = require('child_process');
-const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
 // CLI Configuration
-const CLI_VERSION = '2.0.0';
-const PROJECT_NAME = 'FlashFusion Unified';
-const REQUIRED_NODE_VERSION = '18.0.0';
+const { CLI_VERSION, PROJECT_NAME, REQUIRED_NODE_VERSION } = require('./cli/config');
 
 // Import FlashFusion Tools
 const { OpenLovableTool } = require('./tools/open-lovable-tool');
 
-// Color utilities
-const colors = {
-    reset: '\x1b[0m',
-    bright: '\x1b[1m',
-    red: '\x1b[31m',
-    green: '\x1b[32m',
-    yellow: '\x1b[33m',
-    blue: '\x1b[34m',
-    magenta: '\x1b[35m',
-    cyan: '\x1b[36m',
-    white: '\x1b[37m'
-};
+// Shared logging and process helpers
+const { colors, log } = require('./cli/utils/log');
+const { exec, spawnProcess, ensureProjectRoot, checkNodeVersion } = require('./cli/utils/process');
 
-const log = {
-    info: (msg) => console.log(`${colors.cyan}ℹ${colors.reset} ${msg}`),
-    success: (msg) => console.log(`${colors.green}✓${colors.reset} ${msg}`),
-    warn: (msg) => console.log(`${colors.yellow}⚠${colors.reset} ${msg}`),
-    error: (msg) => console.log(`${colors.red}✗${colors.reset} ${msg}`),
-    title: (msg) => console.log(`${colors.bright}${colors.blue}${msg}${colors.reset}`),
-    command: (msg) => console.log(`${colors.magenta}→${colors.reset} ${msg}`)
-};
-
-// Utility functions
-const exec = (command, options = {}) => {
-    try {
-        return execSync(command, { stdio: 'inherit', ...options });
-    } catch (error) {
-        log.error(`Command failed: ${command}`);
-        process.exit(1);
-    }
-};
-
-const checkNodeVersion = () => {
-    const currentVersion = process.version.slice(1);
-    if (currentVersion < REQUIRED_NODE_VERSION) {
-        log.error(`Node.js ${REQUIRED_NODE_VERSION}+ required. Current: ${currentVersion}`);
-        process.exit(1);
-    }
-};
-
-const ensureProjectRoot = () => {
-    if (!fs.existsSync('package.json')) {
-        log.error('Not in a FlashFusion project root. Run ff:init first.');
-        process.exit(1);
-    }
-};
-
-const spawnProcess = (command, args = [], options = {}) => {
-    return new Promise((resolve, reject) => {
-        const child = spawn(command, args, { stdio: 'inherit', ...options });
-        child.on('close', (code) => {
-            if (code === 0) resolve();
-            else reject(new Error(`Process exited with code ${code}`));
-        });
-    });
-};
+// (utility functions moved to ./cli/utils)
 
 // Command implementations
 const commands = {

@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # Open WebUI - Main AI Interface
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: flashfusion-open-webui
+    ports:
+      - "${OPEN_WEBUI_PORT:-3000}:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY:-change-me}
+      - WEBUI_AUTH=${WEBUI_AUTH:-False}
+    volumes:
+      - open-webui:/app/backend/data
+      - ./config/open-webui:/app/backend/config
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+    profiles:
+      - core
+
+  # Ollama - Local LLM Server
+  ollama:
+    image: ollama/ollama:latest
+    container_name: flashfusion-ollama
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - ollama:/root/.ollama
+      - ./models:${OLLAMA_MODELS_DIR:-/models}
+    environment:
+      - OLLAMA_ORIGINS=*
+    restart: unless-stopped
+    networks:
+      - flashfusion-network
+    # Uncomment for GPU support in compose override if needed
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    profiles:
+      - core
+
+volumes:
+  open-webui:
+  ollama:
+
+networks:
+  flashfusion-network:
+    driver: bridge
+
