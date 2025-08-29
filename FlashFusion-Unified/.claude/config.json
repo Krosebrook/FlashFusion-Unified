@@ -1,0 +1,63 @@
+{
+  "security": {
+    "permissions": "explicit",
+    "dangerously_skip_permissions": false,
+    "require_confirmation": true,
+    "auto_approve": false,
+    "sensitive_file_protection": true
+  },
+  "allowed_tools": {
+    "read_only": ["Read", "Grep", "LS", "Glob"],
+    "write_operations": {
+      "requires_approval": true,
+      "tools": ["Write", "Edit", "MultiEdit"]
+    },
+    "system_operations": {
+      "requires_explicit_approval": true,
+      "restricted_commands": [
+        "rm -rf",
+        "sudo",
+        "chmod 777",
+        "curl | bash",
+        "wget | bash"
+      ],
+      "allowed_commands": [
+        "npm run *",
+        "git status",
+        "git diff",
+        "git log",
+        "node scripts/*"
+      ]
+    }
+  },
+  "file_protection": {
+    "sensitive_files": [
+      ".env*",
+      "*.key",
+      "*.pem",
+      "config/secrets/*",
+      "docker-compose.yml",
+      "package.json",
+      "*.config.js"
+    ],
+    "protected_directories": [
+      ".git/",
+      "node_modules/",
+      ".claude/",
+      "database/",
+      "scripts/"
+    ]
+  },
+  "audit": {
+    "log_all_operations": true,
+    "log_file": ".claude/audit.log",
+    "session_tracking": true,
+    "command_history": true
+  },
+  "development": {
+    "project_context": "FlashFusion-Unified",
+    "max_session_duration": 7200,
+    "auto_clear_after": 3600,
+    "backup_before_changes": true
+  }
+}
