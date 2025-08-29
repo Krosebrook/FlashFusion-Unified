@@ -1,0 +1,132 @@
+{
+  "name": "Base44 → Custom Automation Hub",
+  "description": "Advanced automation platform integration for Base44 workflows with AI-powered process optimization",
+  "trigger": {
+    "type": "webhook", 
+    "url": "https://hooks.zapier.com/hooks/catch/base44/custom-automation/",
+    "method": "POST",
+    "headers": {
+      "Authorization": "Bearer {{base44_api_key}}",
+      "Content-Type": "application/json"
+    }
+  },
+  "filters": [
+    {
+      "condition": "event_type",
+      "operator": "is_not_empty"
+    },
+    {
+      "condition": "payload",
+      "operator": "contains", 
+      "value": "automation"
+    }
+  ],
+  "actions": [
+    {
+      "id": "analyze_automation_event",
+      "type": "code",
+      "language": "python", 
+      "code": "import json\nimport datetime\nfrom typing import Dict, List, Any\n\ndef analyze_base44_automation(event_data: Dict[str, Any]) -> Dict[str, Any]:\n    event_type = event_data.get('event_type', '')\n    payload = event_data.get('payload', {})\n    metadata = event_data.get('metadata', {})\n    \n    automation_insights = {\n        'event_classification': classify_automation_event(event_type, payload),\n        'priority_level': calculate_automation_priority(event_data),\n        'optimization_opportunities': identify_optimization_potential(payload),\n        'workflow_recommendations': generate_workflow_suggestions(event_data),\n        'integration_requirements': analyze_integration_needs(metadata)\n    }\n    \n    process_analysis = {\n        'efficiency_score': calculate_process_efficiency(payload),\n        'bottleneck_detection': identify_process_bottlenecks(event_data),\n        'cost_optimization': calculate_cost_savings_potential(payload),\n        'scalability_assessment': assess_scalability_requirements(metadata),\n        'compliance_check': verify_process_compliance(event_data)\n    }\n    \n    orchestration_plan = {\n        'immediate_actions': determine_immediate_responses(automation_insights),\n        'scheduled_tasks': create_follow_up_schedule(process_analysis),\n        'notification_routing': route_notifications_intelligently(event_data),\n        'data_synchronization': plan_data_sync_operations(payload),\n        'performance_tracking': setup_performance_monitoring(metadata)\n    }\n    \n    return {\n        'analysis_timestamp': datetime.datetime.now().isoformat(),\n        'event_summary': create_executive_summary(event_data, automation_insights),\n        'automation_insights': automation_insights,\n        'process_analysis': process_analysis,\n        'orchestration_plan': orchestration_plan,\n        'success_metrics': define_success_metrics(event_data),\n        'risk_assessment': assess_automation_risks(payload)\n    }\n\ndef classify_automation_event(event_type: str, payload: Dict) -> Dict[str, Any]:\n    classification_rules = {\n        'workflow_creation': {'complexity': 'medium', 'category': 'development'},\n        'process_optimization': {'complexity': 'high', 'category': 'enhancement'},\n        'data_migration': {'complexity': 'high', 'category': 'operations'},\n        'integration_setup': {'complexity': 'medium', 'category': 'configuration'},\n        'monitoring_alert': {'complexity': 'low', 'category': 'maintenance'},\n        'custom_script': {'complexity': 'variable', 'category': 'custom'}\n    }\n    \n    base_classification = classification_rules.get(event_type, {'complexity': 'unknown', 'category': 'general'})\n    \n    complexity_factors = {\n        'data_volume': len(str(payload)) > 10000,\n        'multiple_systems': len(payload.get('connected_systems', [])) > 3,\n        'real_time_requirements': payload.get('real_time', False),\n        'compliance_requirements': payload.get('compliance_level', 'none') != 'none',\n        'custom_logic': 'custom_code' in payload\n    }\n    \n    complexity_score = sum(complexity_factors.values())\n    if complexity_score >= 3:\n        base_classification['complexity'] = 'very_high'\n    elif complexity_score >= 2:\n        base_classification['complexity'] = 'high'\n    \n    return {\n        **base_classification,\n        'complexity_score': complexity_score,\n        'estimated_duration': f\"{complexity_score * 2} hours\",\n        'resource_requirements': f\"{complexity_score} developers\",\n        'skill_requirements': ['automation', 'api_integration', 'data_analysis']\n    }\n\ndef calculate_automation_priority(event_data: Dict) -> Dict[str, Any]:\n    impact_score = 0\n    if event_data.get('affects_production', False):\n        impact_score += 50\n    if event_data.get('revenue_impact', 0) > 1000:\n        impact_score += 30\n    if event_data.get('user_count_affected', 0) > 100:\n        impact_score += 20\n    \n    urgency_score = 0\n    if event_data.get('is_time_sensitive', False):\n        urgency_score += 40\n    if event_data.get('deadline_hours', 168) < 24:\n        urgency_score += 30\n    if event_data.get('blocking_other_processes', False):\n        urgency_score += 30\n    \n    total_priority = impact_score + urgency_score\n    \n    if total_priority >= 80:\n        priority_level = 'critical'\n    elif total_priority >= 60:\n        priority_level = 'high'\n    elif total_priority >= 40:\n        priority_level = 'medium'\n    else:\n        priority_level = 'low'\n    \n    return {\n        'priority_level': priority_level,\n        'priority_score': total_priority,\n        'impact_score': impact_score,\n        'urgency_score': urgency_score,\n        'sla_target': {'critical': '1 hour', 'high': '4 hours', 'medium': '24 hours', 'low': '72 hours'}[priority_level],\n        'escalation_path': f\"Escalate to management if not resolved within SLA for {priority_level} priority\"\n    }\n\ndef assess_automation_risks(payload: Dict) -> Dict[str, Any]:\n    risks = []\n    risk_score = 0\n    \n    if payload.get('handles_sensitive_data', False):\n        risks.append({\n            'type': 'data_security',\n            'level': 'high',\n            'description': 'Process handles sensitive data',\n            'mitigation': 'Implement encryption and access controls'\n        })\n        risk_score += 30\n    \n    external_deps = len(payload.get('external_dependencies', []))\n    if external_deps > 5:\n        risks.append({\n            'type': 'dependency',\n            'level': 'medium',\n            'description': f'{external_deps} external dependencies',\n            'mitigation': 'Implement fallback mechanisms and monitoring'\n        })\n        risk_score += 20\n    \n    if not payload.get('has_timeout_handling', False):\n        risks.append({\n            'type': 'performance',\n            'level': 'medium',\n            'description': 'No timeout handling detected',\n            'mitigation': 'Add timeout and retry mechanisms'\n        })\n        risk_score += 15\n    \n    return {\n        'overall_risk_level': 'high' if risk_score >= 50 else 'medium' if risk_score >= 25 else 'low',\n        'risk_score': risk_score,\n        'identified_risks': risks,\n        'recommended_actions': [f\"Address {risk['type']} risk: {risk['mitigation']}\" for risk in risks]\n    }\n\n# Helper functions\ndef identify_optimization_potential(payload):\n    optimizations = []\n    if payload.get('execution_time', 0) > 300:\n        optimizations.append({'type': 'performance', 'description': 'Reduce execution time'})\n    return optimizations\n\ndef generate_workflow_suggestions(event_data):\n    return [{'category': 'ai_enhancement', 'title': 'Add AI decision making'}]\n\ndef analyze_integration_needs(metadata):\n    return {'slack': True, 'notion': True}\n\ndef calculate_process_efficiency(payload):\n    return 75\n\ndef identify_process_bottlenecks(event_data):\n    return ['manual_approval_step']\n\ndef calculate_cost_savings_potential(payload):\n    return '$500/month'\n\ndef assess_scalability_requirements(metadata):\n    return 'moderate_scaling_needed'\n\ndef verify_process_compliance(event_data):\n    return 'gdpr_compliant'\n\ndef determine_immediate_responses(automation_insights):\n    return ['notify_team', 'create_ticket']\n\ndef create_follow_up_schedule(process_analysis):\n    return {'delay_minutes': 60, 'next_actions': ['check_progress']}\n\ndef route_notifications_intelligently(event_data):\n    return 'slack'\n\ndef plan_data_sync_operations(payload):\n    return 'sync_to_warehouse'\n\ndef setup_performance_monitoring(metadata):\n    return 'enable_metrics_collection'\n\ndef create_executive_summary(event_data, automation_insights):\n    return f\"Base44 automation event: {event_data.get('event_type', 'unknown')}\"\n\ndef define_success_metrics(event_data):\n    return ['completion_time', 'error_rate', 'user_satisfaction']\n\n# Process the event\nevent_input = {\n    'event_type': input_data.get('event_type', ''),\n    'payload': input_data.get('payload', {}),\n    'metadata': input_data.get('metadata', {}),\n    'affects_production': input_data.get('affects_production', False),\n    'revenue_impact': input_data.get('revenue_impact', 0),\n    'user_count_affected': input_data.get('user_count_affected', 0),\n    'is_time_sensitive': input_data.get('is_time_sensitive', False),\n    'deadline_hours': input_data.get('deadline_hours', 168),\n    'blocking_other_processes': input_data.get('blocking_other_processes', False)\n}\n\nresult = analyze_base44_automation(event_input)\noutput = result"
+    },
+    {
+      "id": "route_notifications",
+      "type": "conditional",
+      "conditions": [
+        {
+          "if": "{{analyze_automation_event.priority_level}} == 'critical'",
+          "then": [
+            {
+              "action": "slack_notification",
+              "channel": "#flashfusion-critical",
+              "message": "🚨 CRITICAL Base44 Automation Event\\n\\n**Event:** {{event_type}}\\n**Priority:** {{analyze_automation_event.priority_level}}\\n**Risk Level:** {{analyze_automation_event.risk_assessment.overall_risk_level}}\\n\\n**Summary:** {{analyze_automation_event.event_summary}}\\n\\n**Immediate Actions Required:**\\n{{analyze_automation_event.orchestration_plan.immediate_actions}}\\n\\n**SLA Target:** {{analyze_automation_event.sla_target}}\\n\\ncc: @channel"
+            },
+            {
+              "action": "email_notification", 
+              "to": "team@flashfusion.co",
+              "subject": "🚨 CRITICAL: Base44 Automation Event Requires Immediate Attention",
+              "body": "Critical automation event detected in Base44 platform.\\n\\nDetails: {{analyze_automation_event.event_summary}}\\n\\nRequired Actions: {{analyze_automation_event.orchestration_plan.immediate_actions}}"
+            }
+          ]
+        },
+        {
+          "if": "{{analyze_automation_event.priority_level}} == 'high'",
+          "then": [
+            {
+              "action": "slack_notification",
+              "channel": "#flashfusion-automation",
+              "message": "⚠️ HIGH Priority Base44 Event\\n\\n**Event:** {{event_type}}\\n**Complexity:** {{analyze_automation_event.automation_insights.event_classification.complexity}}\\n\\n**Optimization Opportunities:**\\n{{analyze_automation_event.automation_insights.optimization_opportunities}}\\n\\n**Estimated Duration:** {{analyze_automation_event.automation_insights.event_classification.estimated_duration}}"
+            },
+            {
+              "action": "notion_page_create",
+              "database_id": "base44_automation_tracking",
+              "properties": {
+                "Event Type": "{{event_type}}",
+                "Priority": "{{analyze_automation_event.priority_level}}",
+                "Status": "In Progress",
+                "Created Date": "{{now}}",
+                "Summary": "{{analyze_automation_event.event_summary}}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "update_monitoring_dashboard",
+      "type": "webhook",
+      "url": "https://api.flashfusion.co/monitoring/base44/update",
+      "method": "POST",
+      "headers": {
+        "Authorization": "Bearer {{flashfusion_api_key}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "event_id": "{{event_id}}",
+        "timestamp": "{{now}}",
+        "metrics": {
+          "priority_score": "{{analyze_automation_event.priority_score}}",
+          "complexity_score": "{{analyze_automation_event.automation_insights.event_classification.complexity_score}}",
+          "risk_score": "{{analyze_automation_event.risk_assessment.risk_score}}"
+        },
+        "status": "processed",
+        "analysis_summary": "{{analyze_automation_event.event_summary}}"
+      }
+    }
+  ],
+  "environment_variables": [
+    "BASE44_API_KEY",
+    "SLACK_WEBHOOK_URL", 
+    "FLASHFUSION_API_KEY",
+    "LINEAR_API_KEY",
+    "NOTION_API_KEY"
+  ],
+  "test_data": {
+    "event_type": "process_optimization",
+    "payload": {
+      "automation_id": "auto_base44_001",
+      "process_name": "Data Migration Workflow",
+      "execution_time": 780,
+      "memory_usage": 3072,
+      "api_calls": 2500,
+      "manual_intervention_points": ["data_validation", "approval_gate", "quality_check"],
+      "connected_systems": ["salesforce", "hubspot", "notion"],
+      "handles_sensitive_data": true,
+      "external_dependencies": ["salesforce_api", "hubspot_api", "aws_s3", "redis", "postgresql", "stripe_api"],
+      "real_time": false,
+      "compliance_level": "gdpr",
+      "affects_production": true,
+      "revenue_impact": 5000,
+      "user_count_affected": 250,
+      "is_time_sensitive": true,
+      "deadline_hours": 18,
+      "blocking_other_processes": true
+    },
+    "metadata": {
+      "user_id": "usr_flashfusion_001",
+      "project_id": "proj_base44_migration",
+      "workspace_id": "ws_flashfusion",
+      "timestamp": "2025-01-16T20:45:00Z"
+    },
+    "event_id": "evt_base44_20250116_001"
+  }
+}
