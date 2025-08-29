@@ -2,6 +2,49 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🔒 SECURITY-FIRST DEVELOPMENT PROTOCOLS
+
+**⚠️  CRITICAL: This project operates under ENTERPRISE SECURITY STANDARDS**
+
+### Security Requirements (NON-NEGOTIABLE)
+1. **NO AUTO-APPROVALS**: Every operation requires explicit human confirmation
+2. **EXPLICIT PERMISSIONS**: Request specific permissions for each operation type
+3. **AUDIT EVERYTHING**: All operations logged in `.claude/audit.log`
+4. **MINIMAL SCOPE**: Use least privilege principle - only request necessary permissions
+5. **HUMAN OVERSIGHT**: Continuous human monitoring required for all sessions
+
+### Secure Session Initialization
+```bash
+# REQUIRED: Start with minimal permissions only
+claude --allowedTools "Read" "Grep" "LS" "Glob"
+
+# FORBIDDEN: Never use dangerous permission bypass
+# ❌ claude --dangerously-skip-permissions
+
+# Load security briefing FIRST
+/security-briefing
+```
+
+### Permission Escalation Protocol
+```
+BEFORE ANY WRITE/EXECUTE OPERATION:
+1. Request explicit permissions with justification
+2. Wait for human approval
+3. Proceed only with approved scope
+4. Verify results and log completion
+```
+
+### Protected Assets (Requires Explicit Approval)
+- `.env*` - Environment variables and secrets
+- `package.json` - Dependency management
+- `database/` - Database schemas and migrations  
+- `scripts/` - Automation and deployment scripts
+- `.claude/` - AI configuration and security policies
+- `api/` - API endpoints and business logic
+- `src/core/` - Core business orchestration
+
+**🛡️ SECURITY COMMITMENT**: Security is never compromised for convenience.
+
 ## Project Overview
 
 FlashFusion Unified is an AI-powered business operating system that transforms business ideas into automated revenue streams. The system uses multiple AI agents to automate development, commerce, and content workflows from a single platform.
