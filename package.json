@@ -1,0 +1,176 @@
+{
+  "name": "flashfusion-unified",
+  "version": "1.0.0",
+  "description": "FlashFusion Unified - AI-powered business operating system that transforms ideas into automated revenue streams",
+  "main": "api/main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "nodemon api/main.js",
+    "dev:client": "cd FlashFusion-Unified/client && npm run dev",
+    "dev:full": "npm run dev",
+    "start": "node api/main.js",
+    "build": "npm run build:client && npm run build:functions",
+    "build:client": "cd FlashFusion-Unified/client && npm run build",
+    "build:functions": "cd FlashFusion-Unified/functions && npm run build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint . --ext js,jsx,ts,tsx",
+    "lint:fix": "eslint . --ext js,jsx,ts,tsx --fix",
+    "format": "prettier --write .",
+    "security-check": "node scripts/validate-keys.js",
+    "validate-keys": "node scripts/validate-keys.js",
+    "health": "node scripts/health-check.js",
+    "setup": "node scripts/setup.js",
+    "dev:install": "npm install && cd FlashFusion-Unified/client && npm install && cd ../functions && npm install",
+    "workflow:create": "node src/orchestration/core/WorkflowEngine.js create",
+    "agent:create": "node src/core/AgentOrchestrator.js create",
+    "mcp-demo": "node src/core/mcpServer.js demo",
+    "test-webscraping": "node scripts/test-web-scraping.js",
+    "test-deployment": "node scripts/deployment-test.js",
+    "deploy": "vercel --prod",
+    "deploy:functions": "cd FlashFusion-Unified/functions && firebase deploy --only functions",
+    "key:rotate": "node scripts/key-rotation.js",
+    "validate": "node scripts/validate_env.js",
+    "postinstall": "npm run setup"
+  },
+  "keywords": [
+    "ai",
+    "business-automation",
+    "multi-agent",
+    "workflow-engine",
+    "flashfusion",
+    "revenue-automation",
+    "anthropic",
+    "claude",
+    "saas-platform"
+  ],
+  "author": "FlashFusion Team <krosebrook@example.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Krosebrook/FlashFusion-Unified.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Krosebrook/FlashFusion-Unified/issues"
+  },
+  "homepage": "https://flashfusion.co",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.0",
+    "@notionhq/client": "^2.2.15",
+    "@supabase/supabase-js": "^2.52.1",
+    "axios": "^1.6.8",
+    "bcryptjs": "^2.4.3",
+    "bull": "^4.12.2",
+    "chalk": "^4.1.2",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "firebase": "^12.2.1",
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^5.0.0",
+    "helmet": "^7.1.0",
+    "ioredis": "^5.3.2",
+    "joi": "^17.12.2",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.3",
+    "openai": "^4.28.4",
+    "playwright": "^1.42.1",
+    "uuid": "^9.0.1",
+    "winston": "^3.17.0",
+    "ws": "^8.16.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.1",
+    "@babel/core": "^7.24.3",
+    "@babel/preset-env": "^7.24.3",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/compression": "^1.7.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/lodash": "^4.17.0",
+    "@types/morgan": "^1.9.9",
+    "@types/multer": "^1.4.11",
+    "@types/node": "^20.11.30",
+    "@types/uuid": "^9.0.8",
+    "@types/ws": "^8.5.10",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0",
+    "prettier": "^3.2.5",
+    "supertest": "^6.3.4",
+    "typescript": "^5.4.3"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/api",
+      "<rootDir>/tests"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.js",
+      "**/?(*.)+(spec|test).js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "api/**/*.js",
+      "!src/config/**",
+      "!**/node_modules/**",
+      "!**/build/**"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "prettier"
+    ],
+    "env": {
+      "node": true,
+      "es2022": true,
+      "jest": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 2022,
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_"
+        }
+      ],
+      "no-console": "warn"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false
+  },
+  "private": false
+}
